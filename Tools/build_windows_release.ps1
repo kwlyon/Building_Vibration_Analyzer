@@ -13,6 +13,19 @@ $ReleaseDir = Join-Path $ReleaseRoot ("Building_Vibration_Analyzer_v{0}" -f $Ver
 $Venv = Join-Path $PythonApp ".venv-release"
 $Python = Join-Path $Venv "Scripts\python.exe"
 
+function Invoke-Native {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$FilePath,
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Arguments
+    )
+    & $FilePath @Arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "Command failed with exit code ${LASTEXITCODE}: $FilePath $($Arguments -join ' ')"
+    }
+}
+
 function Invoke-Step {
     param(
         [string]$Name,
@@ -31,21 +44,26 @@ if (-not $SkipInstall) {
         if (Test-Path $Venv) {
             Remove-Item -LiteralPath $Venv -Recurse -Force
         }
-        python -m venv $Venv
+        Invoke-Native python -m venv $Venv
     }
 
     Invoke-Step "Install pinned dependencies" {
-        & $Python -m pip install --upgrade pip
-        & $Python -m pip install -r (Join-Path $PythonApp "requirements.txt")
+        Invoke-Native $Python -m pip install --upgrade pip
+        Invoke-Native $Python -m pip install -r (Join-Path $PythonApp "requirements.txt")
     }
 } else {
-    $Python = "python"
+    if (Test-Path $Python) {
+        Write-Host "Using existing release virtual environment at $Venv"
+    } else {
+        Write-Host "Release virtual environment not found; using system Python."
+        $Python = "python"
+    }
 }
 
 Invoke-Step "Run Python tests" {
     Push-Location $Root
     try {
-        & $Python -m unittest discover -s "Python_Control_Application\tests"
+        Invoke-Native $Python -m unittest discover -s "Python_Control_Application\tests"
     } finally {
         Pop-Location
     }
@@ -54,7 +72,7 @@ Invoke-Step "Run Python tests" {
 Invoke-Step "Run firmware host tests" {
     Push-Location $Root
     try {
-        & $Python -m unittest discover -s "Teensy_Firmware\tests"
+        Invoke-Native $Python -m unittest discover -s "Teensy_Firmware\tests"
     } finally {
         Pop-Location
     }
@@ -65,7 +83,7 @@ Invoke-Step "Compile Teensy firmware if Arduino CLI is available" {
     if ($ArduinoCli) {
         Push-Location $Root
         try {
-            arduino-cli compile --fqbn teensy:avr:teensy41 "Teensy_Firmware\BuildingVibrationLogger"
+            Invoke-Native arduino-cli compile --fqbn teensy:avr:teensy41 "Teensy_Firmware\BuildingVibrationLogger"
         } finally {
             Pop-Location
         }
@@ -78,7 +96,7 @@ if (-not $SkipExecutable) {
     Invoke-Step "Build executable with PyInstaller" {
         Push-Location $PythonApp
         try {
-            & $Python -m PyInstaller --noconfirm --clean --windowed `
+            Invoke-Native $Python -m PyInstaller --noconfirm --clean --windowed `
                 --name "BuildingVibrationAnalyzer" `
                 --paths (Join-Path $PythonApp "src") `
                 (Join-Path $PythonApp "src\building_vibration_analyzer\__main__.py")
