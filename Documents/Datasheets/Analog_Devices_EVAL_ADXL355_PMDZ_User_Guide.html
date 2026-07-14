@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang="en"
+      dir="ltr"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang="en" dir="ltr"> <![endif]-->
+<!--[if IE 9]>
+<html class="no-js lt-ie10" lang="en" dir="ltr"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" dir="ltr"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>EVAL-ADXL355-PMDZ User Guide [Analog Devices Wiki]</title>
+
+    <script>(function (H) {
+            H.className = H.className.replace(/\bno-js\b/, 'js')
+        })(document.documentElement)</script>
+
+    <link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:500,500i,600,600i,700,700i|Barlow:300,300i,400,400i,500,500i,600,600i&display=swap" rel="stylesheet">
+
+    <link href="https://assets2.analog.com/apps-assets/wiki/index.css" rel="stylesheet" />
+    <script src="https://assets2.analog.com/apps-assets/wiki/index.mjs"></script>
+    <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="resources,eval,user-guides,circuits-from-the-lab,eval-adxl355-pmdz"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Analog Devices Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php" crossorigin="use-credentials"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=resources:eval:user-guides:circuits-from-the-lab"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz"/>
+<link rel="canonical" href="https://wiki.analog.com/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz"/>
+<link rel="stylesheet" href="/lib/exe/css.php?t=analog2014&amp;tseed=d706046f42012efb098e8b4f542c6afb"/>
+<script nonce="7fef884a6d1448d98ba72a8eb9844324">var NS='resources:eval:user-guides:circuits-from-the-lab';var JSINFO = {"plugin_enforcesummary":{"enforce_summary":1,"default_minoredit":0,"enforce_preview":0},"plugin_folded":{"hide":"hide","reveal":"reveal"},"plugins":{"interwikipaste":{"patterns":"[{\"shortcut\":\"footprints\",\"pattern\":\"http\\\\:\\\\\\\/\\\\\\\/www\\\\.analog\\\\.com\\\\\\\/en\\\\\\\/design\\\\-center\\\\\\\/packaging\\\\-quality\\\\-symbols\\\\-footprints\\\\\\\/symbols\\\\-and\\\\-footprints\\\\\\\/([^ ]+)?\\\\.html\",\"encode\":false},{\"shortcut\":\"staging.kernel.org\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/git\\\\.kernel\\\\.org\\\\\\\/\\\\?p\\\\=linux\\\\\\\/kernel\\\\\\\/git\\\\\\\/gregkh\\\\\\\/staging\\\\.git;a\\\\=blob;hb\\\\=refs\\\\\\\/heads\\\\\\\/staging\\\\-next;f\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"avnetexpress\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/avnetexpress\\\\.avnet\\\\.com\\\\\\\/store\\\\\\\/em\\\\\\\/EMController\\\\?storeId\\\\=500201&N\\\\=0&action\\\\=products&term\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"downgit\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/analogdevicesinc\\\\.github\\\\.io\\\\\\\/DownGit\\\\\\\/\\\\#\\\\\\\/home\\\\?url\\\\=https\\\\:\\\\\\\/\\\\\\\/github\\\\.com\\\\\\\/analogdevicesinc\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"cart\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/shoppingcart\\\\.analog\\\\.com\\\\\\\/AddModel\\\\.aspx\\\\?locale\\\\=en&ACTION\\\\=BUY_BUNDLES&modelNbr\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"digikey\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.digikey\\\\.com\\\\\\\/scripts\\\\\\\/DkSearch\\\\\\\/dksus\\\\.dll\\\\?KeywordSearch\\\\?Site\\\\=US&amp;Keywords\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"git.linux.org\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/git\\\\.kernel\\\\.org\\\\\\\/\\\\?p\\\\=linux\\\\\\\/kernel\\\\\\\/git\\\\\\\/torvalds\\\\\\\/linux\\\\.git;a\\\\=blob;hb\\\\=HEAD;f\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"export\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.analog\\\\.com\\\\\\\/exportclassification\\\\\\\/Search\\\\\\\/Result\\\\?strSearch\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"ibis\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.analog\\\\.com\\\\\\\/media\\\\\\\/en\\\\\\\/simulation\\\\-models\\\\\\\/ibis\\\\-models\\\\\\\/([^ ]+)?\\\\.ibs\",\"encode\":false},{\"shortcut\":\"bfsvn\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/blackfin\\\\.uclinux\\\\.org\\\\\\\/gf\\\\\\\/project\\\\\\\/([^ ]+)?\\\\\\\/scmsvn\\\\\\\/trunk\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"bfgit\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/blackfin\\\\.uclinux\\\\.org\\\\\\\/git\\\\\\\/\\\\?p\\\\=([^ ]+)?;a\\\\=blob;f\\\\=([^ ]+)?;hb\\\\=HEAD\",\"encode\":false},{\"shortcut\":\"paypal\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.paypal\\\\.com\\\\\\\/cgi\\\\-bin\\\\\\\/webscr\\\\?cmd\\\\=_xclick&amp;business\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"arrow\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.arrow\\\\.com\\\\\\\/en\\\\\\\/products\\\\\\\/search\\\\?cat\\\\=&q\\\\=([^ ]+)?&r\\\\=true\",\"encode\":false},{\"shortcut\":\"linux.github\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/github\\\\.com\\\\\\\/analogdevicesinc\\\\\\\/linux\\\\\\\/blob\\\\\\\/([^ ]+)?\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"bfgit_rev\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/blackfin\\\\.uclinux\\\\.org\\\\\\\/git\\\\\\\/\\\\?p\\\\=([^ ]+)?;a\\\\=blob;f\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"digilent\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.digilentinc\\\\.com\\\\\\\/Products\\\\\\\/Detail\\\\.cfm\\\\?Prod\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"reg\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/my\\\\.analog\\\\.com\\\\\\\/en\\\\\\\/app\\\\\\\/registration\\\\\\\/hardware\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"github\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/github\\\\.com\\\\\\\/analogdevicesinc\\\\\\\/([^ ]+)?\\\\\\\/blob\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"go\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.google\\\\.com\\\\\\\/search\\\\?q\\\\=([^ ]+)?&amp;btnI\\\\=lucky\",\"encode\":true},{\"shortcut\":\"docs\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/docs\\\\.blackfin\\\\.uclinux\\\\.org\\\\\\\/doku\\\\.php\\\\?id\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"amazon\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.amazon\\\\.com\\\\\\\/dp\\\\\\\/([^ ]+)?\\\\?tag\\\\=splitbrain\\\\-20\",\"encode\":true},{\"shortcut\":\"amazon.de\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.amazon\\\\.de\\\\\\\/dp\\\\\\\/([^ ]+)?\\\\?tag\\\\=splitbrain\\\\-21\",\"encode\":true},{\"shortcut\":\"mouser\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/mouser\\\\.com\\\\\\\/Search\\\\\\\/Refine\\\\?Keyword\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"tkt\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/blackfin\\\\.uclinux\\\\.org\\\\\\\/gf\\\\\\\/tracker\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"repo\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/github\\\\.com\\\\\\\/analogdevicesinc\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wpmeta\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/meta\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"bf\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/blackfin\\\\.uclinux\\\\.org\\\\\\\/gf\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"maxim\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.maximintegrated\\\\.com\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wp\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/en\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wpfr\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/fr\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wpde\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/de\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wpes\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/es\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wppl\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/pl\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wpjp\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/ja\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"wpru\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/ru\\\\.wikipedia\\\\.org\\\\\\\/wiki\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"bfin\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/blackfin\\\\.uclinux\\\\.org\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"amazon.uk\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.amazon\\\\.co\\\\.uk\\\\\\\/dp\\\\\\\/([^ ]+)?\",\"encode\":true},{\"shortcut\":\"google\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.google\\\\.com\\\\\\\/search\\\\?q\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"oreilly\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.oreilly\\\\.com\\\\\\\/catalog\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"mw\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.mathworks\\\\.com\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"rfc\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/tools\\\\.ietf\\\\.org\\\\\\\/html\\\\\\\/rfc([^ ]+)?\",\"encode\":false},{\"shortcut\":\"google.de\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.google\\\\.de\\\\\\\/search\\\\?q\\\\=([^ ]+)?\",\"encode\":false},{\"shortcut\":\"user\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/ez\\\\.analog\\\\.com\\\\\\\/members\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"this\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/wiki\\\\.analog\\\\.com\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"phpfn\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/secure\\\\.php\\\\.net\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"adi\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.analog\\\\.com\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"xilinx\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.xilinx\\\\.com\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"ez\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/ez\\\\.analog\\\\.com\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"doku\",\"pattern\":\"https\\\\:\\\\\\\/\\\\\\\/www\\\\.dokuwiki\\\\.org\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"callto\",\"pattern\":\"callto\\\\:\\\\\\\/\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"man\",\"pattern\":\"http\\\\:\\\\\\\/\\\\\\\/man\\\\.cx\\\\\\\/([^ ]+)?\",\"encode\":false},{\"shortcut\":\"skype\",\"pattern\":\"skype\\\\:([^ ]+)?\",\"encode\":false},{\"shortcut\":\"tel\",\"pattern\":\"tel\\\\:([^ ]+)?\",\"encode\":false}]"},"vshare":{"youtube":"youtube\\.com\/.*[&?]v=([a-z0-9_\\-]+)","vimeo":"vimeo\\.com\\\/(\\d+)","slideshare":"slideshare.*id=(\\d+)","dailymotion":"dailymotion\\.com\/video\/([a-z0-9]+)","archiveorg":"archive\\.org\/(?:embed|details)\/([a-zA-Z0-9_\\-]+)","soundcloud":"soundcloud\\.com\/([\\w-]+\/[\\w-]+)","niconico":"nicovideo\\.jp\/watch\/(sm[0-9]+)","bitchute":"bitchute\\.com\\\/video\\\/([a-zA-Z0-9_\\-]+)","coub":"coub\\.com\\\/view\\\/([a-zA-Z0-9_\\-]+)","odysee":"odysee\\.com\/\\$\/(?:embed|download)\/([-%_?=\/a-zA-Z0-9]+)","youku":"v\\.youku\\.com\/v_show\/id_([0-9A-Za-z=]+)\\.html","bilibili":"bilibili\\.com\\\/video\\\/(BV[0-9A-Za-z]+)","msoffice":"(?:office\\.com.*[&?]videoid=([a-z0-9\\-]+))","msstream":"microsoftstream\\.com\\\/video\\\/([a-f0-9\\-]{36})","rutube":"rutube\\.ru\\\/video\\\/([a-z0-9]+)\\\/","gdrive":"drive\\.google\\.com\\\/file\\\/d\\\/([a-zA-Z0-9_-]+)\/"}},"id":"resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz","namespace":"resources:eval:user-guides:circuits-from-the-lab","ACT":"show","useHeadingNavigation":1,"useHeadingContent":0};(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+<script src="/lib/exe/jquery.php?tseed=8faf3dc90234d51a499f4f428a0eae43" defer="defer"></script>
+<script src="/lib/exe/js.php?t=analog2014&amp;tseed=d706046f42012efb098e8b4f542c6afb" defer="defer"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/lib/tpl/analog2014/images/favicon.ico" />
+
+    <script src="https://assets2.analog.com/header-footer/index.js" type="text/javascript" defer="true"></script>
+
+    <!-- LIVE tracking -->
+<script src="//assets.adobedtm.com/bc68b7886092/2a726ea8b70d/launch-a4a6d55de309.min.js" async></script>
+<script src="/lib/tpl/analog2014/assets/js/adi/global.analytics.js" type="text/javascript"></script>
+</head>
+
+<!-- List of supported themes thm-education, thm-applications, thm-parametric, thm-product, thm-community, thm-design-center, thm-my-analog, thm-support -->
+<body class="home">
+
+
+<!-- wiki_header.html -->
+<header class="adi_header adi_header--wiki tools-header" id="dokuwiki__top" data-ot="true">
+
+    <div class="adi_topbar">
+        <div class="adi_container">
+            <section class="adi_row">
+                <!--  BEGIN:  Internal Links -->
+                <nav class="adi_column adi_pull-left">
+                    <a class="adi_topbar-link adi_topbar-link--analog-home" href="//www.analog.com">
+                        <strong>Analog.com</strong>
+                    </a>
+                    <a class="adi_topbar-link adi_topbar-link--engineer-zone" href="//ez.analog.com">
+                        <strong class="adi_link--hover-accent">Engineer</strong>
+                        <span>Zone</span>
+                    </a>
+                    <a class="adi_topbar-link adi_topbar-link--analog-dialogue" href="//www.analog.com/en/resources/analog-dialogue.html">
+                        <strong class="adi_link--hover-accent">Analog</strong>
+                        <span>Dialogue</span>
+                    </a>
+                </nav> <!-- /.adi_column.adi_pull-left -->
+                <!--  END:  Internal Links  -->
+                <!--  BEGIN:  Language Options  -->
+                <nav class="adi_column adi_pull-right">
+                    <a class="adi_topbar-link adi_topbar-link--light adi_topbar-link--myanalog-logo" href="//my.analog.com/">
+                        <span><img src="https://assets2.analog.com/cms-assets/images/images/images/myanalog_logo.png" alt="My Analog Login"></span>&nbsp;
+                    </a>
+
+                    <a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=login&amp;sectok="  class="adi_topbar-link adi_topbar-link--light adi_topbar-link--myanalog-login action login" rel="nofollow" title="Log In"><strong>Log In</strong></a>                </nav> <!-- /.adi_column.adi_pull-right -->
+                <!--  END:  Language Options  -->
+            </section> <!-- /.adi_row -->
+        </div> <!-- /.adi_container -->
+    </div>
+
+
+
+    <div class="adi_container">
+        <section class="adi_row">
+            <!--  BEGIN:  Logo  -->
+            <div class="adi_column adi_logo-container">
+                <a class="adi_logo" href="/start">
+                    <img src="/lib/tpl/analog2014//assets/images/adi-logo.svg" alt="Analog Devices Wiki" />
+                </a>
+            </div> <!-- /.adi_column.adi_logo -->
+            <!--  END:  Logo  -->
+            <div class="adi_column adi_page-title-container">
+                <h1 class="adi_page-title">Wiki</h1>
+            </div> <!-- /.adi_column.adi_logo -->
+            <!--  END:  Logo  -->
+        </section> <!-- /.adi_row -->
+    </div> <!-- /.adi_container -->
+
+    <div class="navigation-bar">
+        <div class="content-wrap clearfix">
+            <ul class="list-inline pull-left nav-links clearfix">
+<li class="dropdown"><div class="li"> <a href="/resources" class="wikilink1" title="resources" data-wiki-id="resources">Resources and Tools</a></div>
+<ul class="submenu">
+<li class="level3"><div class="li"> <a href="/resources/eval" class="wikilink1" title="resources:eval" data-wiki-id="resources:eval">Evaluation Boards &amp; Kits</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/fpga" class="wikilink1" title="resources:fpga" data-wiki-id="resources:fpga">FPGA Reference Designs</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/quick-start" class="wikilink1" title="resources:quick-start" data-wiki-id="resources:quick-start">Quick Start Guides</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/tools-software/linux-drivers-all" class="wikilink1" title="resources:tools-software:linux-drivers-all" data-wiki-id="resources:tools-software:linux-drivers-all">Linux Software Drivers</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/no-os/drivers" class="wikilink1" title="resources:no-os:drivers" data-wiki-id="resources:no-os:drivers">Microcontroller Software Drivers</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/tools-software/ace" class="wikilink1" title="resources:tools-software:ace" data-wiki-id="resources:tools-software:ace">ACE Software</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/technical-guides" class="wikilink1" title="resources:technical-guides" data-wiki-id="resources:technical-guides">Technical Guides</a></div>
+</li>
+</ul>
+</li>
+<li class="dropdown"><div class="li"> <a href="/university/courses/tutorials/index" class="wikilink1" title="university:courses:tutorials:index" data-wiki-id="university:courses:tutorials:index">Education Content</a></div>
+<ul class="submenu">
+<li class="level2"><div class="li"> <a href="/university" class="wikilink1" title="university" data-wiki-id="university">University Program Overview</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/m1k" class="wikilink1" title="university:tools:m1k" data-wiki-id="university:tools:m1k">ADALM1000 (M1k) Active Learning Module</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/m2k" class="wikilink1" title="university:tools:m2k" data-wiki-id="university:tools:m2k">ADALM2000 (M2k) Active Learning Module</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/adalp2000/parts-index" class="wikilink1" title="university:tools:adalp2000:parts-index" data-wiki-id="university:tools:adalp2000:parts-index">ADALP2000 Parts kit for Circuits</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/pluto" class="wikilink1" title="university:tools:pluto" data-wiki-id="university:tools:pluto">ADALM-PLUTO SDR Active Learning Module</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university#teaching_materials_lab_exercises" class="wikilink1" title="university" data-wiki-id="university">Teaching and Lab Materials</a></div>
+</li>
+</ul>
+</li>
+<li class="dropdown"><div class="li"> <a href="/wiki/help" class="wikilink1" title="wiki:help" data-wiki-id="wiki:help">Wiki Help</a></div>
+<ul class="submenu">
+<li class="level3"><div class="li"> <a href="/wiki/help" class="wikilink1" title="wiki:help" data-wiki-id="wiki:help">Help</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/wiki/introduction" class="wikilink1" title="wiki:introduction" data-wiki-id="wiki:introduction">About Wiki</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/playground/playground" class="wikilink1" title="playground:playground" data-wiki-id="playground:playground">Playground</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/start?do=index" class="wikilink1" title="start" data-wiki-id="start">Wiki Site Map</a></div>
+</li>
+</ul>
+</li>
+<li class="dropdown"><div class="li"><a href="#">Wiki Tools</a></div><ul class="submenu"><li class="level2"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent Changes [R]">Recent Changes</a></li><li class="level2"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=media&amp;ns=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a></li><li class="level2"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=index"  class="action index" accesskey="x" rel="nofollow" title="Sitemap [X]">Sitemap</a></li></ul></li></ul>
+            <ul class="list-inline pull-right searchmenu clearfix">
+                <li class="search-box">
+                    <form action="" accept-charset="utf-8" class="search clearfix" id="dw__search" method="get" role="search">
+                        <div class="no">
+                            <input type="hidden" name="do" value="search">
+                            <input type="text" autocomplete="off" id="qsearch__in" accesskey="f" name="id" class="edit" placeholder="search wiki">
+                            <button type="submit" value="Search" class="button search-icon" title="Search"></button>
+
+                            <div id="qsearch__out" class="ajax_qsearch JSpopup" style="display: none; white-space: nowrap;">
+                            </div>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</header> <!-- /.adi_header -->
+
+
+
+
+
+<!-- Mobile view navigation drawer-->
+<div class="wiki-mob-body">
+    <div class="content" role="main">
+        <div class="col-md-12 wiki-head-row">
+            <div class="row ">
+                <div class="title-nophoto">
+                    <div class="container page-title ">
+                        <h1 data-page-title="true">Analog Devices Wiki</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 floater-menu-container">
+                <div class="row product-row">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-2 wiki-right-panel">
+                                <div class="row">
+                                    <div class=" product-bookmarks" id="affix-nav" name="adi_products_left_navigation">
+                                        <ul class="nav" id="affix-ul">
+                                            <li class="">
+
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#"
+                                                   name='SDR-home_2e322e80-5ec4-4b20-b8b8-71702b590a25'>Analog Devices
+                                                    Wiki
+                                                </a>
+
+                                            </li>
+                                            <!--Wiki-->
+                                            <ul class="list-inline pull-left nav-links clearfix">
+<li class="dropdown"><div class="li Res_tools_parent"> <a href="/resources" class="wikilink1" title="resources" data-wiki-id="resources">Resources and Tools</a></div>
+<ul class="submenu Res_tools_child">
+<li class="level3"><div class="li"> <a href="/resources/eval" class="wikilink1" title="resources:eval" data-wiki-id="resources:eval">Evaluation Boards &amp; Kits</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/fpga" class="wikilink1" title="resources:fpga" data-wiki-id="resources:fpga">FPGA Reference Designs</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/quick-start" class="wikilink1" title="resources:quick-start" data-wiki-id="resources:quick-start">Quick Start Guides</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/tools-software/linux-drivers-all" class="wikilink1" title="resources:tools-software:linux-drivers-all" data-wiki-id="resources:tools-software:linux-drivers-all">Linux Software Drivers</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/no-os/drivers" class="wikilink1" title="resources:no-os:drivers" data-wiki-id="resources:no-os:drivers">Microcontroller Software Drivers</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/tools-software/ace" class="wikilink1" title="resources:tools-software:ace" data-wiki-id="resources:tools-software:ace">ACE Software</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/resources/technical-guides" class="wikilink1" title="resources:technical-guides" data-wiki-id="resources:technical-guides">Technical Guides</a></div>
+</li>
+</ul>
+</li>
+<li class="dropdown"><div class="li Res_tools_parent"> <a href="/university/courses/tutorials/index" class="wikilink1" title="university:courses:tutorials:index" data-wiki-id="university:courses:tutorials:index">Education Content</a></div>
+<ul class="submenu Res_tools_child">
+<li class="level2"><div class="li"> <a href="/university" class="wikilink1" title="university" data-wiki-id="university">University Program Overview</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/m1k" class="wikilink1" title="university:tools:m1k" data-wiki-id="university:tools:m1k">ADALM1000 (M1k) Active Learning Module</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/m2k" class="wikilink1" title="university:tools:m2k" data-wiki-id="university:tools:m2k">ADALM2000 (M2k) Active Learning Module</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/adalp2000/parts-index" class="wikilink1" title="university:tools:adalp2000:parts-index" data-wiki-id="university:tools:adalp2000:parts-index">ADALP2000 Parts kit for Circuits</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university/tools/pluto" class="wikilink1" title="university:tools:pluto" data-wiki-id="university:tools:pluto">ADALM-PLUTO SDR Active Learning Module</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/university#teaching_materials_lab_exercises" class="wikilink1" title="university" data-wiki-id="university">Teaching and Lab Materials</a></div>
+</li>
+</ul>
+</li>
+<li class="dropdown"><div class="li Res_tools_parent"> <a href="/wiki/help" class="wikilink1" title="wiki:help" data-wiki-id="wiki:help">Wiki Help</a></div>
+<ul class="submenu Res_tools_child">
+<li class="level3"><div class="li"> <a href="/wiki/help" class="wikilink1" title="wiki:help" data-wiki-id="wiki:help">Help</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/wiki/introduction" class="wikilink1" title="wiki:introduction" data-wiki-id="wiki:introduction">About Wiki</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/playground/playground" class="wikilink1" title="playground:playground" data-wiki-id="playground:playground">Playground</a></div>
+</li>
+<li class="level3"><div class="li"> <a href="/start?do=index" class="wikilink1" title="start" data-wiki-id="start">Wiki Site Map</a></div>
+</li>
+</ul>
+</li>
+<li class="dropdown"><div class="li Res_tools_parent"><a href="#">Wiki Tools</a></div><ul class="submenu Res_tools_child"><li class="level2"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent Changes [R]">Recent Changes</a></li><li class="level2"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=media&amp;ns=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a></li><li class="level2"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=index"  class="action index" accesskey="x" rel="nofollow" title="Sitemap [X]">Sitemap</a></li></ul></li></ul>                                            <!--Wiki-->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="special-content">
+            <div class="accordion-group language-footer-block">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#English">English<span
+                            class="glyphicon  pull-right glyphicon-chevron-down visible-phone"></span>
+                    </a>
+                </div>
+                <div id="English" class="accordion-body collapse">
+                    <div class="accordion-inner language-footer">
+                        <a href="//www.analog.com/en/landing-pages/001/sdr/sdr-get-started.html">
+                            <img data-image-source="//assets2.analog.com/images/language_en.jpg" class="mobile-images"
+                                 width="100%" alt="English"/></a>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group language-footer-block">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#简体中文">简体中文<span
+                            class="glyphicon  pull-right glyphicon-chevron-down visible-phone"></span>
+                    </a>
+                </div>
+                <div id="简体中文" class="accordion-body collapse">
+                    <div class="accordion-inner language-footer">
+                        <a href="//www.analog.com/cn/landing-pages/001/sdr/sdr-get-started.html">
+                            <img data-image-source="//assets2.analog.com/images/language_cn.jpg" class="mobile-images"
+                                 width="100%" alt="简体中文"/></a>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group language-footer-block">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#日本語">日本語<span
+                            class="glyphicon  pull-right glyphicon-chevron-down visible-phone"></span>
+                    </a>
+                </div>
+                <div id="日本語" class="accordion-body collapse">
+                    <div class="accordion-inner language-footer">
+                        <a href="//www.analog.com/jp/landing-pages/001/sdr/sdr-get-started.html">
+                            <img data-image-source="//assets2.analog.com/images/language_jp.jpg" class="mobile-images"
+                                 width="100%" alt="日本語"/></a>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group language-footer-block">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#Руccкий">Руccкий<span
+                            class="glyphicon  pull-right glyphicon-chevron-down visible-phone"></span>
+                    </a>
+                </div>
+                <div id="Руccкий" class="accordion-body collapse">
+                    <div class="accordion-inner language-footer">
+                        <a href="//www.analog.com/ru/landing-pages/001/sdr/sdr-get-started.html">
+                            <img data-image-source="//assets2.analog.com/images/language_ru.jpg" class="mobile-images"
+                                 width="100%" alt="Руccкий"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mobile view navigation drawer-->
+
+<!-- /tpl_header.php -->
+
+
+
+<div id="dokuwiki__site" role="main" class="main-body content">
+    <div class="site dokuwiki mode_show tpl_analog2014   ">
+        <div class="container">
+
+            <!-- ********** CONTENT ********** -->
+            <div id="dokuwiki__content">
+                <div class="pad group">
+
+                    <div class="page group">
+                        
+                                                <!-- wikipage start -->
+                        <div class="approval approved_yes"><span class="approval_approved">This version (<span class="approval_date">20 Apr 2023 06:03</span>) was <em>approved</em> by <a href="https://ez.analog.com/members/trishacabildo" class=" interwiki iw_user">Trisha Cabildo</a>.</span><span class="approval_previous">The <a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?rev=1681260022">Previously approved version</a> (12 Apr 2023 00:40) is available.<a href="https://wiki.analog.com/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=diff&rev2[0]=1681260022&rev2[1]=1681970599&difftype=sidebyside" class="approved_diff_link"><img src="/lib/images/diff.png" class="approved_diff_link" alt="Diff" /></a></span></div><!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#eval-adxl355-pmdz_user_guide">EVAL-ADXL355-PMDZ User Guide</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#input_and_output_connections_and_configurations">Input and Output Connections and Configurations</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#host_processor_connector">Host Processor Connector</a></div></li>
+<li class="level3"><div class="li"><a href="#adxl355_interrupt_pins">ADXL355 Interrupt Pins</a></div></li>
+<li class="level3"><div class="li"><a href="#power_supply_considerations_and_configuration">Power Supply Considerations and Configuration</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#device_driver_support">Device Driver Support</a></div></li>
+<li class="level2"><div class="li"><a href="#system_setup_using_adicup3029">System Setup Using ADICUP3029</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#demo_requirements">Demo Requirements</a></div></li>
+<li class="level3"><div class="li"><a href="#setting_up_the_hardware">Setting up the Hardware</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#system_setup_using_max32655fthr_or_max32650fthr">System Setup Using MAX32655FTHR or MAX32650FTHR</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#demo_requirements1">Demo Requirements</a></div></li>
+<li class="level3"><div class="li"><a href="#max32655fthr">MAX32655FTHR</a></div></li>
+<li class="level3"><div class="li"><a href="#max32650fthr">MAX32650FTHR</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#system_setup_using_raspberry_pi">System Setup Using Raspberry Pi</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#demo_requirements2">Demo Requirements</a></div></li>
+<li class="level3"><div class="li"><a href="#loading_image_on_sd_card">Loading Image on SD Card</a></div></li>
+<li class="level3"><div class="li"><a href="#configuring_the_sd_card">Configuring the SD Card</a></div></li>
+<li class="level3"><div class="li"><a href="#setting_up_the_hardware1">Setting up the Hardware</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#system_setup_using_eval-adicup360_deprecated">System Setup Using EVAL-ADICUP360 (DEPRECATED)</a></div></li>
+<li class="level2"><div class="li"><a href="#application_software_all_platforms">Application Software (All Platforms)</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#hardware_connection">Hardware Connection</a></div></li>
+<li class="level3"><div class="li"><a href="#iio_commands">IIO Commands</a></div></li>
+<li class="level3"><div class="li"><a href="#iio_oscilloscope">IIO Oscilloscope</a></div></li>
+<li class="level3"><div class="li"><a href="#pyadi-iio">PyADI-IIO</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#more_information_and_useful_links">More information and useful links</a></div></li>
+<li class="level2"><div class="li"><a href="#schematic_pcb_layout_bill_of_materials">Schematic, PCB Layout, Bill of Materials</a></div></li>
+<li class="level2"><div class="li"><a href="#additional_information">Additional Information</a></div></li>
+<li class="level2"><div class="li"><a href="#hardware_registration">Hardware Registration</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="eval-adxl355-pmdz_user_guide">EVAL-ADXL355-PMDZ User Guide</h1>
+<div class="level1">
+
+<p>
+The <a href="https://www.analog.com/ADXL355" class="interwiki iw_adi" title="https://www.analog.com/ADXL355">ADXL355</a> is a low noise density, low 0g offset drift, low power, 3-axis MEMS accelerometer with selectable measurement ranges. The ADXL355 supports the ±2g, ±4g, and ±8g ranges, and offers industry leading noise, offset drift over temperature, and long term stability, enabling precision applications with minimal calibration and with very low power consumption. Applications include:
+</p>
+<ul>
+<li class="level1"><div class="li"> Inertial measurement units (IMUs)/altitude and heading reference systems (AHRS)</div>
+</li>
+<li class="level1"><div class="li"> Platform stabilization systems</div>
+</li>
+<li class="level1"><div class="li"> Structural health monitoring</div>
+</li>
+<li class="level1"><div class="li"> Seismic imaging</div>
+</li>
+<li class="level1"><div class="li"> Tilt sensing</div>
+</li>
+<li class="level1"><div class="li"> Robotics</div>
+</li>
+<li class="level1"><div class="li"> Condition monitoring</div>
+</li>
+</ul>
+
+<p>
+The ADXL355 accelerometers offer guaranteed temperature stability with null offset coefficients of 0.15mg/°C (max). The stability minimizes resource and expense associated with calibration and testing effort, helping to achieve higher throughput for device OEMs. In addition, the hermetic package helps ensure that the end product conforms to its repeatability and stability specifications long after they leave the factory.
+</p>
+
+<p>
+With output of ±2g to ±8g full scale range (FSR), selectable digital filtering from 1 Hz to 1 <abbr title="kilohertz">kHz</abbr>, and low noise density of 25µ/√Hz at less than 200µA current consumption, ADXL355 MEMS accelerometer offers performance level comparable to much more expensive devices with less power consumption and BOM cost.  For general board details and to buy a board, please visit the <a href="https://www.analog.com/EVAL-ADXL355-PMDZ" class="interwiki iw_adi" title="https://www.analog.com/EVAL-ADXL355-PMDZ">EVAL-ADXL355-PMDZ</a> product page.
+</p>
+
+<p>
+<a href="/_detail/resources/eval/user-guides/eval-adicup360/hardware/adxl355/adxl355_pmdz.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:eval-adicup360:hardware:adxl355:adxl355_pmdz.png"><img src="/_media/resources/eval/user-guides/eval-adicup360/hardware/adxl355/adxl355_pmdz.png?w=350&amp;tok=a04cb2" class="mediacenter" loading="lazy" alt="" width="350" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="input_and_output_connections_and_configurations">Input and Output Connections and Configurations</h2>
+<div class="level2">
+
+<p>
+The PMOD board is small in size with dimensions approximately 2.5 cm in width by 2.5 cm in length.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="host_processor_connector">Host Processor Connector</h3>
+<div class="level3">
+
+<p>
+The PMOD interface is a series of standardized digital interfaces for various digital communication protocols such as <abbr title="Serial Peripheral Interface">SPI</abbr>, <abbr title="Inter-Integrated Circuit">I2C</abbr>, and <abbr title="universal asynchronous receiver/transmitter">UART</abbr>.  These interface types were standardized by Digilent, which is now a division of National Instruments.  Complete details on the PMOD specification can be found <a href="https://www.digilentinc.com/Pmods/Digilent-Pmod_%20Interface_Specification.pdf" class="urlextern" target="_blank" title="https://www.digilentinc.com/Pmods/Digilent-Pmod_%20Interface_Specification.pdf" rel="ugc nofollow noopener">here</a>.
+</p>
+
+<p>
+The specific interface used for the EVAL-ADXL355-PMDZ boards is the extended <abbr title="Serial Peripheral Interface">SPI</abbr>.  In general <abbr title="Analog Devices, Inc.">ADI</abbr> has adopted the extended <abbr title="Serial Peripheral Interface">SPI</abbr> connector for all PMOD devices which have an <abbr title="Serial Peripheral Interface">SPI</abbr> interface.  It provides flexibility to add interrupts, general purpose I/O, resets, and other important digitally controlled functions.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> P1 Pin Number </th><th class="col1"> Pin Function </th><th class="col2"> Mnemonic </th><th class="col3"> P1 Pin Number </th><th class="col4"> Pin Function </th><th class="col5"> Mnemonic </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> Pin 1  </td><td class="col1 leftalign"> Chip Select         </td><td class="col2 leftalign"> CS   </td><td class="col3 leftalign"> Pin 7  </td><td class="col4 leftalign"> Interrupt 1         </td><td class="col5"> INT1 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> Pin 2  </td><td class="col1"> Master Out Slave In </td><td class="col2"> MOSI </td><td class="col3 leftalign"> Pin 8  </td><td class="col4 leftalign"> Not Connected       </td><td class="col5 leftalign"> NC   </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> Pin 3  </td><td class="col1"> Master In Slave Out </td><td class="col2"> MISO </td><td class="col3 leftalign"> Pin 9  </td><td class="col4 leftalign"> Interrupt 2         </td><td class="col5"> INT2 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> Pin 4  </td><td class="col1 leftalign"> Serial Clock        </td><td class="col2"> <abbr title="System Clock">SCLK</abbr> </td><td class="col3"> Pin 10 </td><td class="col4 leftalign"> Data Ready          </td><td class="col5"> DRDY </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> Pin 5  </td><td class="col1 leftalign"> Digital Ground      </td><td class="col2"> DGND </td><td class="col3"> Pin 11 </td><td class="col4 leftalign"> Digital Ground      </td><td class="col5"> DGND </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> Pin 6  </td><td class="col1 leftalign"> Digital Power       </td><td class="col2 leftalign"> VDD  </td><td class="col3"> Pin 12 </td><td class="col4 leftalign"> Digital Power       </td><td class="col5 leftalign"> VDD  </td>
+	</tr>
+</table></div>
+
+<p>
+<br/>
+<br/>
+
+<a href="/_detail/resources/eval/user-guides/eval-adicup360/hardware/adxl355/adxl355_layout.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:eval-adicup360:hardware:adxl355:adxl355_layout.png"><img src="/_media/resources/eval/user-guides/eval-adicup360/hardware/adxl355/adxl355_layout.png?w=300&amp;tok=2a0773" class="mediacenter" loading="lazy" alt="" width="300" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="adxl355_interrupt_pins">ADXL355 Interrupt Pins</h3>
+<div class="level3">
+
+<p>
+The EVAL-ADXL355-PMDZ has two interrupt pins and a data ready pin which can be used as external indicators for the user.  The interrupt pins can be programmed through software to reflect various status flags within the ADXL355, and those pins are accessible through the <abbr title="Serial Peripheral Interface">SPI</abbr> PMOD header.  For complete details on the individual status flags, what they mean, and how to program the chip to reflect those interrupts, please consult the <a href="https://www.analog.com/ADXL355" class="interwiki iw_adi" title="https://www.analog.com/ADXL355">ADXL355</a> data sheet.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="power_supply_considerations_and_configuration">Power Supply Considerations and Configuration</h3>
+<div class="level3">
+
+<p>
+When using the ADXL355 PMOD board, the 3.3V power for the PMOD comes directly from the host board it is connected to.  The power from the host is generally capable of providing up to 100 <abbr title="milliampere">mA</abbr> at 3.3V; but for complete PMOD power specifications, please click<a href="https://www.digilentinc.com/Pmods/Digilent-Pmod_%20Interface_Specification.pdf" class="urlextern" target="_blank" title="https://www.digilentinc.com/Pmods/Digilent-Pmod_%20Interface_Specification.pdf" rel="ugc nofollow noopener">here</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="device_driver_support">Device Driver Support</h2>
+<div class="level2">
+
+<p>
+There are two device driver solutions that are provided for controlling the <strong>EVAL-ADXL355-PMDZ</strong>:
+</p>
+<ol>
+<li class="level1 node"><div class="li"> <strong>ADXL355 no-<abbr title="Operating System">OS</abbr> Driver</strong></div>
+<ul>
+<li class="level3"><div class="li"> The <strong><a href="/resources/tools-software/uc-drivers/adxl355" class="wikilink1" title="resources:tools-software:uc-drivers:adxl355" data-wiki-id="resources:tools-software:uc-drivers:adxl355">ADXL355 no-OS driver</a></strong> is used in bare-metal applications, typically running on low-power, embedded microcontrollers. </div>
+</li>
+<li class="level3 node"><div class="li"> The <strong><a href="/resources/eval/user-guides/eval-adxl355-pmdz/no-os-setup" class="wikilink1" title="resources:eval:user-guides:eval-adxl355-pmdz:no-os-setup" data-wiki-id="resources:eval:user-guides:eval-adxl355-pmdz:no-os-setup">ADXL355 no-OS Example Project</a></strong> uses the ADXL355 no-<abbr title="Operating System">OS</abbr> driver and has several configuration options.</div>
+<ul>
+<li class="level4"><div class="li"> The tinyiiod configuration emulates the Linux IIO framework through the <a href="https://github.com/analogdevicesinc/libtinyiiod" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/libtinyiiod">tinyiiod daemon library</a>. The application communicates with the host computer via the serial backend, over a <abbr title="Universal Serial Bus">USB</abbr>-<abbr title="universal asynchronous receiver/transmitter">UART</abbr> physical connection. This facilitates rapid application development on a host computer, independent from embedded code development. This is the configuration that will be referenced in the no-<abbr title="Operating System">OS</abbr> platform setups below.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <strong>ADXL355 Linux Driver</strong></div>
+<ul>
+<li class="level3"><div class="li"> The <strong><a href="/resources/tools-software/linux-drivers/iio-accelerometer/adxl355" class="wikilink1" title="resources:tools-software:linux-drivers:iio-accelerometer:adxl355" data-wiki-id="resources:tools-software:linux-drivers:iio-accelerometer:adxl355">ADXL355 Linux driver</a></strong> is used in applications running the Linux operating system, typically on larger processors and SoC devices.</div>
+</li>
+<li class="level3"><div class="li"> The ADXL355 Linux driver uses the Industrial Input/Output (IIO) framework, greatly simplifying the development of application code via the cross-platform Libiio library, which is written in C and includes bindings for Python, MATLAB, C#, and other languages. Application code can run directly on the platform board, communicating with the device over the local backend, or from a remote host over the network or <abbr title="Universal Serial Bus">USB</abbr> backends.<br/>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+
+<p>
+<br/>
+
+</p>
+
+</div>
+
+<h2 class="sectionedit8" id="system_setup_using_adicup3029">System Setup Using ADICUP3029</h2>
+<div class="level2">
+
+<p>
+The <strong> EVAL-ADXL355-PMDZ </strong> can be used with <a href="/resources/eval/user-guides/eval-adicup3029" class="wikilink1" title="resources:eval:user-guides:eval-adicup3029" data-wiki-id="resources:eval:user-guides:eval-adicup3029">ADICUP3029</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="demo_requirements">Demo Requirements</h3>
+<div class="level3">
+
+<p>
+The following is the list of items needed in order to replicate this demo.
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <strong> Hardware </strong></div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://www.analog.com/EVAL-ADICUP3029" class="interwiki iw_adi" title="https://www.analog.com/EVAL-ADICUP3029">EVAL-ADICUP3029</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.analog.com/EVAL-ADXL355-PMDZ" class="interwiki iw_adi" title="https://www.analog.com/EVAL-ADXL355-PMDZ">EVAL-ADXL355-PMDZ</a> </div>
+</li>
+<li class="level2"><div class="li"> Micro-<abbr title="Universal Serial Bus">USB</abbr> to <abbr title="Universal Serial Bus">USB</abbr> Cable</div>
+</li>
+<li class="level2"><div class="li"> PC or Laptop with <abbr title="Universal Serial Bus">USB</abbr> Port</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> <strong> Software </strong></div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip">ADuCM3029_demo_ADXL355.hex</a></div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="wrap_center wrap_round wrap_info plugin_wrap" style="width: 80%;">
+<p>
+There are two basic ways to program the ADICUP3029 with the software for the ADXL355.
+</p>
+<ol>
+<li class="level1 node"><div class="li"> Dragging and Dropping the .Hex to the Daplink drive</div>
+<ol>
+<li class="level2"><div class="li"> Using the drag and drop method, the software is going to be a version that Analog Devices creates for testing and evaluation purposes.  This is the <strong>EASIEST</strong> way to get started with the reference design.</div>
+</li>
+</ol>
+</li>
+<li class="level1 node"><div class="li"> Building, Compiling, and Debugging using CCES</div>
+<ol>
+<li class="level2"><div class="li"> Importing the project into <a href="https://www.analog.com/en/design-center/evaluation-hardware-and-software/software/adswt-cces.html" class="interwiki iw_adi" title="https://www.analog.com/en/design-center/evaluation-hardware-and-software/software/adswt-cces.html">CrossCore Embedded Studio</a> is going to allow you to change parameters and customize the software to your application, but will be a bit more advanced and will require you to download the CrossCore toolchain.</div>
+</li>
+</ol>
+</li>
+</ol>
+</div><div class="wrap_center wrap_round wrap_download plugin_wrap" style="width: 80%;">
+<p>
+The software for the <strong>ADICUP3029_ADXL355</strong> demo can be found here:
+</p>
+
+<p>
+Prebuilt ADXL355 Hex File
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip">ADuCM3029_demo_ADXL355.hex</a></div>
+</li>
+</ul>
+
+<p>
+Complete ADXL355 Source Files
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://github.com/analogdevicesinc/no-OS/tree/master/projects/eval-adxl355-pmdz" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/no-OS/tree/master/projects/eval-adxl355-pmdz">ADuCM3029_demo_ADXL355 Source Code</a> </div>
+</li>
+</ul>
+</div>
+</div>
+
+<h3 class="sectionedit14" id="setting_up_the_hardware">Setting up the Hardware</h3>
+<div class="level3">
+
+<p>
+1. Connect <strong>EVAL-ADXL355-PMDZ</strong> board at connector <strong>P9</strong> of the <strong>EVAL-ADICUP3029</strong>.
+</p>
+
+<p>
+2. Connect a micro-<abbr title="Universal Serial Bus">USB</abbr> cable to the P10 connector of the EVAL-ADICUP3029 and connect it to a computer. The final setup should look similar to the picture below.
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_adicup3029_connections.jpg?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_adicup3029_connections.jpg"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_adicup3029_connections.jpg?w=900&amp;tok=4c566e" class="mediacenter" loading="lazy" title="ASCII" alt="ASCII" width="900" /></a>
+<span class="wrap_center " style="width: 22%;"> <em><span style="color: #000000">Figure 5. Hardware Setup</span></em> </span>
+</p>
+
+<p>
+3. Make sure the following switches are as shown from the table below.
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/cn0552/switch_config.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:cn0552:switch_config.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/cn0552/switch_config.png?w=900&amp;tok=d6135a" class="mediacenter" loading="lazy" alt="" width="900" /></a> <span class="wrap_center " style="width: 30%;"> <em><span style="color: #000000">Figure 6. Switch Confuguration</span></em> </span>
+</p>
+
+<p>
+4. From your PC, open My Computer and look for the DAPLINK drive, if you see this then the drivers are complete and correct. <a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/cn0552/daplink.jpg?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:cn0552:daplink.jpg"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/cn0552/daplink.jpg?w=300&amp;tok=c4480f" class="mediacenter" loading="lazy" title=" " alt=" " width="300" /></a> <span class="wrap_center " style="width: 20%;">
+<em><span style="color: #000000">Figure 7. DAPLINK Drive</span></em>
+</span>
+</p>
+
+<p>
+3. Simply extract the provided zip file. Once extracted, you will see the pre-built hex file for the ADXL355 demo. Then drag and drop this Hex file to the DAPLINK drive and your ADICUP3029 board will be programmed. The DS2 (red) LED will blink rapidly.
+</p>
+
+<p>
+4. The DS2 will stop blinking and will stay ON once the programming is done.
+</p>
+
+<p>
+5. For demo purposes, place the board horizontally such that the Z-axis reading will be approximately 9.8 <abbr title="milli (prefix, as in mW, mA, mV, ms)">m</abbr>/s^2.
+<br/>
+
+</p>
+
+</div>
+
+<h2 class="sectionedit15" id="system_setup_using_max32655fthr_or_max32650fthr">System Setup Using MAX32655FTHR or MAX32650FTHR</h2>
+<div class="level2">
+
+<p>
+The <strong> EVAL-ADXL355-PMDZ </strong> can be used with the MAX32655FTHR or MAX32650FTHR.
+</p>
+
+</div>
+
+<h3 class="sectionedit16" id="demo_requirements1">Demo Requirements</h3>
+<div class="level3">
+
+<p>
+The following is the list of items needed in order to replicate this demo.
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <strong> Hardware </strong></div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://www.maximintegrated.com/MAX32655FTHR" class="interwiki iw_maxim" title="https://www.maximintegrated.com/MAX32655FTHR">MAX32655FTHR</a> or <a href="https://www.maximintegrated.com/MAX32650FTHR" class="interwiki iw_maxim" title="https://www.maximintegrated.com/MAX32650FTHR">MAX32650FTHR</a> with <a href="https://www.maximintegrated.com/MAX32625PICO" class="interwiki iw_maxim" title="https://www.maximintegrated.com/MAX32625PICO">MAX32625PICO</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.analog.com/FTHR-PMD-INTZ" class="interwiki iw_adi" title="https://www.analog.com/FTHR-PMD-INTZ">FTHR-PMD-INTZ</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.analog.com/EVAL-ADXL355-PMDZ" class="interwiki iw_adi" title="https://www.analog.com/EVAL-ADXL355-PMDZ">EVAL-ADXL355-PMDZ</a> </div>
+</li>
+<li class="level2"><div class="li"> Micro-<abbr title="Universal Serial Bus">USB</abbr> to <abbr title="Universal Serial Bus">USB</abbr> Cable</div>
+</li>
+<li class="level2"><div class="li"> 10-pin ribbon cable</div>
+</li>
+<li class="level2"><div class="li"> PC or Laptop with <abbr title="Universal Serial Bus">USB</abbr> Port</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> <strong> Software </strong></div>
+<ul>
+<li class="level2 node"><div class="li"> For MAX32655FTHR, </div>
+<ul>
+<li class="level3"><div class="li"> Pre-built hex file: <a href="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip"> MAX32655FTHR_demo_ADXL355.hex</a></div>
+</li>
+<li class="level3"><div class="li"> PuTTY or other similar software</div>
+</li>
+</ul>
+</li>
+<li class="level2 node"><div class="li"> For MAX32650FTHR, </div>
+<ul>
+<li class="level3"><div class="li"> Maxim Micros SDK <a href="https://www.maximintegrated.com/en/design/software-description.html/swpart=SFW0010820A" class="interwiki iw_maxim" title="https://www.maximintegrated.com/en/design/software-description.html/swpart=SFW0010820A">en/design/software-description.html/swpart=SFW0010820A</a></div>
+</li>
+<li class="level3"><div class="li"> Pre-built hex file: <a href="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip"> MAX32650FTHR_demo_ADXL355.hex</a></div>
+</li>
+<li class="level3"><div class="li"> PuTTY or other similar software</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit17" id="max32655fthr">MAX32655FTHR</h3>
+<div class="level3">
+
+<p>
+1. Connect <strong>MAX32655FTHR</strong> with the <strong>FTHR-PMOD-INTZ</strong>.
+Note that MAXIM feather board should have stacking headers for feather board where the interposer board will be connected.
+</p>
+
+<p>
+2. Connect <strong> EVAL-ADXL355-PMDZ </strong> to the <strong> FTHR-PMOD-INTZ </strong>.
+</p>
+
+<p>
+3. Power up the <strong>MAX32655FTHR</strong> by connecting it to your laptop using micro-<abbr title="Universal Serial Bus">USB</abbr>
+</p>
+
+<p>
+4. Open the file explorer. Drag-and-drop the pre-built hex file to the DAPLINK. 
+If the transfer was not completed, update the firmware for the DAPLINK. 
+Follow the steps here: <a href="https://github.com/MaximIntegrated/max32625pico-firmware-images/" class="urlextern" target="_blank" title="https://github.com/MaximIntegrated/max32625pico-firmware-images/" rel="ugc nofollow noopener">https://github.com/MaximIntegrated/max32625pico-firmware-images/</a>
+</p>
+
+<p>
+5. Open PuTTY or other similar software. Check the Device Manager to set correct COM for the MAX32655FTHR. Set baud rate according to hex file used:
+</p>
+<div class="table sectionedit18"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Hex file  </th><th class="col1"> Baud rate </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> eval-adxl355-pmdz_maxim_dummy_example_max32655_adxl355  </td><td class="col1 centeralign">  57600  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> eval-adxl355-pmdz_maxim_iio_example_max32655_adxl355  </td><td class="col1 centeralign">  115200  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> eval-adxl355-pmdz_maxim_iio_trigger_example_max32655_adxl355.hex  </td><td class="col1 centeralign">  115200  </td>
+	</tr>
+</table></div>
+
+<p>
+The final setup should look similar to the picture below.
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_max32655fthr_connections.jpg?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_max32655fthr_connections.jpg"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_max32655fthr_connections.jpg?w=450&amp;tok=6bdfe0" class="mediacenter" loading="lazy" title="ASCII" alt="ASCII" width="450" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit19" id="max32650fthr">MAX32650FTHR</h3>
+<div class="level3">
+
+<p>
+1. Using a 10-pin ribbon cable, connect the <strong>MAX32625PICO</strong> to the <strong>MAX32650FTHR</strong>. 
+<a href="/_detail/resources/eval/max31855/max32650fthr_with_pico.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:max31855:max32650fthr_with_pico.png"><img src="/_media/resources/eval/max31855/max32650fthr_with_pico.png?w=400&amp;tok=f7d567" class="mediacenter" loading="lazy" alt="" width="400" /></a>
+2. Connect <strong>MAX32650FTHR</strong> to the <strong>FTHR-PMOD-INTZ</strong>.
+</p>
+
+<p>
+3. Connect <strong> EVAL-ADXL355-PMDZ </strong> to the <strong> FTHR-PMOD-INTZ </strong>.
+</p>
+<div class="table sectionedit20"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  MAX31855PMB1      </th><th class="col1 centeralign">  FTHR-PMOD-INTZ <abbr title="Serial Peripheral Interface">SPI</abbr>       </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  Pin 1 (Chip Enable)    </td><td class="col1 centeralign">  CS  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">  Pin 2 (Not connected)    </td><td class="col1 centeralign">  MOSI  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">  Pin 3 (MISO)  </td><td class="col1 centeralign">  MISO    </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">  Pin 4 (SCK)    </td><td class="col1 centeralign">  SCK    </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 centeralign">  Pin 5 (GND)  </td><td class="col1 centeralign">  GND   </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 centeralign">  Pin 6 (VCC)    </td><td class="col1 centeralign">  VCC    </td>
+	</tr>
+</table></div>
+
+<p>
+The final setup should look similar as shown below.
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/max32650fthr_adxl355pmod.jpg?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:max32650fthr_adxl355pmod.jpg"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/max32650fthr_adxl355pmod.jpg?w=450&amp;tok=51806b" class="mediacenter" loading="lazy" title="max32650fthr_adxl355pmod.jpg" alt="max32650fthr_adxl355pmod.jpg" width="450" /></a>
+</p>
+
+<p>
+4. Power up the <strong>MAX32650FTHR</strong> by connecting it to your laptop using micro-<abbr title="Universal Serial Bus">USB</abbr>. Connect <strong>MAX32625PICO</strong> to your laptop as well.
+</p>
+
+<p>
+5. Open the file explorer. Drag-and-drop the pre-built hex file to the DAPLINK. 
+If the transfer was not completed, update the firmware for the DAPLINK. 
+Follow the steps here: <a href="https://github.com/MaximIntegrated/max32625pico-firmware-images/" class="urlextern" target="_blank" title="https://github.com/MaximIntegrated/max32625pico-firmware-images/" rel="ugc nofollow noopener">https://github.com/MaximIntegrated/max32625pico-firmware-images/</a>
+</p>
+
+<p>
+6. Open PuTTY or other similar software. Check the Device Manager to set the correct COM port for the <strong>MAX32650FTHR</strong>. 
+</p>
+
+<p>
+7. Set baud rate according to the hex file used available in <a href="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip" class="interwiki iw_repo" title="https://github.com/analogdevicesinc/no-OS/releases/download/Latest/eval-adxl355-pmdz.zip"> MAX32650FTHR_demo_ADXL355.hex</a>:
+</p>
+<div class="table sectionedit21"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Hex file  </th><th class="col1"> Baud rate </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> eval-adxl355-pmdz_maxim_dummy_example_max32650_adxl355  </td><td class="col1 centeralign">  57600  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> eval-adxl355-pmdz_maxim_iio_example_max32650_adxl355  </td><td class="col1 centeralign">  115200  </td>
+	</tr>
+</table></div>
+
+<p>
+The expected output viewed in the PuTTY is shown below.
+<img src="/_media/resources/eval/user-guides/circuits-from-the-lab/fthr/basic_putty_adxl355.png?w=600&amp;tok=75a055" class="mediacenter" loading="lazy" alt="" width="600" />
+<br/>
+
+</p>
+
+</div>
+
+<h2 class="sectionedit22" id="system_setup_using_raspberry_pi">System Setup Using Raspberry Pi</h2>
+<div class="level2">
+
+<p>
+The <strong> EVAL-ADXL355-PMDZ </strong> can be used with a Raspberry Pi.
+</p>
+
+</div>
+
+<h3 class="sectionedit23" id="demo_requirements2">Demo Requirements</h3>
+<div class="level3">
+
+<p>
+The following is a list of items needed in order to replicate this demo.
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <strong>Hardware</strong></div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://www.analog.com/ADXL355" class="interwiki iw_adi" title="https://www.analog.com/ADXL355">EVAL-ADXL355-PMDZ</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.analog.com/PMD-RPI-INTZ" class="interwiki iw_adi" title="https://www.analog.com/PMD-RPI-INTZ">PMOD to Raspberry Pi Adapter (PMD-RPI-INTZ)</a></div>
+</li>
+<li class="level2"><div class="li"> Raspberry PI Zero, Zero W, 3B+, or 4</div>
+</li>
+<li class="level2"><div class="li"> 16GB (or larger) Class 10 (or faster) micro-<abbr title="Secure Digital">SD</abbr> card</div>
+</li>
+<li class="level2"><div class="li"> 5Vdc, 2.5A power supply with micro <abbr title="Universal Serial Bus">USB</abbr> connector (<abbr title="Universal Serial Bus">USB</abbr>-C power supply for Raspberry Pi 4)</div>
+</li>
+<li class="level2 node"><div class="li"> User interface setup (choose one):</div>
+<ul>
+<li class="level3"><div class="li"> HDMI monitor, keyboard, mouse plugged directly into Raspberry Pi</div>
+</li>
+<li class="level3"><div class="li"> Host Windows/Linux/Mac computer on the same network as Raspberry Pi</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> <strong>Software</strong></div>
+<ul>
+<li class="level2"><div class="li"> <a href="/resources/tools-software/linux-software/kuiper-linux" class="wikilink1" title="resources:tools-software:linux-software:kuiper-linux" data-wiki-id="resources:tools-software:linux-software:kuiper-linux">Kuiper Linux Image</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit24" id="loading_image_on_sd_card">Loading Image on SD Card</h3>
+<div class="level3">
+
+<p>
+In order to boot the Raspberry Pi and control the <strong>EVAL-ADXL355-PMDZ</strong>, you will need to install <abbr title="Analog Devices, Inc.">ADI</abbr> Kuiper Linux on an <abbr title="Secure Digital">SD</abbr> card. Complete instructions, including where to download the <abbr title="Secure Digital">SD</abbr> card image, how to write it to the <abbr title="Secure Digital">SD</abbr> card, and how to configure the system are provided on the <strong><a href="/resources/tools-software/linux-software/kuiper-linux" class="wikilink1" title="resources:tools-software:linux-software:kuiper-linux" data-wiki-id="resources:tools-software:linux-software:kuiper-linux">Kuiper Linux page</a></strong>.
+</p>
+
+</div>
+
+<h3 class="sectionedit25" id="configuring_the_sd_card">Configuring the SD Card</h3>
+<div class="level3">
+
+<p>
+Follow the configuration procedure under <strong>Configuring the <abbr title="Secure Digital">SD</abbr> Card for Raspberry Pi Projects</strong> on the <a href="/resources/tools-software/linux-software/kuiper-linux" class="wikilink1" title="resources:tools-software:linux-software:kuiper-linux" data-wiki-id="resources:tools-software:linux-software:kuiper-linux">Kuiper Linux</a> page, substituting the following lines in <strong>config.txt</strong>:
+</p>
+<pre class="code">dtoverlay=rpi-adxl355</pre>
+
+</div>
+
+<h3 class="sectionedit26" id="setting_up_the_hardware1">Setting up the Hardware</h3>
+<div class="level3">
+
+<p>
+To set up the circuit for evaluation, consider the following steps:
+</p>
+<ol>
+<li class="level1"><div class="li"> Connect the <strong>P9</strong> of the <strong>PMOD to Raspberry Pi Interposer</strong> board at the male header <abbr title="General Purpose Input/Output">GPIO</abbr> pin connector of the <strong>Raspberry Pi</strong> as shown below. <a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/cn0552/interposer.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:cn0552:interposer.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/cn0552/interposer.png?w=500&amp;tok=e1d138" class="mediacenter" loading="lazy" title=" " alt=" " width="500" /></a></div>
+</li>
+<li class="level1"><div class="li"> Connect the <strong> <a href="https://www.analog.com/EVAL-ADXL355-PMDZ" class="interwiki iw_adi" title="https://www.analog.com/EVAL-ADXL355-PMDZ">EVAL-ADXL355-PMDZ</a> </strong> on the PMOD to Raspberry Pi Interposer board either via Port P1 or P2. <a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_rpi_connections.jpg?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_rpi_connections.jpg"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_rpi_connections.jpg?w=600&amp;tok=f730bf" class="mediacenter" loading="lazy" title=" " alt=" " width="600" /></a></div>
+</li>
+<li class="level1"><div class="li"> Burn the <abbr title="Secure Digital">SD</abbr> card with the proper <abbr title="Analog Devices, Inc.">ADI</abbr> Kuiper Linux image. Insert the burned <abbr title="Secure Digital">SD</abbr> card on the designated slot on the RPi.</div>
+</li>
+<li class="level1"><div class="li"> Connect the system to a monitor using an HDMI cable through the mini HDMI connector on the RPi.</div>
+</li>
+<li class="level1"><div class="li"> Connect a <abbr title="Universal Serial Bus">USB</abbr> keyboard and mouse to the RPi through the <abbr title="Universal Serial Bus">USB</abbr> ports.</div>
+</li>
+<li class="level1"><div class="li"> Power on the RPi board by plugging in a 5V power supply with a micro-<abbr title="Universal Serial Bus">USB</abbr> connector. The final setup should look similar to the picture below. <a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/eval-adxl355-pmdz_overall_setup.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:eval-adxl355-pmdz_overall_setup.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/eval-adxl355-pmdz_overall_setup.png?w=600&amp;tok=4890d1" class="mediacenter" loading="lazy" alt="" width="600" /></a></div>
+</li>
+</ol>
+
+<p>
+<br/>
+
+</p>
+
+</div>
+
+<h2 class="sectionedit27" id="system_setup_using_eval-adicup360_deprecated">System Setup Using EVAL-ADICUP360 (DEPRECATED)</h2>
+<div class="level2">
+
+<p>
+The original software example for the ADXL355 was developed on the ADICUP360 platform, and is a simple, terminal-based command line interface. This type of example program is being deprecated in favor of tinyiiod-based servers for embedded platforms, however this example is still available for reference here: <strong><a href="/resources/eval/user-guides/eval-adicup360/reference_designs/demo_adxl355" class="wikilink1" title="resources:eval:user-guides:eval-adicup360:reference_designs:demo_adxl355" data-wiki-id="resources:eval:user-guides:eval-adicup360:reference_designs:demo_adxl355">ADXL355 Accelerometer PMOD Demo on ADICUP360</a></strong>.
+</p>
+<div class="plugin_note noteimportant">In order to use the <strong>EVAL-ADXL355-PMDZ</strong> with the <strong>ADICUP360</strong>, the user <strong>MUST</strong> remove resistor R1.  The ADXL355 holds the DATA_RDY pin low during powerup, and that holds the EVAL-ADICUP360 in <abbr title="universal asynchronous receiver/transmitter">UART</abbr> boot mode. When this mode is active the MCU will stay in standby mode till it receives the proper command, effectively making the ADuCM360 not run.  So to avoid this, please remove R1 and note that you can&#039;t use the DATA_RDY pin with the ADICUP360 
+</div><div class="plugin_note noteclassic">Note that the libiio, iio oscilloscope, and pyadi-iio sections below do NOT apply to this example.
+
+</div>
+<p>
+<br/>
+
+</p>
+
+</div>
+
+<h2 class="sectionedit28" id="application_software_all_platforms">Application Software (All Platforms)</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit29" id="hardware_connection">Hardware Connection</h3>
+<div class="level3">
+
+<p>
+The Libiio is a library used for interfacing with IIO devices and is required to be installed on your computer.
+</p>
+<div class="wrap_center wrap_round wrap_download plugin_wrap" style="width: 60%;">
+<p>
+Download and install the latest <a href="https://github.com/analogdevicesinc/libiio/releases" class="urlextern" target="_blank" title="https://github.com/analogdevicesinc/libiio/releases" rel="ugc nofollow noopener">Libiio package</a> on your machine. 
+</p>
+</div>
+<p>
+To be able to connect your device, the software must be able to create a context. The context creation in the software depends on the backend used to connect to the device as well as the platform where the EVAL-ADXL355-PMDZ is attached. Two platforms are currently supported for the EVAL-ADXL355-PMDZ: Raspberry Pi using the <abbr title="Analog Devices, Inc.">ADI</abbr> Kuiper Linux and the ADICUP3029 running the no-<abbr title="Operating System">OS</abbr> ADXL355 demo project. The user needs to supply a <strong><abbr title="Uniform Resource Identifier">URI</abbr></strong> which will be used in the context creation.
+</p>
+
+<p>
+The <a href="/resources/tools-software/linux-software/libiio/iio_info" class="wikilink1" title="resources:tools-software:linux-software:libiio:iio_info" data-wiki-id="resources:tools-software:linux-software:libiio:iio_info">iio_info</a> command is a part of the libIIO package that reports all IIO attributes. 
+</p>
+
+<p>
+Upon installation, simply enter the command on the terminal command line to access it.
+<br/>
+
+</p>
+
+</div>
+
+<h4 id="for_rpi_direct_local_access">For RPI Direct Local Access:</h4>
+<div class="level4">
+<pre class="code">iio_info</pre>
+
+</div>
+
+<h4 id="for_windows_machine_connected_to_raspberry_pi">For Windows machine connected to Raspberry Pi:</h4>
+<div class="level4">
+<pre class="code">iio_info -u ip:&lt;ip address of your ip&gt;</pre>
+
+<p>
+Example:
+</p>
+<ul>
+<li class="level1"><div class="li"> If your Raspberry Pi has the IP address 192.168.1.7, you have to use <em>iio_info -u ip::192.168.1.7</em> as your <abbr title="Uniform Resource Identifier">URI</abbr></div>
+</li>
+</ul>
+<div class="plugin_note noteclassic">Do note that the Windows machine and the RPI board should be connected to the same network in order for the machine to detect the device.
+
+</div>
+</div>
+
+<h4 id="for_windows_machine_connected_to_adicup3029">For Windows machine connected to ADICUP3029:</h4>
+<div class="level4">
+<pre class="code">iio_info -u serial:&lt;serial port&gt;</pre>
+
+<p>
+Examples:
+</p>
+<ul>
+<li class="level1"><div class="li"> In a Windows machine, you can check the port of your ADICUP3029 via Device Manager in the Ports (COM &amp; LPT) section. If your device is in COM4, you have to use <em>iio_info -u serial:COM4</em> as your <abbr title="Uniform Resource Identifier">URI</abbr>.</div>
+</li>
+<li class="level3"><div class="li"> In a Unix-based machine, you will see it under the /dev/ directory in this format “ttyUSBn”, where n is a number depending on how many serial <abbr title="Universal Serial Bus">USB</abbr> devices attached. If you see that your device is ttyUSB0, you have to use serial:/dev/ttyUSB0 as your <abbr title="Uniform Resource Identifier">URI</abbr>.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit32" id="iio_commands">IIO Commands</h3>
+<div class="level3">
+
+<p>
+There are different commands that can be used to manage and control the device being used. The <a href="/resources/tools-software/linux-software/libiio/iio_attr" class="wikilink1" title="resources:tools-software:linux-software:libiio:iio_attr" data-wiki-id="resources:tools-software:linux-software:libiio:iio_attr">iio_attr</a> command reads and writes IIO attributes.
+</p>
+<pre class="code">analog@analog:~$ iio_attr [OPTION]...</pre>
+
+<p>
+Example:
+</p>
+<ul>
+<li class="level1"><div class="li"> To look at the context attributes, enter this code on the terminal:</div>
+</li>
+</ul>
+<pre class="code">analog@analog:~$ iio_attr -a -C</pre>
+
+<p>
+<br/>
+
+</p>
+
+<p>
+The <a href="/resources/tools-software/linux-software/libiio/iio_reg" class="wikilink1" title="resources:tools-software:linux-software:libiio:iio_reg" data-wiki-id="resources:tools-software:linux-software:libiio:iio_reg">iio_reg</a> command reads or writes <abbr title="Serial Peripheral Interface">SPI</abbr> or <abbr title="Inter-Integrated Circuit">I2C</abbr> registers in an IIO device. This is generally not needed for end applications, but can be useful in debugging drivers. Note that you need to specify a context using the <em>-u</em> qualifier when you are not directly accessing the device via RPI or when you are using the ADICUP3029 platform.
+</p>
+<pre class="code">analog@analog:~$ iio_reg -u &lt;context&gt; &lt;device&gt; &lt;register&gt; [&lt;value&gt;]</pre>
+
+<p>
+Example:
+</p>
+<ul>
+<li class="level1"><div class="li"> To read the device ID (register = 0x02) of an ADXL355 interfaced via RPI from a Windows machine, enter the following code on the terminal:</div>
+</li>
+</ul>
+<pre class="code">iio_reg -u ip:&lt;ip address&gt; adxl355 0x02</pre>
+
+<p>
+<br/>
+
+</p>
+
+</div>
+
+<h3 class="sectionedit33" id="iio_oscilloscope">IIO Oscilloscope</h3>
+<div class="level3">
+<div class="plugin_note noteimportant">Make sure to download/update to the latest version of IIO Oscilloscope found on this link<a href="https://github.com/analogdevicesinc/iio-oscilloscope/releases" class="urlextern" target="_blank" title="https://github.com/analogdevicesinc/iio-oscilloscope/releases" rel="ugc nofollow noopener">https://github.com/analogdevicesinc/iio-oscilloscope/releases</a>
+</div><ol>
+<li class="level1"><div class="li"> Once done with the installation or an update of the latest IIO Oscilloscope, open the application.  The user needs to supply a <abbr title="Uniform Resource Identifier">URI</abbr> which will be used in the context creation of the IIO Oscilloscope and the instructions can be seen from the previous section.</div>
+</li>
+<li class="level1"><div class="li"> Press refresh to display available IIO Devices, once ADXL355 appeared, press connect.</div>
+</li>
+</ol>
+
+<p>
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_iio_osc.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_iio_osc.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_iio_osc.png?w=300&amp;tok=ed6633" class="mediacenter" loading="lazy" alt="" width="300" /></a>
+</p>
+
+</div>
+
+<h4 id="debug_panel">Debug Panel</h4>
+<div class="level4">
+
+<p>
+Below is the Debug panel of ADXL355 wherein you can directly access the attributes of the device.
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_iio_debug.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_iio_debug.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_iio_debug.png?w=400&amp;tok=d64742" class="mediacenter" loading="lazy" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h4 id="dmm_panel">DMM Panel</h4>
+<div class="level4">
+
+<p>
+Access the DMM panel to see the instantaneous reading of the x, y and z axis acceleration readings and the device temperature. 
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_iio_dmm_panel.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_iio_dmm_panel.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_iio_dmm_panel.png?w=400&amp;tok=0833d6" class="mediacenter" loading="lazy" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit34" id="pyadi-iio">PyADI-IIO</h3>
+<div class="level3">
+
+<p>
+<a href="/resources/tools-software/linux-software/pyadi-iio" class="wikilink1" title="resources:tools-software:linux-software:pyadi-iio" data-wiki-id="resources:tools-software:linux-software:pyadi-iio">PyADI-IIO</a> is a python abstraction module for <abbr title="Analog Devices, Inc.">ADI</abbr> hardware with IIO drivers to make them easier to use. This module provides device-specific APIs built on top of the current libIIO python bindings. These interfaces try to match the driver naming as much as possible without the need to understand the complexities of libIIO and IIO.<br/>
+
+</p>
+
+<p>
+Follow the step-by-step procedure on how to install, configure, and set up PYADI-IIO and install the necessary packages/modules needed by referring to this <a href="/resources/tools-software/linux-software/pyadi-iio" class="wikilink1" title="resources:tools-software:linux-software:pyadi-iio" data-wiki-id="resources:tools-software:linux-software:pyadi-iio">link</a>.
+</p>
+
+</div>
+
+<h4 id="running_the_example">Running the example</h4>
+<div class="level4">
+
+<p>
+After installing and configuring PYADI-IIO in your machine, you are now ready to run python script examples. In our case, run the <strong>adxl355_example.py</strong> found in the examples folder.
+</p>
+
+</div>
+
+<h4 id="for_rpi">For RPi</h4>
+<div class="level4">
+<pre class="code"> D:\pyadi-iio\examples&gt;python adxl355_example.py </pre>
+
+<p>
+Press enter and you will get these readings.
+<a href="/_detail/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_python_example_rpi.png?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz" class="media" title="resources:eval:user-guides:circuits-from-the-lab:eval-adxl355-pmdz:adxl355_python_example_rpi.png"><img src="/_media/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz/adxl355_python_example_rpi.png?w=600&amp;tok=393d16" class="mediacenter" loading="lazy" alt="" width="600" /></a>
+</p>
+<div class="wrap_round wrap_download plugin_wrap" style="width: 80%;">
+<p>
+Github link for the python sample script: 
+<a href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/adxl355_example.py" class="urlextern" target="_blank" title="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/adxl355_example.py" rel="ugc nofollow noopener">ADXL355 Python Example</a>
+</p>
+</div>
+</div>
+
+<h4 id="for_no-os">For No-OS</h4>
+<div class="level4">
+<pre class="code"> D:\pyadi-iio\examples&gt;python adxl355_no_os_example.py serial:&lt;serial port&gt;,57600</pre>
+
+<p>
+In a Windows machine, you can check the port of your MAX32655FTHR and MAX32650FTHR via Device Manager in the Ports (COM &amp; LPT) section. If your device is in COM8, you have to use python pyadi-iio/examples/adxl355_no_os_example.py serial:COM8,57600.
+</p>
+
+<p>
+Press enter and you will get these readings.
+</p>
+
+<p>
+<img src="/_media/resources/eval/user-guides/circuits-from-the-lab/fthr/no_os_adxl355_pyadi.png?w=600&amp;tok=b43b6e" class="mediacenter" loading="lazy" alt="" width="600" />
+</p>
+<div class="wrap_round wrap_download plugin_wrap" style="width: 80%;">
+<p>
+Github link for the python sample script: 
+<a href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/adxl355_no_os_example.py" class="urlextern" target="_blank" title="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/adxl355_no_os_example.py" rel="ugc nofollow noopener">ADXL355 Python Example</a>
+</p>
+</div>
+</div>
+
+<h2 class="sectionedit39" id="more_information_and_useful_links">More information and useful links</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.analog.com/EVAL-ADXL355-PMDZ" class="interwiki iw_adi" title="https://www.analog.com/EVAL-ADXL355-PMDZ">EVAL-ADXL355-PMDZ Product Page</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.analog.com/ADXL355" class="interwiki iw_adi" title="https://www.analog.com/ADXL355">ADXL355 Product Page</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://github.com/analogdevicesinc/no-OS/tree/master/projects/eval-adxl355-pmdz" class="urlextern" target="_blank" title="https://github.com/analogdevicesinc/no-OS/tree/master/projects/eval-adxl355-pmdz" rel="ugc nofollow noopener">EVAL-ADXL355-PMDZ no-OS projects</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit40" id="schematic_pcb_layout_bill_of_materials">Schematic, PCB Layout, Bill of Materials</h2>
+<div class="level2">
+<div class="wrap_round wrap_download plugin_wrap" style="width: 80%;">
+<p>
+<a href="https://www.analog.com/media/en/evaluation-documentation/evaluation-design-files/eval-adxl355-pmdz-designsupport.zip" class="interwiki iw_adi" title="https://www.analog.com/media/en/evaluation-documentation/evaluation-design-files/eval-adxl355-pmdz-designsupport.zip">EVAL-ADXL355-PMDZ Design &amp; Integration Files</a>
+</p>
+<ul>
+<li class="level1"><div class="li"> Schematics</div>
+</li>
+<li class="level1"><div class="li"> Bill of Materials</div>
+</li>
+<li class="level1"><div class="li"> Gerber Files </div>
+</li>
+<li class="level1"><div class="li"> Assembly Files</div>
+</li>
+<li class="level1"><div class="li"> Allegro Layout File</div>
+</li>
+</ul>
+</div>
+</div>
+
+<h2 class="sectionedit43" id="additional_information">Additional Information</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://github.com/analogdevicesinc/pyadi-iio" class="urlextern" target="_blank" title="https://github.com/analogdevicesinc/pyadi-iio" rel="ugc nofollow noopener">pyADI-IIO</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/resources/tools-software/linux-software/pyadi-iio" class="wikilink1" title="resources:tools-software:linux-software:pyadi-iio" data-wiki-id="resources:tools-software:linux-software:pyadi-iio">PyADI-IIO Installation Guide</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/resources/tools-software/linux-software/iio_oscilloscope" class="wikilink1" title="resources:tools-software:linux-software:iio_oscilloscope" data-wiki-id="resources:tools-software:linux-software:iio_oscilloscope">IIO Oscilloscope Installation Guide</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/resources/tools-software/linux-software/kuiper-linux" class="wikilink1" title="resources:tools-software:linux-software:kuiper-linux" data-wiki-id="resources:tools-software:linux-software:kuiper-linux">Kuiper Linux</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit44" id="hardware_registration">Hardware Registration</h2>
+<div class="level2">
+<div class="wrap_round wrap_tip plugin_wrap" style="width: 80%;">
+<p>
+Receive software update notifications, documentation updates, view the latest videos, and more when you register your hardware. <a href="https://my.analog.com/en/app/registration/hardware/EVAL-ADXL355-PMDZ?&amp;v=Rev B" class="interwiki iw_reg" title="https://my.analog.com/en/app/registration/hardware/EVAL-ADXL355-PMDZ?&amp;v=Rev B">Register</a> to receive all these great benefits and more!
+</p>
+</div>
+</div>
+                        <!-- wikipage stop -->
+                    </div>
+
+                    <div class="docInfo"><bdi>resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz.txt</bdi> · Last modified: <time datetime="2023-04-20T06:03:19+0000">20 Apr 2023 06:03</time> by <bdi><a href="https://ez.analog.com/members/trishacabildo" class=" interwiki iw_user">Trisha Cabildo</a></bdi></div>
+
+                                    </div>
+            </div>
+            <!-- /content -->
+
+            <hr class="a11y"/>
+
+            <!-- PAGE ACTIONS -->
+            <div id="dokuwiki__pagetools">
+                <h3 class="a11y">Page Tools</h3>
+                <div class="tools">
+                    <ul>
+                        <li class="source"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=edit" title="View Source [v]" rel="nofollow" accesskey="v"><span>View Source</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5l3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41-3.74 3.74m11.16 0l-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41 3.74-3.74z"/></svg></a></li><li class="revs"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=revisions" title="History [o]" rel="nofollow" accesskey="o"><span>History</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 7v5.11l4.71 2.79.79-1.28-4-2.37V7m0-5C8.97 2 5.91 3.92 4.27 6.77L2 4.5V11h6.5L5.75 8.25C6.96 5.73 9.5 4 12.5 4a7.5 7.5 0 0 1 7.5 7.5 7.5 7.5 0 0 1-7.5 7.5c-3.27 0-6.03-2.09-7.06-5h-2.1c1.1 4.03 4.77 7 9.16 7 5.24 0 9.5-4.25 9.5-9.5A9.5 9.5 0 0 0 12.5 2z"/></svg></a></li><li class="backlink"><a href="/resources/eval/user-guides/circuits-from-the-lab/eval-adxl355-pmdz?do=backlink" title="Backlinks" rel="nofollow"><span>Backlinks</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24m2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"/></svg></a></li><li class="menuitemfolded"><a href="javascript:void(0);" title="Fold/unfold all" rel="nofollow" class="fold_unfold_all_new" onclick="fold_unfold_all();"><span>Fold/unfold all</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2,0 L 6.5,3 L 2,6 z M 8,6.6 L 12.5,9.6 L 8,12.6 z M 14,13.2 L 20,13.2 L 17,17.7 z"/></svg></a></li><li class="top"><a href="#dokuwiki__top" title="[ Back to top ] [t]" rel="nofollow" accesskey="t"><span>[ Back to top ]</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg></a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /wrapper -->
+
+    </div>
+    <!-- /container -->
+</div>
+<!-- /site -->
+
+﻿<a class="backtotop" href="#header">&nbsp;</a>
+<footer class="footer" id="footer">
+    <adi-footer short></adi-footer>
+
+    
+    <script type="text/javascript">
+        var analytics = '//assets.adobedtm.com/bc68b7886092/2a726ea8b70d/launch-a4a6d55de309.min.js';
+        var cookiesToDelete = [{ "Domain": ".analog.com", "Cookie": ["__qca", "adiHintCookie", "bCrumbs", "cookieAccepted", "dmdbase_cdc", "ELOQUA", "FedAuthentication", "gpv_p14", "gpv_v100", "myAnalog_id", "Mysite_info", "s_cc", "s_dfa", "s_fid", "s_gad", "s_gpv", "s_invisit", "s_lv", "s_nr", "s_ptc", "s_sq", "s_vi", "s_vnum", "es_visited", "AdiSessionAuthCookie", "AdiSecureDlCookie"] }, { "Domain": ".investor.analog.com", "Cookie": ["ADI_BRIEFCASE", "ADI_SESSION"] }, { "Domain": "careers.analog.com", "Cookie": ["in_ref", "Per_UniqueID", "PLAY_SESSION", "VISITED_COUNTRY", "VISITED_LANG", "ext_trk", "_gat_UA-84784380-31"] }, { "Domain": "distiadmin-dev.corpnt.analog.com", "Cookie": ["ASP.NET_SessionId"] }, { "Domain": "distributor-dev.corpnt.analog.com", "Cookie": ["FedAuth1", "FedAuth", "ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "_sdsat_Email Address", "dmdbase", "_sdsat_DevQaOrProd"] }, { "Domain": "ez.analog.com", "Cookie": ["containerSecurityToken", "jive.security.context", "X-JCAPI-Token ", "BIGipServerpool_vanity_analog.jiveon.com", "JSESSIONID", "jive.login.ts"] }, { "Domain": "form.analog.com", "Cookie": ["AdiSessionAuthCookie", "FedAuth1", "FedAuth", "ASP.NET_SessionId", "AlteonP", "ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "_sdsat_DevQaOrProd", "adicftlassetdata", "AdiSessionAuthCookie", "_sdsat_Membership Status", "_sdsat_Email Address"] }, { "Domain": "registration.analog.com", "Cookie": ["ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "registration-dev.corpnt.analog.com", "_sdsat_Email Address", "FedAuth1", "FedAuth", "_sdsat_Membership Status", "AlteonP", "ASP.NET_SessionId"] }, { "Domain": "sdk.analog.com", "Cookie": ["dmdbase", "_sdsat_DevQaOrProd", "ipe_30155_fov", "ipe.30155.pageViewedCount", "_sdsat_Membership Status", "_sdsat_Email Address", "ipe_s", "AdiSessionAuthCookie", "FedAuth1"] }, { "Domain": "shoppingcart.analog.com", "Cookie": ["ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "dmdbase", "_sdsat_DevQaOrProd", "_sdsat_Membership Status", "_sdsat_Email Address", "ASP.NET_SessionId", "adiSessionAuth", "FedAuth", "FedAuth1", "analogp", "USERID", "SHOPPINGCARTID", "DISTI_COUNTRY_CODE", "AlteonP"] }, { "Domain": "webuseradmin.analog.com", "Cookie": ["ASP.NET_SessionId"] }, { "Domain": "wiki.analog.com", "Cookie": ["DokuWiki", "DW<hash>", "DOKU_PREFS"] }, { "Domain": "www.analog.com", "Cookie": ["__atuvc", "__atuvs", "_sdsat_Email Address", "_sdsat_Membership Status", "DisclaimerConfirmation", "dmdbase", "downloadGoals", "sc.ASP.NET_SESSIONID", "sc.Status", "SC_ANALYTICS_GLOBAL_COOKIE", "website#lang", "ipe.30155.pageViewedCount", "ipe_30155_fov", "ipe_s", "_sdsat_DevQaOrProd", "ASP.NET_SessionId"] }];
+    </script>
+    <script type="text/javascript">
+        var ADIAssetsPath = "//assets2.analog.com";
+        var cookiesToDelete = [{ "Domain": ".analog.com", "Cookie": ["__qca", "adiHintCookie", "bCrumbs", "cookieAccepted", "dmdbase_cdc", "ELOQUA", "FedAuthentication", "gpv_p14", "gpv_v100", "myAnalog_id", "Mysite_info", "s_cc", "s_dfa", "s_fid", "s_gad", "s_gpv", "s_invisit", "s_lv", "s_nr", "s_ptc", "s_sq", "s_vi", "s_vnum", "es_visited", "AdiSessionAuthCookie", "AdiSecureDlCookie"] }, { "Domain": ".investor.analog.com", "Cookie": ["ADI_BRIEFCASE", "ADI_SESSION"] }, { "Domain": "careers.analog.com", "Cookie": ["in_ref", "Per_UniqueID", "PLAY_SESSION", "VISITED_COUNTRY", "VISITED_LANG", "ext_trk", "_gat_UA-84784380-31"] }, { "Domain": "distiadmin-dev.corpnt.analog.com", "Cookie": ["ASP.NET_SessionId"] }, { "Domain": "distributor-dev.corpnt.analog.com", "Cookie": ["FedAuth1", "FedAuth", "ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "_sdsat_Email Address", "dmdbase", "_sdsat_DevQaOrProd"] }, { "Domain": "ez.analog.com", "Cookie": ["containerSecurityToken", "jive.security.context", "X-JCAPI-Token ", "BIGipServerpool_vanity_analog.jiveon.com", "JSESSIONID", "jive.login.ts"] }, { "Domain": "form.analog.com", "Cookie": ["AdiSessionAuthCookie", "FedAuth1", "FedAuth", "ASP.NET_SessionId", "AlteonP", "ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "_sdsat_DevQaOrProd", "adicftlassetdata", "AdiSessionAuthCookie", "_sdsat_Membership Status", "_sdsat_Email Address"] }, { "Domain": "registration.analog.com", "Cookie": ["ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "registration-dev.corpnt.analog.com", "_sdsat_Email Address", "FedAuth1", "FedAuth", "_sdsat_Membership Status", "AlteonP", "ASP.NET_SessionId"] }, { "Domain": "sdk.analog.com", "Cookie": ["dmdbase", "_sdsat_DevQaOrProd", "ipe_30155_fov", "ipe.30155.pageViewedCount", "_sdsat_Membership Status", "_sdsat_Email Address", "ipe_s", "AdiSessionAuthCookie", "FedAuth1"] }, { "Domain": "shoppingcart.analog.com", "Cookie": ["ipe_30155_fov", "ipe.30155.pageViewedCount", "ipe_s", "dmdbase", "_sdsat_DevQaOrProd", "_sdsat_Membership Status", "_sdsat_Email Address", "ASP.NET_SessionId", "adiSessionAuth", "FedAuth", "FedAuth1", "analogp", "USERID", "SHOPPINGCARTID", "DISTI_COUNTRY_CODE", "AlteonP"] }, { "Domain": "webuseradmin.analog.com", "Cookie": ["ASP.NET_SessionId"] }, { "Domain": "wiki.analog.com", "Cookie": ["DokuWiki", "DW<hash>", "DOKU_PREFS"] }, { "Domain": "www.analog.com", "Cookie": ["__atuvc", "__atuvs", "_sdsat_Email Address", "_sdsat_Membership Status", "DisclaimerConfirmation", "dmdbase", "downloadGoals", "sc.ASP.NET_SESSIONID", "sc.Status", "SC_ANALYTICS_GLOBAL_COOKIE", "website#lang", "ipe.30155.pageViewedCount", "ipe_30155_fov", "ipe_s", "_sdsat_DevQaOrProd", "ASP.NET_SessionId"] }];
+    </script>
+    <script>
+        /* Copyright 2011-2015 iPerceptions, Inc. All rights reserved. Do not distribute. iPerceptions provides this code 'as is' without warranty of any kind, either express or implied. */
+        window.iperceptionskey = 'acafac0d-3b8a-4d30-8a98-6cbcd5256d93';
+        (function() { var a = document.createElement('script'),
+            b = document.getElementsByTagName('body')[0];
+            a.type = 'text/javascript';
+            a.defer = true;
+            a.src = '//universal.iperceptions.com/wrapper.js';
+            b.appendChild(a); })();
+    </script>
+</footer>
+<script type="text/javascript">
+            if(typeof(_satellite) != 'undefined') {
+            _satellite.pageBottom();
+            }
+        </script>
+<div class="a11y"
+     style="float: left"><img src="/lib/exe/taskrunner.php?id=resources%3Aeval%3Auser-guides%3Acircuits-from-the-lab%3Aeval-adxl355-pmdz&amp;1784068738" width="2" height="1" alt="" /></div>
+</body>
+</html>

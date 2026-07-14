@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Time Library, Timekeeping and Time/Date Manipulation on Teensy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="/favicon.ico">
+<style>
+body,td,p {font-family: Arial, Helvetica, sans-serif;}
+html { scroll-behavior: smooth; }
+img { max-width:100%; height:auto; }
+nav.left { float:left; width:172px; }
+.logoimg { display:block; padding-left:40px; }
+.notmobile {/* display:normal */}
+.navtopwidth { width=100%; max-width:calc(185px + 1080px); }
+.headertop { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:2px }
+.navtop { display:flex; justify-content:space-around; background-color:#D0E0FF; }
+.navtopitem { padding:6px; }
+.navbreadcrumb { background-color:#F0F0F0; }
+main { float:left; margin-left:10px; width:calc(100% - 185px); max-width:1080px; }
+aside { float:right; }
+figure { display:table; }
+figcaption { display:table-caption; caption-side:bottom; font-size:0.8em; font-weight:bold; }
+@media only screen and (max-width:960px) {
+	aside { float:none; display:table; margin:auto; }
+}
+@media only screen and (max-width:600px) {
+	nav.left { display:none; }
+	.notmobile { display:none; }
+	.logoimg { padding-left:6px; }
+	main { width:100%; margin-left:0; }
+	table { font-size:75%; }
+}
+.center { margin: auto; }
+h1 {font-size: 200% }
+h2 {font-size: 160% }
+h3 {font-size: 140% }
+h4 {font-size: 120% }
+h5 {font-size: 110% }
+dl.featurelist dt {
+	font-weight: bold;
+	font-size: 130%;
+	margin-left: 2em;
+	display: list-item;
+	list-style-type: disc;
+}
+dl.featurelist dd {
+	margin-left: 4em;
+	padding-bottom: 0.75em;
+}
+ul.subfeaturelist {
+	padding-top: 0.4em;
+}
+ul.subfeaturelist li {
+	font-size: 90%;
+	padding-bottom: 0.25em;
+}
+.orderButton {
+	background:linear-gradient(to bottom, #c5f7be 5%, #cae0b3 100%);
+	background-color:#c5f7be;
+	border-radius:6px;
+	cursor:pointer;
+	padding:8px 20px;
+}
+.orderButton:hover {
+	background:linear-gradient(to bottom, #cae0b3 5%, #c5f7be 100%);
+	background-color:#cae0b3;
+}
+.orderButton:active {
+	position:relative;
+	top:1px;
+}
+tr.top {background-color:#C0C0C0}
+tr.odd {background-color:#F0F0F0}
+tr.even {background-color:#E0E0E0}
+p.desc {padding-left:3em; margin:0px; padding-top:0.2em; padding-bottom:0.8em; font-size:0.75em}
+span.literal {color: #006666}
+span.comment {color: #777755}
+span.keyword {color: #cc6600}
+span.function {color: #996600}
+span.mainfunction {color: #993300; font-weight: bolder}
+span.footnote {vertical-align: super; font-size: smaller; color: #ff0000;}
+a.footnote:link {text-decoration: none}
+a.footnote:visited {text-decoration: none}
+</style>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" link="#0000D0" vlink="#202080">
+<!--nav begin-->
+<header class="headertop navtopwidth">
+<div><a href="/"><img src="/img/logo.gif" alt="PJRC" width=276 height=31 class=logoimg></a></div>
+<div>
+<small>
+<a href="https://www.pjrc.com/cart/cart.php">Shopping&nbsp;Cart</a>
+<span class=notmobile><img src="/img/a.gif" width=10 height=10 alt="">
+<a href="/cgi-bin/archive/summary">Download&nbsp;Website</a></span>
+</small>
+</div>
+</header>
+<nav class="navtop navtopwidth">
+<div class=navtopitem><a href="/">Home</a></div>
+<div class=navtopitem><a href="/store/">Products</a></div>
+<div class=navtopitem><a href="/teensy/">Teensy</a></div>
+<div class=navtopitem><a href="/blog/">Blog</a></div>
+<div class=navtopitem><a href="https://forum.pjrc.com/">Forum</a></div>
+</nav>
+<nav class="navbreadcrumb navtopwidth">
+<small><span class=notmobile>You are here:</span>
+<a href="/teensy/">Teensy</a>
+<img src="/img/b.gif" width=10 height=10 alt="">
+<a href="teensyduino.html">Teensyduino</a>
+<img src="/img/b.gif" width=10 height=10 alt="">
+<a href="td_libs.html">Libraries</a>
+<img src="/img/b.gif" width=10 height=10 alt="">
+<span style="background-color: #B0E4A8">Time</span>
+</small></nav>
+<p>
+<nav class=left>
+<table width=172 border=0 cellspacing=0 cellpadding=6>
+<tr><td bgcolor="#D0E0FF" align=center>
+<big><b>PJRC Store</b></big>
+</td></tr>
+<tr><td bgcolor="#F0F0F0">
+<small>
+<img src="/img/a.gif" width=10 height=10 alt="" align=middle>
+<a href="/store/teensy41.html">Teensy 4.1</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="" align=middle>
+<a href="/store/teensy40.html">Teensy 4.0</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="" align=middle>
+<a href="/store/ic_mkl02_t4.html">Chips for PCB</a><br>
+</small></td></tr>
+<tr><td height=15></td></tr>
+<tr><td bgcolor="#D0E0FF" align=center>
+<big><b>Teensy</b></big>
+</td></tr>
+<tr><td bgcolor="#F0F0F0" style="line-height: 96%">
+<small>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="index.html">Main Page</a><br>
+<a href="techspecs.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Hardware</b></a><br>
+<a href="first_use.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Getting Started</b></a><br>
+<a href="tutorial.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Tutorial</b></a><br>
+<a href="pins.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>How-To Tips</b></a><br>
+<a href="usb_debug_only.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Code Library</b></a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="projects.html">Projects</a><br>
+<img src="/img/b.gif" width=10 height=10 alt="">
+<b>Teensyduino</b><br>
+</small>
+<div style="padding-left: 1.2em">
+<small>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="teensyduino.html">Main</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_download.html">Download+Install</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_usage.html">Basic Usage</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_digital.html">Digital I/O</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_pulse.html">PWM & Tone</a><br>
+<a href="td_timing.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Timing</b></a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_code_security.html">Code Security</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_startup.html">Startup</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_crashreport.html">CrashReport</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_serial.html">USB Serial</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_keyboard.html">USB Keyboard</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_mouse.html">USB Mouse</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_joystick.html">USB Joystick</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_midi.html">USB MIDI</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_flightsim.html">USB Flight Sim</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_uart.html">Serial</a><br>
+<img src="/img/b.gif" width=10 height=10 alt="">
+<b>Libraries</b><br>
+</small>
+<div style="padding-left: 1.2em">
+<small>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs.html">Main List</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_GLCD.html">GLCD</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_LiquidCrystal.html">LiquidCrystal</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_OctoWS2811.html">OctoWS2811</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_FastSPI_LED.html">FastSPI_LED</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Matrix.html">Matrix/Sprite</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_LedDisplay.html">LedDisplay</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_LedControl.html">LedControl</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_DogLcd.html">DogLcd</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_ST7565.html">ST7565</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_AltSoftSerial.html">AltSoftSerial</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_SoftwareSerial.html">SoftwareSerial</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_MIDI.html">MIDI</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_PS2Keyboard.html">PS2Keyboard</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_DmxSimple.html">DmxSimple</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Firmata.html">Firmata</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Wire.html">Wire</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_SPI.html">SPI</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_OneWire.html">OneWire</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_XBee.html">XBee</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_VirtualWire.html">VirtualWire</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_x10.html">X10</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_IRremote.html">IRremote</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_TinyGPS.html">TinyGPS</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_USBHostShield.html">USBHostShield</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Ethernet.html">Ethernet</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Bounce.html">Bounce</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Keypad.html">Keypad</a><br>
+<a href="td_libs_Audio.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Audio</b></a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Encoder.html">Encoder</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Ping.html">Ping</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_CapacitiveSensor.html">CapacitiveSensor</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_FreqCount.html">FreqCount</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_FreqMeasure.html">FreqMeasure</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Servo.html">Servo</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_PulsePosition.html">PulsePosition</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Stepper.html">Stepper</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_AccelStepper.html">AccelStepper</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_FrequencyTimer2.html">FrequencyTimer2</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Tlc5940.html">Tlc5940</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_SoftPWM.html">SoftPWM</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_ShiftPWM.html">ShiftPWM</a><br>
+<img src="/img/b.gif" width=10 height=10 alt="selected">
+<span style="background-color: #B0E4A8">Time</span><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_TimeAlarms.html">TimeAlarms</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_DS1307RTC.html">DS1307RTC</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_Metro.html">Metro</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_TimerOne.html">TimerOne</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_MsTimer2.html">MsTimer2</a><br>
+<img src="/img/a.gif" width=10 height=10 alt="">
+<a href="td_libs_EEPROM.html">EEPROM</a><br>
+</small>
+</div>
+<small>
+</small>
+</div>
+<small>
+<a href="pinout.html"><img src="/img/c.gif" width=10 height=10 alt="" border=0>
+<b>Reference</b></a><br>
+</small></td></tr>
+<tr><td height=60></td></tr>
+</table><br>
+<a name="navend"> </a>
+</nav>
+<!--nav end-->
+
+
+<main>
+<h1>Time Library</h1>
+
+Time, by Michael Margolis, adds timekeeping ability in hours, minutes, seconds, days, months and years.
+
+<p>
+<table><tr><td valign=top><b>Download</b>:</td><td>
+Included with the <a href="td_download.html">Teensyduino Installer</a><br>
+Latest Developments on <a href="https://github.com/PaulStoffregen/Time">Github</a>
+</td></tr></table>
+<!--<table><tr>
+<td valign=top><b>Download</b>:</td>
+<td><a href="arduino_libraries/Time.zip">Time.zip</a> <small>(version 1.3)</small><br>
+<a href="https://github.com/PaulStoffregen/Time">Latest code on GitHub</a>
+</td>
+</tr></table>-->
+<p>
+
+<table align=right cellpadding=20><tr><td width=366><img src="td_libs_Time_8b.jpg"><br>
+<small><b>Time Library using Teensy 3.0 RTC</b></small></td></tr></table>
+
+<h2>Hardware Requirements</h2>
+
+Time does not require any special hardware.  Internally, Time depends
+upon Arduino's millis() function to keep track to elasped time.
+However, Time can synchronize to several types of hardware which
+provide time and date information.
+<p>
+See below for details:
+<ul>
+<li><a href="#ds1307">DS1307 Real Time Clock Chip</a>
+<li><a href="#gps">GPS Module</a>
+<li><a href="#ntp">Ethernet-based Network Time Protocol</a>
+<li><a href="#teensy3">Teensy 3.0 Real Time Clock</a>
+</ul>
+
+<h2>Basic Usage</h2>
+
+<span style="color: #CC6600;">hour</span>();
+<p class=desc>
+The current time, in hours (0 to 23)
+</p>
+<span style="color: #CC6600;">minute</span>();
+<p class=desc>
+The current time, in minutes (0 to 59)
+</p>
+<span style="color: #CC6600;">second</span>();
+<p class=desc>
+The current time, in seconds (0 to 59)
+</p>
+<span style="color: #CC6600;">day</span>();
+<p class=desc>
+The current date, in day of the month (1 to 31)
+</p>
+<span style="color: #CC6600;">month</span>();
+<p class=desc>
+The current date, in month of the year (1 to 12)
+</p>
+<span style="color: #CC6600;">year</span>();
+<p class=desc>
+The current date, in years (2013, 2014, etc)
+</p>
+<span style="color: #CC6600;">setTime</span>(hours, minutes, seconds, days, months, years);
+<p class=desc>
+The time and date, using the 6 parameters above.
+</p>
+<span style="color: #CC6600;">adjustTime</span>(number);
+<p class=desc>
+Adjust the time, adding (positive numbers) or removing (negative numbers) seconds.
+</p>
+
+<br clear=all>
+
+<h2>Usage with 32-Bit "time_t"</h2>
+
+<p>
+Time uses a special <span style="color: #CC6600;">time_t</span> variable type,
+which is the number of seconds elapsed since 1970.  Using time_t lets you
+store or compare times as a single number, rather that dealing with 6 numbers
+and details like the number of days in each month and leap years.
+</p>
+<span style="color: #CC6600;">now</span>();
+<p class=desc>
+Reads the current time, as a time_t number.
+</p>
+<span style="color: #CC6600;">setTime</span>(t);
+<p class=desc>
+Sets the current time, based on a time_t number.
+</p>
+<span style="color: #CC6600;">makeTime</span>(tm);
+<p class=desc style="padding-bottom:0.2em;">
+Convert normal date &amp; time to a time_t number.  The time_t number is returned.
+The tm input is a TimeElements variable type, which has these fields:
+</p>
+<pre style="padding-left:6em; margin:0px; padding-top:0.2em; padding-bottom:0.2em;">
+tm.Second  Seconds   0 to 59
+tm.Minute  Minutes   0 to 59
+tm.Hour    Hours     0 to 23
+tm.Wday    Week Day  0 to 6  (not needed for mktime)
+tm.Day     Day       1 to 31
+tm.Month   Month     1 to 12
+tm.Year    Year      0 to 99 (offset from 1970)
+</pre>
+</p>
+<span style="color: #CC6600;">breakTime</span>(t, tm);
+<p class=desc>
+Convert a time_t number to normal date &amp; time.  The tm input is a TimeElements
+variable which breakTime fills with the 7 numbers, computed from the "t" input.
+</p>
+
+<span style="color: #CC6600;">hour</span>(t);<br>
+<span style="color: #CC6600;">minute</span>(t);<br>
+<span style="color: #CC6600;">second</span>(t);<br>
+<span style="color: #CC6600;">day</span>(t);<br>
+<span style="color: #CC6600;">month</span>(t);<br>
+<span style="color: #CC6600;">year</span>(t);
+<p class=desc>
+Convert a time_t number to a single time or data field.  These can be simpler
+to use than breakTime() and a 7-field TimeElements variable.
+</p>
+
+
+
+
+
+
+
+
+<h2>Synchronization With Other Time Services</h2>
+<p>
+Time can synchronize its clock with another source of known time.  You can use
+the setTime functions above, or configure Time to automatically call a function
+which will report the time.
+</p>
+
+<span style="color: #CC6600;">timeStatus</span>();
+<p class=desc style="padding-bottom:0.2em;">
+Returns the status of time sync.  Three type of status are defined, with
+these names:
+<pre style="padding-left:6em; margin:0px; padding-top:0.2em; padding-bottom:0.2em;">
+timeNotSet     Time's clock has not been set.  The time &amp; date are unknown.
+timeSet        Time's clock has been set.
+timeNeedsSync  Time's clock is set, but the sync has failed, so it may not be accurate.
+</pre>
+</p>
+<span style="color: #CC6600;">setSyncProvider</span>(getTimeFunction);
+<p class=desc>
+Configure Time to automatically called the getTimeFunction() regularly.  This
+function should obtain the time from another service and return a time_t number,
+or zero if the time is not known.
+</p>
+<span style="color: #CC6600;">setSyncInterval</span>(seconds);
+<p class=desc>
+Configure how often the getTimeFunction is called.
+</p>
+
+
+<h2>TimeSerial Example Program</h2>
+
+TimeSerial demonstrates how to set the time &amp; date when no other hardware
+is capable of providing this information.
+<p>
+You can open this example from <b>File &gt; Examples &gt; Time &gt; TimeSerial</b>.
+<p>
+TimeSerial listens for a message from your computer.  This message is sent by
+a Processing-based program, found in Time's examples/Processing folder.  You
+will need <a href="http://www.processing.org/">Processing</a> to run this program.
+<p>
+<center><img src="td_libs_Time_1.png"></center>
+<p>
+When you click in the window, or when TimeSerial requests an update, this program
+will send the message using your computer's time.  Text printed by TimeSerial
+appears in the black console windows in Processing.
+<p>
+On Linux, you can send the time message in UTC time zone using
+"date +T%s &gt; /dev/ttyACM0"
+
+<h2><a name="ds1307">TimeRTCSet Example Program</a></h2>
+
+TimeRTCSet demonstrates synchronizing to a DS1307 real time clock chip.  It
+can also accept Serial messages from the Processing program, to set both
+Time's clock and the DS1307.
+<p>
+<center><img src="td_libs_Time_3.jpg"></center>
+<p>
+You can open this example from <b>File &gt; Examples &gt; Time &gt; TimeRTCSet</b>.
+<p>
+This example requires the DS1307RTC library.
+<p>
+<center><img src="td_libs_Time_2.png"></center>
+<!-- http://www.adafruit.com/products/264 -->
+<p>
+If you have trouble with the DS1307, the DS1307RTC library provides 2 example
+for diagnosing problems and setting the time (without Processing).
+
+<h2><a name="gps">TimeGPS Example Program</a></h2>
+
+TimeGPS demonstrates synchronizing Time to data from a GPS receiver module,
+which reports very accurate time when tracking GPS satelites.
+<p>
+You can open this example from <b>File &gt; Examples &gt; Time &gt; TimeGPS</b>.
+<p>
+To use TimeGPS with Teensy, edit this code to use Serial1, and comment out
+the earlier lines with SoftwareSerial.
+<p>
+<pre style="padding-left:2em;">
+<span style="color: #7E7E7E;">//&nbsp;To&nbsp;use&nbsp;a&nbsp;hardware&nbsp;serial&nbsp;port,&nbsp;which&nbsp;is&nbsp;far&nbsp;more&nbsp;efficient&nbsp;than</span>
+<span style="color: #7E7E7E;">//&nbsp;SoftwareSerial,&nbsp;uncomment&nbsp;this&nbsp;line&nbsp;and&nbsp;remove&nbsp;SoftwareSerial</span>
+#define&nbsp;SerialGPS&nbsp;<span style="color: #CC6600;"><b>Serial1</b></span>
+</pre>
+<p>
+Connect the GPS data to the Serial1 pins (0/1 on Teensy 3.0, 7/8 on Teensy 2.0).
+<p>
+<center><img src="td_libs_Time_4.jpg"></center>
+<p>
+One more edit is necessary.  You need to configure your time zone, since GPS reports
+UTC time.
+<p>
+<pre style="padding-left:2em;">
+<span style="color: #7E7E7E;">//&nbsp;Offset&nbsp;hours&nbsp;from&nbsp;gps&nbsp;time&nbsp;(UTC)</span>
+<span style="color: #7E7E7E;">//const&nbsp;int&nbsp;offset&nbsp;=&nbsp;1;&nbsp;&nbsp;&nbsp;//&nbsp;Central&nbsp;European&nbsp;Time</span>
+<span style="color: #7E7E7E;">//const&nbsp;int&nbsp;offset&nbsp;=&nbsp;-5;&nbsp;&nbsp;//&nbsp;Eastern&nbsp;Standard&nbsp;Time&nbsp;(USA)</span>
+<span style="color: #7E7E7E;">//const&nbsp;int&nbsp;offset&nbsp;=&nbsp;-4;&nbsp;&nbsp;//&nbsp;Eastern&nbsp;Daylight&nbsp;Time&nbsp;(USA)</span>
+<span style="color: #7E7E7E;">//const&nbsp;int&nbsp;offset&nbsp;=&nbsp;-8;&nbsp;&nbsp;//&nbsp;Pacific&nbsp;Standard&nbsp;Time&nbsp;(USA)</span>
+<span style="color: #CC6600;">const</span> <span style="color: #CC6600;">int</span> offset = -7;  <span style="color: #7E7E7E;">// Pacific Daylight Time (USA)</span>
+</pre>
+<p>
+If the GPS module is acquiring satelite tracking, you may see a delay before Time
+synchronizes and begins printing to the Arduino Serial Monitor.
+
+<h2><a name="ntp">TimeNTP Example Program</a></h2>
+
+TimeNTP uses the Network Time Protocol with an ethernet adaptor to synchronize
+to time servers over the internet.
+<p>
+<center><img src="td_libs_Time_6.jpg"></center>
+<p>
+You can open this example from <b>File &gt; Examples &gt; Time &gt; TimeNTP</b>.
+<p>
+<center><img src="td_libs_Time_5.png"></center>
+<p>
+
+<h2><a name="teensy3">TimeTeensy3 Example Program</a></h2>
+
+TimeTeensy3 demonstrates synchronizing Time to the Real Time Clock in
+Teensy 3.0, 3.1, 3.2, 3.5 &amp; 3.6.
+<p>
+To use the Teensy 3.0, 3.1 &amp; 3.2 RTC, you must add a 32.768 kHz, 12.5 pF crystal
+to the bottom side of the board.  The crystal shown is Citizen part
+CFS-206, Digikey part 300-8303-ND, 300-8762-ND, 300-8763-ND, or 300-1002-ND.
+Teensy 3.5 &amp; 3.6 have this 32.768 kHz crystal built in.
+<p>
+<center><img src="td_libs_Time_9.jpg"></center>
+<p>
+The Teensy 3.x RTC will work without a battery, but to retain the time
+and date while power is off, of course you must also add a 3V battery.
+<p>
+<center><img src="td_libs_Time_8.jpg"></center>
+<p>
+You can open this example from <b>File &gt; Examples &gt; Time &gt; TimeTeensy3</b>.
+<p>
+The time can be set using the Processing program from TimeSerial above.
+<p>
+<center><img src="td_libs_Time_7.png"></center>
+<p>
+
+
+<h2>Details</h2>
+
+Details may be found at the 
+<a href="http://playground.arduino.cc/Code/Time">official Arduino Time page</a>.
+
+
+</main>
+</body>
+</html>
