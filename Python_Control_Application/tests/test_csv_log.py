@@ -5,7 +5,7 @@ import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 
-from building_vibration_analyzer.csv_log import export_session_csv, load_sessions
+from building_vibration_analyzer.csv_log import export_session_csv, load_sessions, select_samples_by_elapsed
 
 
 SAMPLE_CSV = """record_type,session_id,timestamp_iso8601,elapsed_us,sample_number,x_counts,y_counts,z_counts,x_mps2,y_mps2,z_mps2,temperature_c,status_flags
@@ -38,6 +38,14 @@ class CsvLogTests(unittest.TestCase):
             session = load_sessions(source)[0]
             export_session_csv(session, dest)
             self.assertIn("x_mps2", dest.read_text(encoding="utf-8"))
+
+    def test_select_samples_by_elapsed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / "log.csv"
+            path.write_text(SAMPLE_CSV, encoding="utf-8")
+            session = load_sessions(path)[0]
+            selected = select_samples_by_elapsed(session, 0.005, 0.02)
+            self.assertEqual([sample.sample_number for sample in selected], [1])
 
 
 if __name__ == "__main__":

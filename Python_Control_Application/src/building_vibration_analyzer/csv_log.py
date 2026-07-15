@@ -121,13 +121,36 @@ def export_session_csv(session: Session, path: str | Path) -> None:
             writer.writerow(sample.__dict__)
 
 
+def session_elapsed_seconds(samples: Iterable[Sample]):
+    import numpy as np
+
+    samples = list(samples)
+    if not samples:
+        return np.array([], dtype=float)
+    base_us = samples[0].elapsed_us
+    return np.array([(s.elapsed_us - base_us) / 1_000_000.0 for s in samples], dtype=float)
+
+
+def select_samples_by_elapsed(session: Session, start_s: float | None = None, end_s: float | None = None) -> list[Sample]:
+    if not session.samples:
+        return []
+    base_us = session.samples[0].elapsed_us
+    selected: list[Sample] = []
+    for sample in session.samples:
+        elapsed_s = (sample.elapsed_us - base_us) / 1_000_000.0
+        if start_s is not None and elapsed_s < start_s:
+            continue
+        if end_s is not None and elapsed_s > end_s:
+            continue
+        selected.append(sample)
+    return selected
+
+
 def samples_to_arrays(samples: Iterable[Sample]):
     import numpy as np
 
     samples = list(samples)
-    t = np.array([s.elapsed_us for s in samples], dtype=float) / 1_000_000.0
-    if len(t):
-        t -= t[0]
+    t = session_elapsed_seconds(samples)
     data = {
         "x": np.array([s.x_mps2 for s in samples], dtype=float),
         "y": np.array([s.y_mps2 for s in samples], dtype=float),

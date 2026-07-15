@@ -62,16 +62,20 @@ Local file workflow:
 - `Open CSV`: load a local append-only log file or exported session CSV.
 - `Save CSV`: save the selected session to a separate local CSV.
 - `Export FFT`: export the selected session's time data, FFT amplitudes, Welch PSD, ASD, dominant peaks, and frequency-band RMS values to one Excel `.xlsx` workbook.
+- `Data Table`: inspect raw selected-session samples in a read-only grid. Select cells and press `Ctrl+C` to copy tab-separated data.
 
 ## Analysis Workflow
 
 1. Open `VIBRATION_DATA.CSV`.
 2. Select one session from the append-only file.
 3. Inspect time-domain X/Y/Z acceleration.
-4. Remove mean or detrend if appropriate.
-5. Run FFT, PSD, ASD, spectrogram, dominant-frequency, and band-RMS tools.
-6. Use velocity or displacement spectra only with an explicit low-frequency cutoff.
-7. Export selected data, export FFT data to Excel, or generate a report.
+4. Set the analysis window using the Start/End controls or by dragging the two vertical orange cursors on the time plot.
+5. Select frequency-domain traces for X, Y, Z, and optionally `R dynamic`, the magnitude of mean-removed X/Y/Z components.
+6. Run FFT, PSD, ASD, spectrogram, dominant-frequency, and band-RMS tools.
+7. Use velocity or displacement spectra only with an explicit low-frequency cutoff.
+8. Export selected data, export FFT data to Excel, or generate a report.
+
+The selected time window controls the frequency-domain plot and FFT Excel export. Shorter windows have coarser frequency resolution, approximately `sample_rate / selected_sample_count`.
 
 ## Synthetic Test Data
 

@@ -26,6 +26,9 @@ PySide6 is required for the GUI. The core protocol, CSV parsing, and vibration-a
 - Generate HTML and PDF-style reports when Matplotlib is available.
 - Save selected sessions back to local CSV files.
 - Export selected-session FFT, PSD, ASD, band RMS, dominant peaks, and source time data to one `.xlsx` workbook.
+- Select the analysis time window with numeric start/end controls or draggable vertical cursors on the time-domain plot.
+- Show selectable X, Y, Z, and dynamic resultant (`R dynamic`) traces in FFT and ASD plots.
+- Inspect raw session samples in a read-only data table and copy selected cells with `Ctrl+C`.
 
 ## Test Data
 

@@ -20,6 +20,14 @@ def remove_mean(values):
     return values - np.nanmean(values)
 
 
+def dynamic_resultant(x_values, y_values, z_values):
+    """Return magnitude of mean-removed acceleration components."""
+    x = remove_mean(x_values)
+    y = remove_mean(y_values)
+    z = remove_mean(z_values)
+    return np.sqrt(x**2 + y**2 + z**2)
+
+
 def detrend_linear(values):
     return signal.detrend(np.asarray(values, dtype=float), type="linear")
 

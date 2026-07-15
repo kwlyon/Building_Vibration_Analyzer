@@ -11,6 +11,7 @@ from building_vibration_analyzer.analysis import (
     band_rms_from_psd,
     coherence,
     dominant_frequencies,
+    dynamic_resultant,
     fft_amplitude,
     harmonic_peaks,
     summary_statistics,
@@ -66,6 +67,13 @@ class AnalysisTests(unittest.TestCase):
         velocity, displacement = velocity_displacement_spectra(freq, accel, low_cutoff_hz=1.0)
         self.assertTrue(np.isnan(velocity[0]))
         self.assertTrue(np.isfinite(displacement[1]))
+
+    def test_dynamic_resultant_removes_static_offset(self):
+        x = np.array([1.0, 2.0, 1.0, 0.0])
+        y = np.array([0.0, 0.0, 0.0, 0.0])
+        z = np.array([9.8, 9.8, 9.8, 9.8])
+        r = dynamic_resultant(x, y, z)
+        self.assertAlmostEqual(float(np.max(r)), 1.0)
 
 
 if __name__ == "__main__":

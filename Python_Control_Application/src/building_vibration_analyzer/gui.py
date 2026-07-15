@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 
-from .analysis import amplitude_spectral_density, dominant_frequencies, fft_amplitude, welch_psd
-from .csv_log import export_session_csv, load_sessions, samples_to_arrays
+from .analysis import amplitude_spectral_density, dominant_frequencies, dynamic_resultant, fft_amplitude, welch_psd
+from .csv_log import export_session_csv, load_sessions, samples_to_arrays, select_samples_by_elapsed
 from .excel_export import export_fft_workbook
 from .protocol import build_set_rtc_command
 from .serial_device import DeviceClient, likely_teensy_ports
@@ -13,7 +13,7 @@ from .serial_device import DeviceClient, likely_teensy_ports
 
 def main() -> int:
     try:
-        from PySide6 import QtCore, QtWidgets
+        from PySide6 import QtCore, QtGui, QtWidgets
         from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
         from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
         from matplotlib.figure import Figure
@@ -23,6 +23,91 @@ def main() -> int:
         print(f"Missing dependency detail: {exc}")
         return 2
 
+    class SampleTableModel(QtCore.QAbstractTableModel):
+        headers = [
+            "timestamp_iso8601",
+            "elapsed_s",
+            "sample_number",
+            "x_counts",
+            "y_counts",
+            "z_counts",
+            "x_mps2",
+            "y_mps2",
+            "z_mps2",
+            "temperature_c",
+            "status_flags",
+        ]
+
+        def __init__(self) -> None:
+            super().__init__()
+            self.samples = []
+
+        def set_samples(self, samples) -> None:
+            self.beginResetModel()
+            self.samples = list(samples)
+            self.endResetModel()
+
+        def rowCount(self, parent=QtCore.QModelIndex()) -> int:
+            return 0 if parent.isValid() else len(self.samples)
+
+        def columnCount(self, parent=QtCore.QModelIndex()) -> int:
+            return 0 if parent.isValid() else len(self.headers)
+
+        def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
+            if role != QtCore.Qt.DisplayRole:
+                return None
+            if orientation == QtCore.Qt.Horizontal:
+                return self.headers[section]
+            return section + 1
+
+        def data(self, index, role=QtCore.Qt.DisplayRole):
+            if not index.isValid() or role not in (QtCore.Qt.DisplayRole, QtCore.Qt.EditRole):
+                return None
+            sample = self.samples[index.row()]
+            elapsed_s = (sample.elapsed_us - self.samples[0].elapsed_us) / 1_000_000.0 if self.samples else 0.0
+            values = [
+                sample.timestamp_iso8601,
+                f"{elapsed_s:.6f}",
+                sample.sample_number,
+                sample.x_counts,
+                sample.y_counts,
+                sample.z_counts,
+                f"{sample.x_mps2:.9g}",
+                f"{sample.y_mps2:.9g}",
+                f"{sample.z_mps2:.9g}",
+                "" if sample.temperature_c is None else f"{sample.temperature_c:.6g}",
+                sample.status_flags,
+            ]
+            return values[index.column()]
+
+        def flags(self, index):
+            if not index.isValid():
+                return QtCore.Qt.NoItemFlags
+            return QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+
+    class CopyableTableView(QtWidgets.QTableView):
+        def keyPressEvent(self, event) -> None:
+            if event.matches(QtGui.QKeySequence.Copy):
+                self.copy_selection()
+                return
+            super().keyPressEvent(event)
+
+        def copy_selection(self) -> None:
+            indexes = self.selectedIndexes()
+            if not indexes:
+                return
+            rows = sorted({idx.row() for idx in indexes})
+            cols = sorted({idx.column() for idx in indexes})
+            index_set = {(idx.row(), idx.column()): idx for idx in indexes}
+            lines = []
+            for row in rows:
+                fields = []
+                for col in cols:
+                    idx = index_set.get((row, col))
+                    fields.append("" if idx is None else str(idx.data()))
+                lines.append("\t".join(fields))
+            QtWidgets.QApplication.clipboard().setText("\n".join(lines))
+
     class MainWindow(QtWidgets.QMainWindow):
         def __init__(self) -> None:
             super().__init__()
@@ -30,6 +115,13 @@ def main() -> int:
             self.resize(1180, 760)
             self.client = DeviceClient()
             self.sessions = []
+            self.analysis_window = None
+            self._updating_window_controls = False
+            self._dragging_cursor = None
+            self._time_axis = None
+            self._window_start_line = None
+            self._window_end_line = None
+            self._window_span = None
 
             central = QtWidgets.QWidget()
             self.setCentralWidget(central)
@@ -90,6 +182,23 @@ def main() -> int:
             time_tab = QtWidgets.QWidget()
             time_layout = QtWidgets.QVBoxLayout(time_tab)
             time_layout.setContentsMargins(0, 0, 0, 0)
+            window_controls = QtWidgets.QHBoxLayout()
+            self.window_start_spin = QtWidgets.QDoubleSpinBox()
+            self.window_end_spin = QtWidgets.QDoubleSpinBox()
+            for spin in (self.window_start_spin, self.window_end_spin):
+                spin.setDecimals(4)
+                spin.setSingleStep(0.1)
+                spin.setSuffix(" s")
+                spin.setMinimum(0.0)
+            self.full_window_button = QtWidgets.QPushButton("Full Session")
+            window_controls.addWidget(QtWidgets.QLabel("Analysis window"))
+            window_controls.addWidget(QtWidgets.QLabel("Start"))
+            window_controls.addWidget(self.window_start_spin)
+            window_controls.addWidget(QtWidgets.QLabel("End"))
+            window_controls.addWidget(self.window_end_spin)
+            window_controls.addWidget(self.full_window_button)
+            window_controls.addStretch(1)
+            time_layout.addLayout(window_controls)
             time_layout.addWidget(NavigationToolbar(self.time_canvas, time_tab))
             time_layout.addWidget(self.time_canvas, 1)
             right.addTab(time_tab, "Time Domain")
@@ -98,9 +207,31 @@ def main() -> int:
             freq_tab = QtWidgets.QWidget()
             freq_layout = QtWidgets.QVBoxLayout(freq_tab)
             freq_layout.setContentsMargins(0, 0, 0, 0)
+            axis_controls = QtWidgets.QHBoxLayout()
+            self.axis_checkboxes = {}
+            for key, label, checked in (("x", "X", True), ("y", "Y", True), ("z", "Z", True), ("r", "R dynamic", False)):
+                checkbox = QtWidgets.QCheckBox(label)
+                checkbox.setChecked(checked)
+                self.axis_checkboxes[key] = checkbox
+                axis_controls.addWidget(checkbox)
+            axis_controls.addStretch(1)
+            freq_layout.addLayout(axis_controls)
             freq_layout.addWidget(NavigationToolbar(self.freq_canvas, freq_tab))
             freq_layout.addWidget(self.freq_canvas, 1)
             right.addTab(freq_tab, "Frequency Domain")
+            self.table_model = SampleTableModel()
+            self.data_table = CopyableTableView()
+            self.data_table.setModel(self.table_model)
+            self.data_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectItems)
+            self.data_table.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+            self.data_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+            self.data_table.setAlternatingRowColors(True)
+            self.data_table.horizontalHeader().setStretchLastSection(True)
+            copy_action = QtGui.QAction("Copy Selection", self.data_table)
+            copy_action.triggered.connect(self.data_table.copy_selection)
+            self.data_table.addAction(copy_action)
+            self.data_table.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+            right.addTab(self.data_table, "Data Table")
             self.summary = QtWidgets.QPlainTextEdit()
             self.summary.setReadOnly(True)
             right.addTab(self.summary, "Summary")
@@ -118,6 +249,14 @@ def main() -> int:
             self.list_files_button.clicked.connect(self.list_sd_files)
             self.download_button.clicked.connect(self.download_selected_sd_file)
             self.session_list.currentRowChanged.connect(self.plot_session)
+            self.window_start_spin.valueChanged.connect(self.update_analysis_window_from_controls)
+            self.window_end_spin.valueChanged.connect(self.update_analysis_window_from_controls)
+            self.full_window_button.clicked.connect(self.reset_analysis_window)
+            for checkbox in self.axis_checkboxes.values():
+                checkbox.stateChanged.connect(self.refresh_frequency_plot)
+            self.time_canvas.mpl_connect("button_press_event", self.on_time_mouse_press)
+            self.time_canvas.mpl_connect("motion_notify_event", self.on_time_mouse_move)
+            self.time_canvas.mpl_connect("button_release_event", self.on_time_mouse_release)
             self.refresh_ports()
 
         def refresh_ports(self) -> None:
@@ -213,6 +352,89 @@ def main() -> int:
                 return None
             return self.sessions[row]
 
+        def selected_axes(self):
+            return tuple(axis for axis, checkbox in self.axis_checkboxes.items() if checkbox.isChecked())
+
+        def selected_window(self, session):
+            if self.analysis_window is None:
+                return (0.0, session.duration_s)
+            start, end = self.analysis_window
+            return (max(0.0, start), min(session.duration_s, end))
+
+        def selected_window_samples(self, session):
+            start, end = self.selected_window(session)
+            return select_samples_by_elapsed(session, start, end)
+
+        def set_window_controls(self, session, start: float, end: float) -> None:
+            self._updating_window_controls = True
+            try:
+                for spin in (self.window_start_spin, self.window_end_spin):
+                    spin.setMaximum(max(session.duration_s, 0.001))
+                self.window_start_spin.setValue(start)
+                self.window_end_spin.setValue(end)
+            finally:
+                self._updating_window_controls = False
+
+        def apply_analysis_window(self, start: float, end: float, refresh_frequency: bool = True) -> None:
+            session = self.selected_session()
+            if session is None or not session.samples:
+                return
+            duration = session.duration_s
+            start = max(0.0, min(float(start), duration))
+            end = max(0.0, min(float(end), duration))
+            if end <= start:
+                sample_step = 1.0 / (session.sample_rate_hz or 1000.0)
+                end = min(duration, start + sample_step)
+                if end <= start:
+                    start = max(0.0, end - sample_step)
+            self.analysis_window = (start, end)
+            self.set_window_controls(session, start, end)
+            self.update_window_artists(start, end)
+            if refresh_frequency:
+                self.refresh_frequency_plot()
+
+        def update_analysis_window_from_controls(self) -> None:
+            if self._updating_window_controls:
+                return
+            self.apply_analysis_window(self.window_start_spin.value(), self.window_end_spin.value())
+
+        def reset_analysis_window(self) -> None:
+            session = self.selected_session()
+            if session is None:
+                return
+            self.analysis_window = (0.0, session.duration_s)
+            self.set_window_controls(session, 0.0, session.duration_s)
+            self.draw_time_plot(session)
+            self.refresh_frequency_plot()
+
+        def on_time_mouse_press(self, event) -> None:
+            session = self.selected_session()
+            if session is None or event.inaxes != self._time_axis or event.xdata is None:
+                return
+            start, end = self.selected_window(session)
+            tolerance = max(session.duration_s * 0.015, 0.02)
+            if abs(event.xdata - start) <= abs(event.xdata - end) and abs(event.xdata - start) <= tolerance:
+                self._dragging_cursor = "start"
+            elif abs(event.xdata - end) <= tolerance:
+                self._dragging_cursor = "end"
+
+        def on_time_mouse_move(self, event) -> None:
+            session = self.selected_session()
+            if self._dragging_cursor is None or session is None or event.inaxes != self._time_axis or event.xdata is None:
+                return
+            start, end = self.selected_window(session)
+            if self._dragging_cursor == "start":
+                start = event.xdata
+            else:
+                end = event.xdata
+            self.apply_analysis_window(start, end, refresh_frequency=False)
+
+        def on_time_mouse_release(self, event) -> None:
+            if self._dragging_cursor is None:
+                return
+            self._dragging_cursor = None
+            self.refresh_frequency_plot()
+
         def save_selected_session(self) -> None:
             session = self.selected_session()
             if session is None:
@@ -243,7 +465,7 @@ def main() -> int:
             if not destination.lower().endswith(".xlsx"):
                 destination += ".xlsx"
             try:
-                export_fft_workbook(session, destination)
+                export_fft_workbook(session, destination, time_window=self.selected_window(session), axes=self.selected_axes())
             except Exception as exc:
                 self.append_log(f"FFT export failed: {exc}")
                 return
@@ -255,12 +477,26 @@ def main() -> int:
             session = self.sessions[row]
             if not session.samples:
                 self.summary.setPlainText(f"Session {session.session_id} has no valid DATA samples.")
+                self.table_model.set_samples([])
                 return
+            self.analysis_window = (0.0, session.duration_s)
+            self.set_window_controls(session, 0.0, session.duration_s)
+            self.table_model.set_samples(session.samples)
+            self.data_table.resizeColumnsToContents()
+            self.draw_time_plot(session)
+            self.refresh_frequency_plot()
+
+        def draw_time_plot(self, session) -> None:
             t, data = samples_to_arrays(session.samples)
             self.time_figure.clear()
             ax = self.time_figure.add_subplot(111)
             for axis in ("x", "y", "z"):
                 ax.plot(t, data[axis], label=axis.upper(), linewidth=0.8)
+            start, end = self.selected_window(session)
+            self._time_axis = ax
+            self._window_span = ax.axvspan(start, end, color="tab:orange", alpha=0.12)
+            self._window_start_line = ax.axvline(start, color="tab:orange", linewidth=1.4, linestyle="--", picker=5)
+            self._window_end_line = ax.axvline(end, color="tab:orange", linewidth=1.4, linestyle="--", picker=5)
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Acceleration (m/s^2)")
             ax.set_title(f"Session {session.session_id}")
@@ -268,42 +504,74 @@ def main() -> int:
             ax.legend()
             self.time_canvas.draw()
 
+        def update_window_artists(self, start: float, end: float) -> None:
+            if self._time_axis is None:
+                return
+            if self._window_start_line is not None:
+                self._window_start_line.set_xdata([start, start])
+            if self._window_end_line is not None:
+                self._window_end_line.set_xdata([end, end])
+            if self._window_span is not None:
+                self._window_span.remove()
+            self._window_span = self._time_axis.axvspan(start, end, color="tab:orange", alpha=0.12)
+            self.time_canvas.draw_idle()
+
+        def refresh_frequency_plot(self) -> None:
+            session = self.selected_session()
+            if session is None or not session.samples:
+                return
             self.freq_figure.clear()
+            selected_samples = self.selected_window_samples(session)
             fs = session.sample_rate_hz or 0.0
-            if fs > 0 and len(session.samples) > 4:
+            axes = self.selected_axes()
+            if fs > 0 and len(selected_samples) > 4 and axes:
+                t, data = samples_to_arrays(selected_samples)
+                data["r"] = dynamic_resultant(data["x"], data["y"], data["z"])
                 top = self.freq_figure.add_subplot(211)
                 bottom = self.freq_figure.add_subplot(212)
                 dominant_lines = []
-                for axis in ("x", "y", "z"):
+                for axis in axes:
                     freq, amp = fft_amplitude(data[axis], fs)
-                    top.plot(freq, amp, label=axis.upper(), linewidth=0.8)
+                    label = "R dynamic" if axis == "r" else axis.upper()
+                    top.plot(freq, amp, label=label, linewidth=0.8)
                     peaks = dominant_frequencies(freq, amp, count=1, min_frequency=max(0.5, freq[1] if len(freq) > 1 else 0.0))
                     if peaks:
-                        dominant_lines.append(f"{axis.upper()}: {peaks[0][0]:.3g} Hz ({peaks[0][1]:.3g} m/s^2)")
+                        dominant_lines.append(f"{label}: {peaks[0][0]:.3g} Hz ({peaks[0][1]:.3g} m/s^2)")
                 top.set_ylabel("FFT amplitude (m/s^2)")
                 top.set_title(f"Frequency Domain - Session {session.session_id}")
                 top.grid(True, alpha=0.3)
                 top.legend()
 
-                nfft = min(1024, len(data["z"]))
-                freq_psd, psd = welch_psd(data["z"], fs, fft_length=nfft)
-                asd = amplitude_spectral_density(psd)
-                bottom.semilogy(freq_psd, asd, color="tab:purple", linewidth=0.9)
+                nfft = min(1024, len(selected_samples))
+                for axis in axes:
+                    freq_psd, psd = welch_psd(data[axis], fs, fft_length=nfft)
+                    asd = amplitude_spectral_density(psd)
+                    label = "R dynamic" if axis == "r" else axis.upper()
+                    bottom.semilogy(freq_psd, asd, label=label, linewidth=0.9)
                 bottom.set_xlabel("Frequency (Hz)")
-                bottom.set_ylabel("Z ASD (m/s^2/sqrt(Hz))")
+                bottom.set_ylabel("ASD (m/s^2/sqrt(Hz))")
                 bottom.grid(True, which="both", alpha=0.3)
+                bottom.legend()
                 self.freq_figure.tight_layout()
                 dominant_text = "\nDominant frequencies:\n" + "\n".join(dominant_lines)
             else:
                 ax_freq = self.freq_figure.add_subplot(111)
-                ax_freq.text(0.5, 0.5, "Need at least five samples with valid elapsed_us timing.", ha="center", va="center")
+                message = "Need at least five selected samples with valid elapsed_us timing."
+                if not axes:
+                    message = "Select at least one frequency-domain trace."
+                ax_freq.text(0.5, 0.5, message, ha="center", va="center")
                 ax_freq.axis("off")
                 dominant_text = ""
             self.freq_canvas.draw()
 
+            start, end = self.selected_window(session)
+            window_duration = max(0.0, end - start)
+            resolution = (fs / len(selected_samples)) if fs > 0 and selected_samples else 0.0
             self.summary.setPlainText(
                 f"Samples: {len(session.samples)}\nDuration: {session.duration_s:.3f} s\n"
-                f"Sample rate: {session.sample_rate_hz or 0:.3f} Hz\nFaults: {len(session.faults)}"
+                f"Sample rate: {session.sample_rate_hz or 0:.3f} Hz\nFaults: {len(session.faults)}\n"
+                f"Analysis window: {start:.4f} s to {end:.4f} s ({window_duration:.4f} s)\n"
+                f"Selected samples: {len(selected_samples)}\nFrequency resolution: {resolution:.6g} Hz"
                 f"{dominant_text}"
             )
 

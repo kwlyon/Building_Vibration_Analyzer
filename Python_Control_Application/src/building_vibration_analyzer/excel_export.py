@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 import math
@@ -12,29 +11,40 @@ from .analysis import (
     amplitude_spectral_density,
     band_rms_from_psd,
     dominant_frequencies,
+    dynamic_resultant,
     fft_amplitude,
     welch_psd,
 )
-from .csv_log import Session, samples_to_arrays
+from .csv_log import Session, select_samples_by_elapsed, samples_to_arrays
 
 
-def export_fft_workbook(session: Session, path: str | Path, window: str = "hann") -> None:
+def export_fft_workbook(
+    session: Session,
+    path: str | Path,
+    window: str = "hann",
+    time_window: tuple[float, float] | None = None,
+    axes: tuple[str, ...] = ("x", "y", "z", "r"),
+) -> None:
     """Export selected-session time and frequency data to a single .xlsx workbook."""
-    if not session.samples:
+    samples = select_samples_by_elapsed(session, *time_window) if time_window else list(session.samples)
+    if not samples:
         raise ValueError("selected session has no samples")
-    fs = session.sample_rate_hz
+    fs = _sample_rate_from_samples(samples)
     if fs is None or fs <= 0:
         raise ValueError("selected session does not have valid elapsed_us timing")
 
-    t, data = samples_to_arrays(session.samples)
-    axes = ("x", "y", "z")
+    t, data = samples_to_arrays(samples)
+    data["r"] = dynamic_resultant(data["x"], data["y"], data["z"])
+    axes = tuple(axis for axis in axes if axis in data)
+    if not axes:
+        raise ValueError("at least one export axis must be selected")
     fft_by_axis = {axis: fft_amplitude(data[axis], fs, window=window) for axis in axes}
-    nperseg = min(1024, len(session.samples))
+    nperseg = min(1024, len(samples))
     psd_by_axis = {axis: welch_psd(data[axis], fs, window=window, fft_length=nperseg) for axis in axes}
     asd_by_axis = {axis: (freq, amplitude_spectral_density(psd)) for axis, (freq, psd) in psd_by_axis.items()}
 
-    summary_rows = _summary_rows(session, fs, window, nperseg, fft_by_axis, psd_by_axis)
-    time_rows = _time_rows(session, t)
+    summary_rows = _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axis, time_window)
+    time_rows = _time_rows(samples, t)
     fft_rows = _fft_rows(fft_by_axis)
     psd_rows = _psd_asd_rows(psd_by_axis, asd_by_axis)
 
@@ -47,22 +57,38 @@ def export_fft_workbook(session: Session, path: str | Path, window: str = "hann"
     _write_xlsx(Path(path), workbook)
 
 
-def _summary_rows(session, fs, window, nperseg, fft_by_axis, psd_by_axis):
+def _sample_rate_from_samples(samples):
+    if len(samples) < 2:
+        return None
+    diffs = [b.elapsed_us - a.elapsed_us for a, b in zip(samples, samples[1:]) if b.elapsed_us > a.elapsed_us]
+    if not diffs:
+        return None
+    median_us = sorted(diffs)[len(diffs) // 2]
+    return 1_000_000.0 / median_us
+
+
+def _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axis, time_window):
     rows = [
         ["Building Vibration Analyzer Frequency Export"],
         [],
         ["Exported UTC", datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")],
         ["Session ID", session.session_id],
-        ["Samples", len(session.samples)],
-        ["Duration (s)", session.duration_s],
+        ["Full-session samples", len(session.samples)],
+        ["Exported samples", len(samples)],
+        ["Full-session duration (s)", session.duration_s],
+        ["Analysis start (s)", time_window[0] if time_window else 0.0],
+        ["Analysis end (s)", time_window[1] if time_window else session.duration_s],
+        ["Analysis duration (s)", ((time_window[1] - time_window[0]) if time_window else session.duration_s)],
         ["Estimated sample rate (Hz)", fs],
+        ["Frequency resolution (Hz)", fs / len(samples) if samples else ""],
         ["FFT window", window],
         ["FFT amplitude units", "m/s^2 peak amplitude"],
         ["PSD units", "(m/s^2)^2/Hz"],
         ["ASD units", "m/s^2/sqrt(Hz)"],
         ["Welch nperseg", nperseg],
         ["Welch overlap", "50%"],
-        ["Frequency bins exported", len(next(iter(fft_by_axis.values()))[0])],
+        ["Frequency bins exported", len(next(iter(fft_by_axis.values()))[0]) if fft_by_axis else 0],
+        ["Exported axes", ", ".join(axis.upper() for axis in fft_by_axis)],
         [],
         ["Dominant FFT Peaks"],
         ["Axis", "Frequency (Hz)", "Amplitude (m/s^2)"],
@@ -86,7 +112,7 @@ def _summary_rows(session, fs, window, nperseg, fft_by_axis, psd_by_axis):
     return rows
 
 
-def _time_rows(session: Session, t):
+def _time_rows(samples, t):
     rows = [
         [
             "timestamp_iso8601",
@@ -103,7 +129,7 @@ def _time_rows(session: Session, t):
             "status_flags",
         ]
     ]
-    for elapsed_s, sample in zip(t, session.samples):
+    for elapsed_s, sample in zip(t, samples):
         rows.append(
             [
                 sample.timestamp_iso8601,
@@ -125,37 +151,25 @@ def _time_rows(session: Session, t):
 
 def _fft_rows(fft_by_axis):
     freq = next(iter(fft_by_axis.values()))[0]
-    rows = [["frequency_hz", "x_fft_mps2", "y_fft_mps2", "z_fft_mps2"]]
+    axes = tuple(fft_by_axis)
+    rows = [["frequency_hz", *(f"{axis}_fft_mps2" for axis in axes)]]
     for i, f in enumerate(freq):
-        rows.append([f, fft_by_axis["x"][1][i], fft_by_axis["y"][1][i], fft_by_axis["z"][1][i]])
+        rows.append([f, *(fft_by_axis[axis][1][i] for axis in axes)])
     return rows
 
 
 def _psd_asd_rows(psd_by_axis, asd_by_axis):
-    freq = psd_by_axis["x"][0]
-    rows = [
-        [
-            "frequency_hz",
-            "x_psd_mps2_2_per_hz",
-            "x_asd_mps2_per_sqrt_hz",
-            "y_psd_mps2_2_per_hz",
-            "y_asd_mps2_per_sqrt_hz",
-            "z_psd_mps2_2_per_hz",
-            "z_asd_mps2_per_sqrt_hz",
-        ]
-    ]
+    axes = tuple(psd_by_axis)
+    freq = psd_by_axis[axes[0]][0]
+    header = ["frequency_hz"]
+    for axis in axes:
+        header.extend([f"{axis}_psd_mps2_2_per_hz", f"{axis}_asd_mps2_per_sqrt_hz"])
+    rows = [header]
     for i, f in enumerate(freq):
-        rows.append(
-            [
-                f,
-                psd_by_axis["x"][1][i],
-                asd_by_axis["x"][1][i],
-                psd_by_axis["y"][1][i],
-                asd_by_axis["y"][1][i],
-                psd_by_axis["z"][1][i],
-                asd_by_axis["z"][1][i],
-            ]
-        )
+        row = [f]
+        for axis in axes:
+            row.extend([psd_by_axis[axis][1][i], asd_by_axis[axis][1][i]])
+        rows.append(row)
     return rows
 
 
