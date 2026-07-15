@@ -66,6 +66,8 @@ The script creates a virtual environment, installs pinned dependencies, runs tes
 7. Send `STOP` or press the button again before unplugging power.
 8. Download or remove the SD card and analyze selected sessions.
 
+The desktop app also supports purely local file work: open a CSV from disk, save a selected session as a new CSV, and export the selected session's frequency-analysis data to a single Excel `.xlsx` workbook.
+
 ## Safety and Measurement Limits
 
 This is not a safety-rated seismic instrument. Static gravity calibration does not provide traceable dynamic calibration. Derived velocity and displacement spectra require low-frequency cutoffs and careful interpretation because integration amplifies drift and low-frequency noise.

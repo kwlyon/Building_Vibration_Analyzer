@@ -119,7 +119,13 @@ if (-not $SkipExecutable) {
 
 Invoke-Step "Copy release support files" {
     Copy-Item -Path (Join-Path $Root "README.md") -Destination (Join-Path $ReleaseDir "README.md") -Force
-    Copy-Item -Path (Join-Path $PythonApp "sample_data") -Destination (Join-Path $ReleaseDir "sample_data") -Recurse -Force
+    $SampleSource = Join-Path $PythonApp "sample_data"
+    $SampleDest = Join-Path $ReleaseDir "sample_data"
+    if (Test-Path $SampleDest) {
+        Remove-Item -LiteralPath $SampleDest -Recurse -Force
+    }
+    New-Item -ItemType Directory -Force -Path $SampleDest | Out-Null
+    Copy-Item -Path (Join-Path $SampleSource "*") -Destination $SampleDest -Recurse -Force
     Copy-Item -Path (Join-Path $PythonApp "requirements.txt") -Destination (Join-Path $ReleaseDir "requirements.txt") -Force
     @"
 Building Vibration Analyzer $Version

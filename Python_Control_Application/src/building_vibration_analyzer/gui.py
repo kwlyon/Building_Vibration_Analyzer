@@ -5,7 +5,8 @@ from pathlib import Path
 import sys
 
 from .analysis import amplitude_spectral_density, dominant_frequencies, fft_amplitude, welch_psd
-from .csv_log import load_sessions, samples_to_arrays
+from .csv_log import export_session_csv, load_sessions, samples_to_arrays
+from .excel_export import export_fft_workbook
 from .protocol import build_set_rtc_command
 from .serial_device import DeviceClient, likely_teensy_ports
 
@@ -59,6 +60,11 @@ def main() -> int:
             left = QtWidgets.QWidget()
             left_layout = QtWidgets.QVBoxLayout(left)
             self.session_list = QtWidgets.QListWidget()
+            local_buttons = QtWidgets.QHBoxLayout()
+            self.save_session_button = QtWidgets.QPushButton("Save CSV")
+            self.export_fft_button = QtWidgets.QPushButton("Export FFT")
+            local_buttons.addWidget(self.save_session_button)
+            local_buttons.addWidget(self.export_fft_button)
             self.sd_file_list = QtWidgets.QListWidget()
             sd_buttons = QtWidgets.QHBoxLayout()
             self.list_files_button = QtWidgets.QPushButton("List SD")
@@ -69,6 +75,7 @@ def main() -> int:
             self.log.setReadOnly(True)
             left_layout.addWidget(QtWidgets.QLabel("Sessions"))
             left_layout.addWidget(self.session_list, 1)
+            left_layout.addLayout(local_buttons)
             left_layout.addWidget(QtWidgets.QLabel("SD Card Files"))
             left_layout.addWidget(self.sd_file_list, 1)
             left_layout.addLayout(sd_buttons)
@@ -95,6 +102,8 @@ def main() -> int:
             self.start_button.clicked.connect(lambda: self.send_command("START"))
             self.stop_button.clicked.connect(lambda: self.send_command("STOP"))
             self.open_button.clicked.connect(self.open_csv)
+            self.save_session_button.clicked.connect(self.save_selected_session)
+            self.export_fft_button.clicked.connect(self.export_selected_fft)
             self.list_files_button.clicked.connect(self.list_sd_files)
             self.download_button.clicked.connect(self.download_selected_sd_file)
             self.session_list.currentRowChanged.connect(self.plot_session)
@@ -186,6 +195,48 @@ def main() -> int:
                 self.session_list.addItem(f"Session {session.session_id} - {len(session.samples)} samples")
             if self.sessions:
                 self.session_list.setCurrentRow(0)
+
+        def selected_session(self):
+            row = self.session_list.currentRow()
+            if row < 0 or row >= len(self.sessions):
+                return None
+            return self.sessions[row]
+
+        def save_selected_session(self) -> None:
+            session = self.selected_session()
+            if session is None:
+                self.append_log("Select a session before saving")
+                return
+            default_name = str(Path.home() / "Downloads" / f"session_{session.session_id}.csv")
+            destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save selected session CSV", default_name, "CSV files (*.csv)")
+            if not destination:
+                return
+            try:
+                export_session_csv(session, destination)
+            except Exception as exc:
+                self.append_log(f"Save failed: {exc}")
+                return
+            self.append_log(f"Saved session {session.session_id} to {destination}")
+
+        def export_selected_fft(self) -> None:
+            session = self.selected_session()
+            if session is None:
+                self.append_log("Select a session before exporting FFT data")
+                return
+            default_name = str(Path.home() / "Downloads" / f"session_{session.session_id}_fft_export.xlsx")
+            destination, _ = QtWidgets.QFileDialog.getSaveFileName(
+                self, "Export frequency analysis workbook", default_name, "Excel workbooks (*.xlsx)"
+            )
+            if not destination:
+                return
+            if not destination.lower().endswith(".xlsx"):
+                destination += ".xlsx"
+            try:
+                export_fft_workbook(session, destination)
+            except Exception as exc:
+                self.append_log(f"FFT export failed: {exc}")
+                return
+            self.append_log(f"Exported FFT workbook for session {session.session_id} to {destination}")
 
         def plot_session(self, row: int) -> None:
             if row < 0 or row >= len(self.sessions):

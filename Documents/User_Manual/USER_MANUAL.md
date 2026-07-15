@@ -55,6 +55,14 @@ python -m building_vibration_analyzer
 
 Use the connection panel to discover ports, connect, synchronize RTC, start/stop logging, list SD files, download logs, and open local CSV files for analysis.
 
+For unattended measurements, the logger can record to the Teensy microSD card without the Windows app connected, as long as the Teensy is powered. Use the physical Run/Stop button to begin and end logging. Later, connect USB, click `List SD`, select `VIBRATION_DATA.CSV`, and click `Download`. You can also remove the SD card and open the CSV directly from the local machine.
+
+Local file workflow:
+
+- `Open CSV`: load a local append-only log file or exported session CSV.
+- `Save CSV`: save the selected session to a separate local CSV.
+- `Export FFT`: export the selected session's time data, FFT amplitudes, Welch PSD, ASD, dominant peaks, and frequency-band RMS values to one Excel `.xlsx` workbook.
+
 ## Analysis Workflow
 
 1. Open `VIBRATION_DATA.CSV`.
@@ -63,7 +71,11 @@ Use the connection panel to discover ports, connect, synchronize RTC, start/stop
 4. Remove mean or detrend if appropriate.
 5. Run FFT, PSD, ASD, spectrogram, dominant-frequency, and band-RMS tools.
 6. Use velocity or displacement spectra only with an explicit low-frequency cutoff.
-7. Export selected data or generate a report.
+7. Export selected data, export FFT data to Excel, or generate a report.
+
+## Synthetic Test Data
+
+The desktop app includes `sample_data/SYNTHETIC_BUILDING_VIBRATION_TEST.csv`. It is a 200 Hz, 20 second synthetic dataset with known vibration peaks. Open it with `Open CSV`, inspect the `Frequency Domain` tab, and use `Export FFT` to produce a workbook for Excel.
 
 ## Units
 

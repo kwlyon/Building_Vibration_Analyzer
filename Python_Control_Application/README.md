@@ -24,3 +24,9 @@ PySide6 is required for the GUI. The core protocol, CSV parsing, and vibration-a
 - Parse append-only CSV logs and select acquisition sessions.
 - Compute time-domain statistics, FFT, PSD, ASD, spectrograms, dominant frequencies, harmonics, coherence, and band RMS.
 - Generate HTML and PDF-style reports when Matplotlib is available.
+- Save selected sessions back to local CSV files.
+- Export selected-session FFT, PSD, ASD, band RMS, dominant peaks, and source time data to one `.xlsx` workbook.
+
+## Test Data
+
+`sample_data/SYNTHETIC_BUILDING_VIBRATION_TEST.csv` is a synthetic 200 Hz, 20 second data file with known frequency content. Open it with `Open CSV`, select the session, inspect the frequency tab, and use `Export FFT` to create a workbook for Excel.
