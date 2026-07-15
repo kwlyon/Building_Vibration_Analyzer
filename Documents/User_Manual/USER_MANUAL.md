@@ -70,7 +70,7 @@ Local file workflow:
 2. Select one session from the append-only file.
 3. Inspect time-domain X/Y/Z acceleration.
 4. Set the analysis window using the Start/End controls or by dragging the two vertical orange cursors on the time plot.
-5. Select frequency-domain traces for X, Y, Z, and optionally `R dynamic`, the magnitude of mean-removed X/Y/Z components.
+5. Select frequency-domain traces for X, Y, Z, and either resultant option. `R dynamic` is the FFT/ASD of `sqrt((X-mean(X))^2 + (Y-mean(Y))^2 + (Z-mean(Z))^2)`. `R spectral RSS` combines spectra directly, using `sqrt(X_fft^2 + Y_fft^2 + Z_fft^2)` for FFT amplitude and `sqrt(PSD_X + PSD_Y + PSD_Z)` for ASD.
 6. Run FFT, PSD, ASD, spectrogram, dominant-frequency, and band-RMS tools.
 7. Use velocity or displacement spectra only with an explicit low-frequency cutoff.
 8. Export selected data, export FFT data to Excel, or generate a report.

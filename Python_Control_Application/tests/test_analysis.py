@@ -14,6 +14,8 @@ from building_vibration_analyzer.analysis import (
     dynamic_resultant,
     fft_amplitude,
     harmonic_peaks,
+    root_sum_square_spectra,
+    sum_power_spectra,
     summary_statistics,
     velocity_displacement_spectra,
     welch_psd,
@@ -74,6 +76,13 @@ class AnalysisTests(unittest.TestCase):
         z = np.array([9.8, 9.8, 9.8, 9.8])
         r = dynamic_resultant(x, y, z)
         self.assertAlmostEqual(float(np.max(r)), 1.0)
+
+    def test_spectral_resultant_helpers(self):
+        x = np.array([3.0, 0.0])
+        y = np.array([4.0, 1.0])
+        z = np.array([0.0, 2.0])
+        self.assertTrue(np.allclose(root_sum_square_spectra(x, y, z), np.array([5.0, math.sqrt(5.0)])))
+        self.assertTrue(np.allclose(sum_power_spectra(x, y, z), np.array([7.0, 3.0])))
 
 
 if __name__ == "__main__":

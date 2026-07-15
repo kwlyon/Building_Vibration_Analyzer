@@ -4,11 +4,29 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 
-from .analysis import amplitude_spectral_density, dominant_frequencies, dynamic_resultant, fft_amplitude, welch_psd
+from .analysis import (
+    amplitude_spectral_density,
+    dominant_frequencies,
+    dynamic_resultant,
+    fft_amplitude,
+    root_sum_square_spectra,
+    sum_power_spectra,
+    welch_psd,
+)
 from .csv_log import export_session_csv, load_sessions, samples_to_arrays, select_samples_by_elapsed
 from .excel_export import export_fft_workbook
 from .protocol import build_set_rtc_command
 from .serial_device import DeviceClient, likely_teensy_ports
+
+BASE_AXES = ("x", "y", "z")
+FREQUENCY_TRACE_OPTIONS = (
+    ("x", "X", True),
+    ("y", "Y", True),
+    ("z", "Z", True),
+    ("r_dynamic", "R dynamic", False),
+    ("r_spectral", "R spectral RSS", False),
+)
+TRACE_LABELS = {key: label for key, label, _checked in FREQUENCY_TRACE_OPTIONS}
 
 
 def main() -> int:
@@ -209,7 +227,7 @@ def main() -> int:
             freq_layout.setContentsMargins(0, 0, 0, 0)
             axis_controls = QtWidgets.QHBoxLayout()
             self.axis_checkboxes = {}
-            for key, label, checked in (("x", "X", True), ("y", "Y", True), ("z", "Z", True), ("r", "R dynamic", False)):
+            for key, label, checked in FREQUENCY_TRACE_OPTIONS:
                 checkbox = QtWidgets.QCheckBox(label)
                 checkbox.setChecked(checked)
                 self.axis_checkboxes[key] = checkbox
@@ -526,13 +544,42 @@ def main() -> int:
             axes = self.selected_axes()
             if fs > 0 and len(selected_samples) > 4 and axes:
                 t, data = samples_to_arrays(selected_samples)
-                data["r"] = dynamic_resultant(data["x"], data["y"], data["z"])
+                data["r_dynamic"] = dynamic_resultant(data["x"], data["y"], data["z"])
                 top = self.freq_figure.add_subplot(211)
                 bottom = self.freq_figure.add_subplot(212)
+                fft_cache = {}
+                psd_cache = {}
+
+                def independent_fft(axis):
+                    if axis not in fft_cache:
+                        fft_cache[axis] = fft_amplitude(data[axis], fs)
+                    return fft_cache[axis]
+
+                def trace_fft(axis):
+                    if axis == "r_spectral":
+                        spectra = [independent_fft(base_axis) for base_axis in BASE_AXES]
+                        return spectra[0][0], root_sum_square_spectra(*(spectrum[1] for spectrum in spectra))
+                    return independent_fft(axis)
+
+                nfft = min(1024, len(selected_samples))
+
+                def independent_psd(axis):
+                    if axis not in psd_cache:
+                        psd_cache[axis] = welch_psd(data[axis], fs, fft_length=nfft)
+                    return psd_cache[axis]
+
+                def trace_asd(axis):
+                    if axis == "r_spectral":
+                        spectra = [independent_psd(base_axis) for base_axis in BASE_AXES]
+                        psd = sum_power_spectra(*(spectrum[1] for spectrum in spectra))
+                        return spectra[0][0], amplitude_spectral_density(psd)
+                    freq_psd, psd = independent_psd(axis)
+                    return freq_psd, amplitude_spectral_density(psd)
+
                 dominant_lines = []
                 for axis in axes:
-                    freq, amp = fft_amplitude(data[axis], fs)
-                    label = "R dynamic" if axis == "r" else axis.upper()
+                    freq, amp = trace_fft(axis)
+                    label = TRACE_LABELS.get(axis, axis.upper())
                     top.plot(freq, amp, label=label, linewidth=0.8)
                     peaks = dominant_frequencies(freq, amp, count=1, min_frequency=max(0.5, freq[1] if len(freq) > 1 else 0.0))
                     if peaks:
@@ -542,11 +589,9 @@ def main() -> int:
                 top.grid(True, alpha=0.3)
                 top.legend()
 
-                nfft = min(1024, len(selected_samples))
                 for axis in axes:
-                    freq_psd, psd = welch_psd(data[axis], fs, fft_length=nfft)
-                    asd = amplitude_spectral_density(psd)
-                    label = "R dynamic" if axis == "r" else axis.upper()
+                    freq_psd, asd = trace_asd(axis)
+                    label = TRACE_LABELS.get(axis, axis.upper())
                     bottom.semilogy(freq_psd, asd, label=label, linewidth=0.9)
                 bottom.set_xlabel("Frequency (Hz)")
                 bottom.set_ylabel("ASD (m/s^2/sqrt(Hz))")

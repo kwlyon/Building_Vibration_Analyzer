@@ -36,7 +36,7 @@ class ExcelExportTests(unittest.TestCase):
                 self.assertIn("frequency_hz", fft_xml)
                 self.assertIn("x_fft_mps2", fft_xml)
 
-    def test_windowed_export_can_include_dynamic_resultant(self):
+    def test_windowed_export_can_include_both_resultants(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = pathlib.Path(tmp)
             csv_path = tmp_path / "synthetic.csv"
@@ -44,14 +44,19 @@ class ExcelExportTests(unittest.TestCase):
             self._write_synthetic_csv(csv_path)
             session = load_sessions(csv_path)[0]
 
-            export_fft_workbook(session, xlsx_path, window="boxcar", time_window=(1.0, 3.0), axes=("x", "r"))
+            export_fft_workbook(session, xlsx_path, window="boxcar", time_window=(1.0, 3.0), axes=("x", "r", "r_spectral"))
 
             with zipfile.ZipFile(xlsx_path) as zf:
                 summary_xml = zf.read("xl/worksheets/sheet1.xml").decode("utf-8")
                 fft_xml = zf.read("xl/worksheets/sheet3.xml").decode("utf-8")
+                psd_xml = zf.read("xl/worksheets/sheet4.xml").decode("utf-8")
                 self.assertIn("Exported samples", summary_xml)
                 self.assertIn("Analysis start", summary_xml)
-                self.assertIn("r_fft_mps2", fft_xml)
+                self.assertIn("R dynamic", summary_xml)
+                self.assertIn("R spectral RSS", summary_xml)
+                self.assertIn("r_dynamic_fft_mps2", fft_xml)
+                self.assertIn("r_spectral_fft_mps2", fft_xml)
+                self.assertIn("r_spectral_asd_mps2_per_sqrt_hz", psd_xml)
                 self.assertNotIn("z_fft_mps2", fft_xml)
 
     @staticmethod

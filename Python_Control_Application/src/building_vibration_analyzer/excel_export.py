@@ -13,9 +13,20 @@ from .analysis import (
     dominant_frequencies,
     dynamic_resultant,
     fft_amplitude,
+    root_sum_square_spectra,
+    sum_power_spectra,
     welch_psd,
 )
 from .csv_log import Session, select_samples_by_elapsed, samples_to_arrays
+
+BASE_AXES = ("x", "y", "z")
+AXIS_LABELS = {
+    "x": "X",
+    "y": "Y",
+    "z": "Z",
+    "r_dynamic": "R dynamic",
+    "r_spectral": "R spectral RSS",
+}
 
 
 def export_fft_workbook(
@@ -23,7 +34,7 @@ def export_fft_workbook(
     path: str | Path,
     window: str = "hann",
     time_window: tuple[float, float] | None = None,
-    axes: tuple[str, ...] = ("x", "y", "z", "r"),
+    axes: tuple[str, ...] = ("x", "y", "z", "r_dynamic", "r_spectral"),
 ) -> None:
     """Export selected-session time and frequency data to a single .xlsx workbook."""
     samples = select_samples_by_elapsed(session, *time_window) if time_window else list(session.samples)
@@ -34,13 +45,14 @@ def export_fft_workbook(
         raise ValueError("selected session does not have valid elapsed_us timing")
 
     t, data = samples_to_arrays(samples)
-    data["r"] = dynamic_resultant(data["x"], data["y"], data["z"])
-    axes = tuple(axis for axis in axes if axis in data)
+    data["r_dynamic"] = dynamic_resultant(data["x"], data["y"], data["z"])
+    axes = _normalize_axes(axes)
     if not axes:
         raise ValueError("at least one export axis must be selected")
-    fft_by_axis = {axis: fft_amplitude(data[axis], fs, window=window) for axis in axes}
+
     nperseg = min(1024, len(samples))
-    psd_by_axis = {axis: welch_psd(data[axis], fs, window=window, fft_length=nperseg) for axis in axes}
+    fft_by_axis = _fft_by_axis(data, fs, window, axes)
+    psd_by_axis = _psd_by_axis(data, fs, window, nperseg, axes)
     asd_by_axis = {axis: (freq, amplitude_spectral_density(psd)) for axis, (freq, psd) in psd_by_axis.items()}
 
     summary_rows = _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axis, time_window)
@@ -55,6 +67,55 @@ def export_fft_workbook(
         "PSD_ASD": psd_rows,
     }
     _write_xlsx(Path(path), workbook)
+
+
+def _normalize_axes(axes: tuple[str, ...]) -> tuple[str, ...]:
+    normalized = []
+    for axis in axes:
+        key = axis.lower().strip()
+        if key in ("r", "r_dynamic", "rdynamic", "r dynamic"):
+            key = "r_dynamic"
+        elif key in ("r_spectral", "r_rss", "rss", "r spectral", "r spectral rss", "resultant"):
+            key = "r_spectral"
+        if key in AXIS_LABELS and key not in normalized:
+            normalized.append(key)
+    return tuple(normalized)
+
+
+def _fft_by_axis(data, fs, window, axes):
+    fft_cache = {}
+
+    def independent_fft(axis):
+        if axis not in fft_cache:
+            fft_cache[axis] = fft_amplitude(data[axis], fs, window=window)
+        return fft_cache[axis]
+
+    results = {}
+    for axis in axes:
+        if axis == "r_spectral":
+            spectra = [independent_fft(base_axis) for base_axis in BASE_AXES]
+            results[axis] = (spectra[0][0], root_sum_square_spectra(*(spectrum[1] for spectrum in spectra)))
+        else:
+            results[axis] = independent_fft(axis)
+    return results
+
+
+def _psd_by_axis(data, fs, window, nperseg, axes):
+    psd_cache = {}
+
+    def independent_psd(axis):
+        if axis not in psd_cache:
+            psd_cache[axis] = welch_psd(data[axis], fs, window=window, fft_length=nperseg)
+        return psd_cache[axis]
+
+    results = {}
+    for axis in axes:
+        if axis == "r_spectral":
+            spectra = [independent_psd(base_axis) for base_axis in BASE_AXES]
+            results[axis] = (spectra[0][0], sum_power_spectra(*(spectrum[1] for spectrum in spectra)))
+        else:
+            results[axis] = independent_psd(axis)
+    return results
 
 
 def _sample_rate_from_samples(samples):
@@ -88,19 +149,19 @@ def _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axi
         ["Welch nperseg", nperseg],
         ["Welch overlap", "50%"],
         ["Frequency bins exported", len(next(iter(fft_by_axis.values()))[0]) if fft_by_axis else 0],
-        ["Exported axes", ", ".join(axis.upper() for axis in fft_by_axis)],
+        ["Exported axes", ", ".join(_axis_label(axis) for axis in fft_by_axis)],
         [],
         ["Dominant FFT Peaks"],
         ["Axis", "Frequency (Hz)", "Amplitude (m/s^2)"],
     ]
     for axis, (freq, amp) in fft_by_axis.items():
         for peak_freq, peak_amp in dominant_frequencies(freq, amp, count=5, min_frequency=0.5):
-            rows.append([axis.upper(), peak_freq, peak_amp])
+            rows.append([_axis_label(axis), peak_freq, peak_amp])
 
     rows.extend([[], ["Band RMS from Welch PSD"], ["Axis", "Band", "Low Hz", "High Hz", "RMS (m/s^2)"]])
     for axis, (freq, psd) in psd_by_axis.items():
         for band_name, band in DEFAULT_BUILDING_BANDS.items():
-            rows.append([axis.upper(), band_name, band[0], band[1], band_rms_from_psd(freq, psd, band)])
+            rows.append([_axis_label(axis), band_name, band[0], band[1], band_rms_from_psd(freq, psd, band)])
     rows.extend(
         [
             [],
@@ -110,6 +171,10 @@ def _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axi
         ]
     )
     return rows
+
+
+def _axis_label(axis):
+    return AXIS_LABELS.get(axis, axis.upper())
 
 
 def _time_rows(samples, t):

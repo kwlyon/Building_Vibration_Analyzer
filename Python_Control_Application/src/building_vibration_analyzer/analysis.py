@@ -28,6 +28,18 @@ def dynamic_resultant(x_values, y_values, z_values):
     return np.sqrt(x**2 + y**2 + z**2)
 
 
+def root_sum_square_spectra(*spectra):
+    """Combine same-bin amplitude spectra as a root-sum-square resultant."""
+    arrays = [np.asarray(spectrum, dtype=float) for spectrum in spectra]
+    return np.sqrt(np.sum([array**2 for array in arrays], axis=0))
+
+
+def sum_power_spectra(*spectra):
+    """Combine same-bin power spectra."""
+    arrays = [np.asarray(spectrum, dtype=float) for spectrum in spectra]
+    return np.sum(arrays, axis=0)
+
+
 def detrend_linear(values):
     return signal.detrend(np.asarray(values, dtype=float), type="linear")
 

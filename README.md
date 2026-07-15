@@ -66,7 +66,7 @@ The script creates a virtual environment, installs pinned dependencies, runs tes
 7. Send `STOP` or press the button again before unplugging power.
 8. Download or remove the SD card and analyze selected sessions.
 
-The desktop app also supports purely local file work: open a CSV from disk, save a selected session as a new CSV, inspect raw samples in a read-only copyable data table, select an analysis time window with draggable cursors, and export the selected window's frequency-analysis data to a single Excel `.xlsx` workbook.
+The desktop app also supports purely local file work: open a CSV from disk, save a selected session as a new CSV, inspect raw samples in a read-only copyable data table, select an analysis time window with draggable cursors, choose individual-axis or resultant frequency traces, and export the selected window's frequency-analysis data to a single Excel `.xlsx` workbook.
 
 ## Safety and Measurement Limits
 
