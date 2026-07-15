@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 
+from .analysis import amplitude_spectral_density, dominant_frequencies, fft_amplitude, welch_psd
 from .csv_log import load_sessions, samples_to_arrays
 from .protocol import build_set_rtc_command
 from .serial_device import DeviceClient, likely_teensy_ports
@@ -58,18 +59,30 @@ def main() -> int:
             left = QtWidgets.QWidget()
             left_layout = QtWidgets.QVBoxLayout(left)
             self.session_list = QtWidgets.QListWidget()
+            self.sd_file_list = QtWidgets.QListWidget()
+            sd_buttons = QtWidgets.QHBoxLayout()
+            self.list_files_button = QtWidgets.QPushButton("List SD")
+            self.download_button = QtWidgets.QPushButton("Download")
+            sd_buttons.addWidget(self.list_files_button)
+            sd_buttons.addWidget(self.download_button)
             self.log = QtWidgets.QPlainTextEdit()
             self.log.setReadOnly(True)
             left_layout.addWidget(QtWidgets.QLabel("Sessions"))
             left_layout.addWidget(self.session_list, 1)
+            left_layout.addWidget(QtWidgets.QLabel("SD Card Files"))
+            left_layout.addWidget(self.sd_file_list, 1)
+            left_layout.addLayout(sd_buttons)
             left_layout.addWidget(QtWidgets.QLabel("Device Log"))
             left_layout.addWidget(self.log, 1)
             splitter.addWidget(left)
 
             right = QtWidgets.QTabWidget()
-            self.figure = Figure(figsize=(8, 5))
-            self.canvas = FigureCanvas(self.figure)
-            right.addTab(self.canvas, "Time Domain")
+            self.time_figure = Figure(figsize=(8, 5))
+            self.time_canvas = FigureCanvas(self.time_figure)
+            right.addTab(self.time_canvas, "Time Domain")
+            self.freq_figure = Figure(figsize=(8, 5))
+            self.freq_canvas = FigureCanvas(self.freq_figure)
+            right.addTab(self.freq_canvas, "Frequency Domain")
             self.summary = QtWidgets.QPlainTextEdit()
             self.summary.setReadOnly(True)
             right.addTab(self.summary, "Summary")
@@ -82,6 +95,8 @@ def main() -> int:
             self.start_button.clicked.connect(lambda: self.send_command("START"))
             self.stop_button.clicked.connect(lambda: self.send_command("STOP"))
             self.open_button.clicked.connect(self.open_csv)
+            self.list_files_button.clicked.connect(self.list_sd_files)
+            self.download_button.clicked.connect(self.download_selected_sd_file)
             self.session_list.currentRowChanged.connect(self.plot_session)
             self.refresh_ports()
 
@@ -117,15 +132,54 @@ def main() -> int:
                 return
             for response in responses:
                 self.append_log(str(response))
+            return responses
 
         def sync_rtc(self) -> None:
             stamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
             self.send_command(build_set_rtc_command(stamp))
 
+        def list_sd_files(self) -> None:
+            if not self.client.connected:
+                self.append_log("Connect to the Teensy before listing SD files")
+                return
+            responses = self.send_command("LIST FILES") or []
+            self.sd_file_list.clear()
+            for response in responses:
+                if response.kind == "FILE" and "name" in response.fields:
+                    size = response.fields.get("size", "?")
+                    item = QtWidgets.QListWidgetItem(f"{response.fields['name']} ({size} bytes)")
+                    item.setData(QtCore.Qt.UserRole, response.fields["name"])
+                    self.sd_file_list.addItem(item)
+
+        def download_selected_sd_file(self) -> None:
+            if not self.client.connected:
+                self.append_log("Connect to the Teensy before downloading SD files")
+                return
+            item = self.sd_file_list.currentItem()
+            if item is None:
+                self.append_log("Select an SD file first")
+                return
+            remote_name = item.data(QtCore.Qt.UserRole)
+            default_name = str(Path.home() / "Downloads" / remote_name)
+            destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save SD file", default_name, "CSV files (*.csv);;All files (*.*)")
+            if not destination:
+                return
+            try:
+                self.client.save_read_file_chunks(remote_name, Path(destination))
+            except Exception as exc:
+                self.append_log(f"Download failed: {exc}")
+                return
+            self.append_log(f"Downloaded {remote_name} to {destination}")
+            if destination.lower().endswith(".csv"):
+                self.load_csv(destination)
+
         def open_csv(self) -> None:
             filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open vibration CSV", str(Path.home()), "CSV files (*.csv)")
             if not filename:
                 return
+            self.load_csv(filename)
+
+        def load_csv(self, filename: str) -> None:
             self.sessions = load_sessions(filename)
             self.session_list.clear()
             for session in self.sessions:
@@ -137,9 +191,12 @@ def main() -> int:
             if row < 0 or row >= len(self.sessions):
                 return
             session = self.sessions[row]
+            if not session.samples:
+                self.summary.setPlainText(f"Session {session.session_id} has no valid DATA samples.")
+                return
             t, data = samples_to_arrays(session.samples)
-            self.figure.clear()
-            ax = self.figure.add_subplot(111)
+            self.time_figure.clear()
+            ax = self.time_figure.add_subplot(111)
             for axis in ("x", "y", "z"):
                 ax.plot(t, data[axis], label=axis.upper(), linewidth=0.8)
             ax.set_xlabel("Time (s)")
@@ -147,10 +204,45 @@ def main() -> int:
             ax.set_title(f"Session {session.session_id}")
             ax.grid(True, alpha=0.3)
             ax.legend()
-            self.canvas.draw()
+            self.time_canvas.draw()
+
+            self.freq_figure.clear()
+            fs = session.sample_rate_hz or 0.0
+            if fs > 0 and len(session.samples) > 4:
+                top = self.freq_figure.add_subplot(211)
+                bottom = self.freq_figure.add_subplot(212)
+                dominant_lines = []
+                for axis in ("x", "y", "z"):
+                    freq, amp = fft_amplitude(data[axis], fs)
+                    top.plot(freq, amp, label=axis.upper(), linewidth=0.8)
+                    peaks = dominant_frequencies(freq, amp, count=1, min_frequency=max(0.5, freq[1] if len(freq) > 1 else 0.0))
+                    if peaks:
+                        dominant_lines.append(f"{axis.upper()}: {peaks[0][0]:.3g} Hz ({peaks[0][1]:.3g} m/s^2)")
+                top.set_ylabel("FFT amplitude (m/s^2)")
+                top.set_title(f"Frequency Domain - Session {session.session_id}")
+                top.grid(True, alpha=0.3)
+                top.legend()
+
+                nfft = min(1024, len(data["z"]))
+                freq_psd, psd = welch_psd(data["z"], fs, fft_length=nfft)
+                asd = amplitude_spectral_density(psd)
+                bottom.semilogy(freq_psd, asd, color="tab:purple", linewidth=0.9)
+                bottom.set_xlabel("Frequency (Hz)")
+                bottom.set_ylabel("Z ASD (m/s^2/sqrt(Hz))")
+                bottom.grid(True, which="both", alpha=0.3)
+                self.freq_figure.tight_layout()
+                dominant_text = "\nDominant frequencies:\n" + "\n".join(dominant_lines)
+            else:
+                ax_freq = self.freq_figure.add_subplot(111)
+                ax_freq.text(0.5, 0.5, "Need at least five samples with valid elapsed_us timing.", ha="center", va="center")
+                ax_freq.axis("off")
+                dominant_text = ""
+            self.freq_canvas.draw()
+
             self.summary.setPlainText(
                 f"Samples: {len(session.samples)}\nDuration: {session.duration_s:.3f} s\n"
                 f"Sample rate: {session.sample_rate_hz or 0:.3f} Hz\nFaults: {len(session.faults)}"
+                f"{dominant_text}"
             )
 
         def append_log(self, text: str) -> None:

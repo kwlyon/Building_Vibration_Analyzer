@@ -64,6 +64,28 @@ class DeviceClient:
                 break
         return responses
 
+    def read_file_chunk_text(self, filename: str, offset: int = 0, length: int = 4096) -> bytes:
+        if not self._serial or not self._serial.is_open:
+            raise RuntimeError("device is not connected")
+        self._serial.write(f"READ FILE {filename} {offset} {length}\n".encode("ascii"))
+        self._serial.flush()
+
+        first = self._serial.readline().decode("utf-8", errors="replace").strip()
+        if first.startswith("ERR"):
+            raise RuntimeError(first)
+        if not first.startswith("OK READ"):
+            raise RuntimeError(f"unexpected file-read response: {first}")
+
+        lines: list[bytes] = []
+        while True:
+            raw = self._serial.readline()
+            if not raw:
+                break
+            if raw.strip() == b"END READ":
+                break
+            lines.append(raw)
+        return b"".join(lines)
+
     def start_reader(self, callback: Callable[[str], None]) -> None:
         if not self._serial or not self._serial.is_open:
             raise RuntimeError("device is not connected")
@@ -90,11 +112,7 @@ class DeviceClient:
         offset = 0
         with destination.open("wb") as out:
             while True:
-                responses = self.command(f"READ FILE {filename} {offset} {chunk_size}", response_timeout=5.0)
-                payload_lines = [r.message for r in responses if r.kind not in {"OK", "ERR"}]
-                if not payload_lines:
-                    break
-                payload = "\n".join(payload_lines).encode("utf-8")
+                payload = self.read_file_chunk_text(filename, offset, chunk_size)
                 if not payload:
                     break
                 out.write(payload)
