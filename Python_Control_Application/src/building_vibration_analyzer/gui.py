@@ -15,6 +15,7 @@ def main() -> int:
     try:
         from PySide6 import QtCore, QtWidgets
         from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+        from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
         from matplotlib.figure import Figure
     except ImportError as exc:
         print("PySide6 GUI dependencies are not installed.")
@@ -86,10 +87,20 @@ def main() -> int:
             right = QtWidgets.QTabWidget()
             self.time_figure = Figure(figsize=(8, 5))
             self.time_canvas = FigureCanvas(self.time_figure)
-            right.addTab(self.time_canvas, "Time Domain")
+            time_tab = QtWidgets.QWidget()
+            time_layout = QtWidgets.QVBoxLayout(time_tab)
+            time_layout.setContentsMargins(0, 0, 0, 0)
+            time_layout.addWidget(NavigationToolbar(self.time_canvas, time_tab))
+            time_layout.addWidget(self.time_canvas, 1)
+            right.addTab(time_tab, "Time Domain")
             self.freq_figure = Figure(figsize=(8, 5))
             self.freq_canvas = FigureCanvas(self.freq_figure)
-            right.addTab(self.freq_canvas, "Frequency Domain")
+            freq_tab = QtWidgets.QWidget()
+            freq_layout = QtWidgets.QVBoxLayout(freq_tab)
+            freq_layout.setContentsMargins(0, 0, 0, 0)
+            freq_layout.addWidget(NavigationToolbar(self.freq_canvas, freq_tab))
+            freq_layout.addWidget(self.freq_canvas, 1)
+            right.addTab(freq_tab, "Frequency Domain")
             self.summary = QtWidgets.QPlainTextEdit()
             self.summary.setReadOnly(True)
             right.addTab(self.summary, "Summary")
