@@ -10,6 +10,7 @@ class CsvLogger {
   bool begin();
   bool sdReady() const { return sdReady_; }
   bool isOpen() const { return fileOpen_; }
+  const char *activeFilename() const { return activeFilename_; }
   bool startSession(const LoggerConfig &config, uint32_t sessionId, bool rtcValid);
   bool appendSample(const SampleRecord &record);
   bool writeEvent(const char *recordType, uint32_t sessionId, const char *message);
@@ -23,6 +24,7 @@ class CsvLogger {
   bool fileInfo(const char *name, Print &out);
   bool readFileChunk(const char *name, uint32_t offset, uint32_t length, Print &out);
   bool deleteFile(const char *name);
+  static bool isValidFilename(const char *name);
 
  private:
   bool sdReady_ = false;
@@ -31,8 +33,10 @@ class CsvLogger {
   uint32_t writeErrors_ = 0;
   uint32_t bytesWritten_ = 0;
   uint32_t lastFlushMs_ = 0;
+  char activeFilename_[32] = {0};
 
   bool writeLine(const char *line);
+  bool chooseNextDataFilename(char *buffer, size_t bufferSize);
   void writeHeaderIfNeeded(bool newFile);
   void timestampForRecord(const SampleRecord &record, char *buffer, size_t bufferSize);
 };

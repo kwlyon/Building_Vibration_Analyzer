@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "0.1.0",
+    [string]$Version = "0.2.0",
     [switch]$SkipInstall,
     [switch]$SkipExecutable
 )
@@ -135,7 +135,8 @@ Portable use:
 2. Run BuildingVibrationAnalyzer.exe if present.
 3. Synchronize RTC before field logging.
 4. Start and stop logging before removing power.
-5. Analyze downloaded CSV sessions from the persistent append-only log.
+5. Select one or more Data_N.csv files for download or confirmed deletion.
+6. Analyze only the desired cursor-selected window when saving CSV or exporting FFT.
 
 Hardware validation is still required before field measurements.
 "@ | Set-Content -Path (Join-Path $ReleaseDir "PORTABLE_USE.txt")

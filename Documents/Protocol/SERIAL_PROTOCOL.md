@@ -44,20 +44,19 @@ The Python application parses the leading token first and then parses `key=value
 | --- | --- |
 | `HELP` | Print command summary. |
 | `STATUS` | Return firmware, state, RTC, sensor, SD, dropped samples, overruns, and current configuration. |
-| `START` | Start append-only logging if sensor and SD checks pass. |
-| `STOP` | Stop logging, flush, and close the CSV file. |
+| `START` | Create the next unused `Data_N.csv` file and start logging if sensor and SD checks pass. Returns the new filename. |
+| `STOP` | Write the session end record, flush, and close the active CSV file. Returns the closed filename. |
 | `GET CONFIG` | Return active configuration. |
 | `SET RATE <hz>` | Set requested output data rate. Allowed rates map to ADXL355 ODR codes. |
 | `SET RANGE <2|4|8>` | Set ADXL355 measurement range in g. Blocked while recording. |
 | `SET FILTER <odr_code> [hpf_code]` | Set raw ADXL355 filter register fields. Blocked while recording except future HPF-only changes. |
-| `SET FILENAME <name>` | Set append-only CSV filename. Must be 8.3-compatible for best SD compatibility. |
 | `SET RTC <YYYY-MM-DDTHH:MM:SSZ>` | Set Teensy RTC from host UTC time and mark RTC valid. |
 | `GET RTC` | Return current RTC value and validity. |
-| `LIST FILES` | List root SD files. |
+| `LIST FILES` | List regular files in the SD-card root. |
 | `FILE INFO <name>` | Return size and basic metadata. |
 | `READ FILE <name> [offset] [length]` | Return an exact-length file chunk for download or terminal use. |
 | `DOWNLOAD FILE <name>` | Start framed file transfer. |
-| `DELETE FILE <name>` | Delete a file only when not recording. Python GUI must confirm first. |
+| `DELETE FILE <name>` | Delete a validated root-level file only when not recording. Python GUI confirms first. |
 | `GET ERRORS` | Return sticky firmware error counters. |
 | `CLEAR ERRORS` | Clear sticky counters. |
 | `GET SENSOR INFO` | Read ADXL355 identity registers and active config. |
@@ -68,11 +67,15 @@ The Python application parses the leading token first and then parses `key=value
 
 ## CSV schema
 
-Persistent append-only file default:
+Every acquisition uses a separate file:
 
 ```text
-VIBRATION_DATA.CSV
+Data_0.csv
+Data_1.csv
+Data_2.csv
 ```
+
+At Start, firmware scans existing names and selects one greater than the highest existing `Data_N.csv` index. It never fills a lower-numbered gap or opens an existing acquisition file for append. Each file contains one session.
 
 Header:
 
@@ -105,6 +108,11 @@ The raw payload is followed by a line break and the `END READ` marker. Clients m
 read the announced `bytes` count exactly before consuming the framing line break and
 end marker. This preserves CSV rows when a chunk boundary falls in the middle of a
 line and also prevents payload text from being mistaken for a framing marker.
+
+Filenames accepted by `FILE INFO`, `READ FILE`, and `DELETE FILE` are limited to a
+single root-level basename containing ASCII letters, digits, underscore, hyphen, and
+period. Empty names, `..`, path separators, and traversal forms are rejected. A read
+request is limited to 4096 bytes per chunk.
 
 `DOWNLOAD FILE <name>` returns:
 

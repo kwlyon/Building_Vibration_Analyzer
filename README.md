@@ -6,7 +6,7 @@ Portable building-vibration logger and Windows analysis tool using a Teensy 4.1,
 
 This repository contains:
 
-- Modular Teensy firmware for SPI ADXL355 acquisition, append-only CSV logging, RTC sync, LED/button handling, and a human-readable USB serial command protocol.
+- Modular Teensy firmware for SPI ADXL355 acquisition, one-file-per-acquisition CSV logging, RTC sync, LED/button handling, and a human-readable USB serial command protocol.
 - Hardware and protocol documentation for the selected Teensy pins and ADXL355 PMOD wiring.
 - A Python control/analysis application scaffold with tested protocol parsing, CSV session parsing, and vibration-analysis routines.
 - A repeatable Windows release script.
@@ -15,7 +15,7 @@ No actual Teensy or ADXL355 hardware was available in this coding environment. H
 
 ## Hardware Overview
 
-The ADXL355 is read directly over SPI from the Teensy 4.1. The PMOD board is powered from Teensy 3.3 V. The Teensy built-in microSD socket stores all acquisition sessions in one persistent append-only CSV file, `VIBRATION_DATA.CSV`.
+The ADXL355 is read directly over SPI from the Teensy 4.1. The PMOD board is powered from Teensy 3.3 V. Each acquisition creates a new CSV file in the Teensy built-in microSD socket using the sequence `Data_0.csv`, `Data_1.csv`, and so on. Existing numbered files are never overwritten.
 
 Default pin choices are documented in `Documents/Hardware/PIN_ASSIGNMENTS.md`.
 
@@ -64,9 +64,9 @@ The script creates a virtual environment, installs pinned dependencies, runs tes
 5. Send `SET RTC <timestamp>` before field logging when wall-clock time matters.
 6. Send `START` or press the Run/Stop button.
 7. Send `STOP` or press the button again before unplugging power.
-8. Download or remove the SD card and analyze selected sessions.
+8. Use the multi-selection SD browser to download or delete selected files, or remove the SD card and analyze a file directly.
 
-The desktop app also supports purely local file work: open a CSV from disk, save a selected session as a new CSV, inspect raw samples in a read-only copyable data table, select an analysis time window with draggable cursors, choose individual-axis or resultant frequency traces, and export the selected window's frequency-analysis data to a single Excel `.xlsx` workbook.
+The desktop app also supports purely local file work: open a CSV from disk, save only the samples between the two analysis cursors as a new CSV, inspect raw samples in a read-only copyable data table, choose individual-axis or resultant frequency traces, and export an FFT workbook calculated only from the selected time window.
 
 ## Safety and Measurement Limits
 

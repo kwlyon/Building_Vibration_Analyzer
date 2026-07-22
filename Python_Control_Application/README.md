@@ -19,12 +19,12 @@ PySide6 is required for the GUI. The core protocol, CSV parsing, and vibration-a
 - Discover serial ports with pyserial.
 - Send documented Teensy commands and parse `OK` / `ERR` / `EVT` replies.
 - Synchronize the Teensy RTC.
-- Start and stop logging.
-- List, inspect, read, and delete SD card files through firmware commands.
-- Parse append-only CSV logs and select acquisition sessions.
+- Start a newly numbered `Data_N.csv` acquisition and stop/close it safely.
+- List SD files with multi-selection, download selected files, and delete selected files after confirmation without blocking the GUI.
+- Parse acquisition CSV logs and select sessions.
 - Compute time-domain statistics, FFT, PSD, ASD, spectrograms, dominant frequencies, harmonics, coherence, and band RMS.
 - Generate HTML and PDF-style reports when Matplotlib is available.
-- Save selected sessions back to local CSV files.
+- Save only the current cursor-selected time window back to a local CSV file.
 - Export selected-session FFT, PSD, ASD, band RMS, dominant peaks, and source time data to one `.xlsx` workbook.
 - Select the analysis time window with numeric start/end controls or draggable vertical cursors on the time-domain plot.
 - Show selectable X, Y, Z, dynamic resultant (`R dynamic`), and spectral root-sum-square resultant (`R spectral RSS`) traces in FFT and ASD plots.

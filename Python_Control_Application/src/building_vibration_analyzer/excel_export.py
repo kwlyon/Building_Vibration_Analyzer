@@ -17,7 +17,7 @@ from .analysis import (
     sum_power_spectra,
     welch_psd,
 )
-from .csv_log import Session, select_samples_by_elapsed, samples_to_arrays
+from .csv_log import Session, normalize_elapsed_window, sample_rate_from_samples, select_samples_by_elapsed, samples_to_arrays
 
 BASE_AXES = ("x", "y", "z")
 AXIS_LABELS = {
@@ -37,10 +37,11 @@ def export_fft_workbook(
     axes: tuple[str, ...] = ("x", "y", "z", "r_dynamic", "r_spectral"),
 ) -> None:
     """Export selected-session time and frequency data to a single .xlsx workbook."""
-    samples = select_samples_by_elapsed(session, *time_window) if time_window else list(session.samples)
-    if not samples:
-        raise ValueError("selected session has no samples")
-    fs = _sample_rate_from_samples(samples)
+    normalized_window = normalize_elapsed_window(session, *time_window) if time_window else (0.0, session.duration_s)
+    samples = select_samples_by_elapsed(session, *normalized_window)
+    if len(samples) < 5:
+        raise ValueError("selected time window must contain at least five samples for FFT export")
+    fs = sample_rate_from_samples(samples)
     if fs is None or fs <= 0:
         raise ValueError("selected session does not have valid elapsed_us timing")
 
@@ -55,7 +56,7 @@ def export_fft_workbook(
     psd_by_axis = _psd_by_axis(data, fs, window, nperseg, axes)
     asd_by_axis = {axis: (freq, amplitude_spectral_density(psd)) for axis, (freq, psd) in psd_by_axis.items()}
 
-    summary_rows = _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axis, time_window)
+    summary_rows = _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axis, normalized_window)
     time_rows = _time_rows(samples, t)
     fft_rows = _fft_rows(fft_by_axis)
     psd_rows = _psd_asd_rows(psd_by_axis, asd_by_axis)
@@ -118,16 +119,6 @@ def _psd_by_axis(data, fs, window, nperseg, axes):
     return results
 
 
-def _sample_rate_from_samples(samples):
-    if len(samples) < 2:
-        return None
-    diffs = [b.elapsed_us - a.elapsed_us for a, b in zip(samples, samples[1:]) if b.elapsed_us > a.elapsed_us]
-    if not diffs:
-        return None
-    median_us = sorted(diffs)[len(diffs) // 2]
-    return 1_000_000.0 / median_us
-
-
 def _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axis, time_window):
     rows = [
         ["Building Vibration Analyzer Frequency Export"],
@@ -137,9 +128,9 @@ def _summary_rows(session, samples, fs, window, nperseg, fft_by_axis, psd_by_axi
         ["Full-session samples", len(session.samples)],
         ["Exported samples", len(samples)],
         ["Full-session duration (s)", session.duration_s],
-        ["Analysis start (s)", time_window[0] if time_window else 0.0],
-        ["Analysis end (s)", time_window[1] if time_window else session.duration_s],
-        ["Analysis duration (s)", ((time_window[1] - time_window[0]) if time_window else session.duration_s)],
+        ["Analysis start (s)", time_window[0]],
+        ["Analysis end (s)", time_window[1]],
+        ["Analysis duration (s)", time_window[1] - time_window[0]],
         ["Estimated sample rate (Hz)", fs],
         ["Frequency resolution (Hz)", fs / len(samples) if samples else ""],
         ["FFT window", window],

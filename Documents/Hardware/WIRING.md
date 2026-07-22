@@ -51,7 +51,7 @@ The firmware debounces in software and enforces a minimum interval between run/s
 
 ## microSD
 
-Use the Teensy 4.1 built-in microSD socket. Format cards as FAT32 or exFAT using a standard SD formatter. The firmware opens a persistent append-only CSV file and uses buffered writes with controlled flushes.
+Use the Teensy 4.1 built-in microSD socket. Format cards as FAT32 or exFAT using a standard SD formatter. The firmware creates a new numbered CSV file for each acquisition and uses buffered writes with controlled periodic flushes.
 
 ## USB serial
 

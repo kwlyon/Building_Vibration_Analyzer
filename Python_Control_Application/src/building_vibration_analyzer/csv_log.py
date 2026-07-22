@@ -100,7 +100,14 @@ def load_sessions(path: str | Path) -> list[Session]:
     return [sessions[sid] for sid in order]
 
 
-def export_session_csv(session: Session, path: str | Path) -> None:
+def export_session_csv(
+    session: Session,
+    path: str | Path,
+    time_window: tuple[float, float] | None = None,
+) -> None:
+    samples = select_samples_by_elapsed(session, *time_window) if time_window else list(session.samples)
+    if not samples:
+        raise ValueError("selected time window contains no samples")
     fieldnames = [
         "timestamp_iso8601",
         "elapsed_us",
@@ -117,7 +124,7 @@ def export_session_csv(session: Session, path: str | Path) -> None:
     with Path(path).open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
-        for sample in session.samples:
+        for sample in samples:
             writer.writerow(sample.__dict__)
 
 
@@ -131,19 +138,41 @@ def session_elapsed_seconds(samples: Iterable[Sample]):
     return np.array([(s.elapsed_us - base_us) / 1_000_000.0 for s in samples], dtype=float)
 
 
+def normalize_elapsed_window(
+    session: Session, start_s: float | None = None, end_s: float | None = None
+) -> tuple[float, float]:
+    duration = max(0.0, session.duration_s)
+    start = 0.0 if start_s is None else float(start_s)
+    end = duration if end_s is None else float(end_s)
+    left, right = sorted((start, end))
+    return max(0.0, min(duration, left)), max(0.0, min(duration, right))
+
+
 def select_samples_by_elapsed(session: Session, start_s: float | None = None, end_s: float | None = None) -> list[Sample]:
     if not session.samples:
         return []
+    start_s, end_s = normalize_elapsed_window(session, start_s, end_s)
     base_us = session.samples[0].elapsed_us
     selected: list[Sample] = []
     for sample in session.samples:
         elapsed_s = (sample.elapsed_us - base_us) / 1_000_000.0
-        if start_s is not None and elapsed_s < start_s:
+        if elapsed_s < start_s:
             continue
-        if end_s is not None and elapsed_s > end_s:
+        if elapsed_s > end_s:
             continue
         selected.append(sample)
     return selected
+
+
+def sample_rate_from_samples(samples: Iterable[Sample]) -> float | None:
+    samples = list(samples)
+    if len(samples) < 2:
+        return None
+    diffs = [b.elapsed_us - a.elapsed_us for a, b in zip(samples, samples[1:]) if b.elapsed_us > a.elapsed_us]
+    if not diffs:
+        return None
+    median_us = sorted(diffs)[len(diffs) // 2]
+    return 1_000_000.0 / median_us
 
 
 def samples_to_arrays(samples: Iterable[Sample]):

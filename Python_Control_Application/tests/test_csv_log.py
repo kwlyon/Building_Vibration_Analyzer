@@ -5,7 +5,12 @@ import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 
-from building_vibration_analyzer.csv_log import export_session_csv, load_sessions, select_samples_by_elapsed
+from building_vibration_analyzer.csv_log import (
+    export_session_csv,
+    load_sessions,
+    normalize_elapsed_window,
+    select_samples_by_elapsed,
+)
 
 
 SAMPLE_CSV = """record_type,session_id,timestamp_iso8601,elapsed_us,sample_number,x_counts,y_counts,z_counts,x_mps2,y_mps2,z_mps2,temperature_c,status_flags
@@ -46,6 +51,26 @@ class CsvLogTests(unittest.TestCase):
             session = load_sessions(path)[0]
             selected = select_samples_by_elapsed(session, 0.005, 0.02)
             self.assertEqual([sample.sample_number for sample in selected], [1])
+
+    def test_selection_normalizes_reversed_and_clipped_limits(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / "log.csv"
+            path.write_text(SAMPLE_CSV, encoding="utf-8")
+            session = load_sessions(path)[0]
+            self.assertEqual(normalize_elapsed_window(session, 1.0, -1.0), (0.0, 0.01))
+            selected = select_samples_by_elapsed(session, 0.02, 0.005)
+            self.assertEqual([sample.sample_number for sample in selected], [1])
+
+    def test_export_session_uses_only_selected_window(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = pathlib.Path(tmp) / "source.csv"
+            destination = pathlib.Path(tmp) / "selected.csv"
+            source.write_text(SAMPLE_CSV, encoding="utf-8")
+            session = load_sessions(source)[0]
+            export_session_csv(session, destination, time_window=(0.02, 0.005))
+            exported = destination.read_text(encoding="utf-8").splitlines()
+            self.assertEqual(len(exported), 2)
+            self.assertIn(",1,1,2,3,", exported[1])
 
 
 if __name__ == "__main__":

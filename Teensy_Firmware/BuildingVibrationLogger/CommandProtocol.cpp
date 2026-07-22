@@ -41,13 +41,15 @@ void CommandProtocol::handleLine(char *line) {
     printStatus();
   } else if (equalsIgnoreCase(line, "START")) {
     if (ctx_.startLogging && ctx_.startLogging()) {
-      stream_->println("OK START");
+      stream_->print("OK START name=");
+      stream_->println(ctx_.logger->activeFilename());
     } else {
       stream_->println("ERR START failed");
     }
   } else if (equalsIgnoreCase(line, "STOP")) {
     if (ctx_.stopLogging && ctx_.stopLogging()) {
-      stream_->println("OK STOP");
+      stream_->print("OK STOP name=");
+      stream_->println(ctx_.logger->activeFilename());
     } else {
       stream_->println("ERR STOP failed");
     }
@@ -96,9 +98,7 @@ void CommandProtocol::handleLine(char *line) {
       stream_->println("ERR BUSY recording");
       return;
     }
-    ConfigManager::sanitizeFilename(line + 13, ctx_.config->filename, sizeof(ctx_.config->filename));
-    stream_->print("OK SET_FILENAME name=");
-    stream_->println(ctx_.config->filename);
+    stream_->println("ERR UNSUPPORTED automatic_filenames");
   } else if (startsWithIgnoreCase(line, "SET RTC ")) {
     if (ctx_.clock && ctx_.clock->setFromIso8601(line + 8)) {
       stream_->println("OK SET_RTC");
@@ -115,7 +115,12 @@ void CommandProtocol::handleLine(char *line) {
   } else if (equalsIgnoreCase(line, "LIST FILES")) {
     ctx_.logger->listFiles(*stream_);
   } else if (startsWithIgnoreCase(line, "FILE INFO ")) {
-    ctx_.logger->fileInfo(line + 10, *stream_);
+    const char *name = line + 10;
+    if (!CsvLogger::isValidFilename(name)) {
+      stream_->println("ERR FILE invalid_name");
+      return;
+    }
+    ctx_.logger->fileInfo(name, *stream_);
   } else if (startsWithIgnoreCase(line, "READ FILE ")) {
     char *name = line + 10;
     char *offsetText = strchr(name, ' ');
@@ -128,16 +133,36 @@ void CommandProtocol::handleLine(char *line) {
         length = strtoul(offsetText + 1, nullptr, 0);
       }
     }
+    if (!CsvLogger::isValidFilename(name) || length == 0 || length > 4096) {
+      stream_->println("ERR FILE invalid_request");
+      return;
+    }
     ctx_.logger->readFileChunk(name, offset, length, *stream_);
   } else if (startsWithIgnoreCase(line, "DELETE FILE ")) {
     if (isRecording()) {
       stream_->println("ERR BUSY recording");
       return;
     }
-    stream_->println(ctx_.logger->deleteFile(line + 12) ? "OK DELETE" : "ERR DELETE failed");
+    const char *name = line + 12;
+    if (!CsvLogger::isValidFilename(name)) {
+      stream_->println("ERR FILE invalid_name");
+      return;
+    }
+    if (ctx_.logger->deleteFile(name)) {
+      stream_->print("OK DELETE name=");
+      stream_->println(name);
+    } else {
+      stream_->print("ERR DELETE failed name=");
+      stream_->println(name);
+    }
   } else if (startsWithIgnoreCase(line, "DOWNLOAD FILE ")) {
-    stream_->println("OK DOWNLOAD mode=text_chunk note=use_READ_FILE_for_chunks");
-    ctx_.logger->readFileChunk(line + 14, 0, 2048, *stream_);
+    const char *name = line + 14;
+    if (!CsvLogger::isValidFilename(name)) {
+      stream_->println("ERR FILE invalid_name");
+      return;
+    }
+    stream_->println("OK DOWNLOAD mode=exact_byte_chunks note=use_READ_FILE_for_chunks");
+    ctx_.logger->readFileChunk(name, 0, 2048, *stream_);
   } else if (equalsIgnoreCase(line, "GET ERRORS")) {
     stream_->print("OK ERRORS sd_write=");
     stream_->print(ctx_.logger->writeErrors());
@@ -172,7 +197,7 @@ void CommandProtocol::handleLine(char *line) {
 void CommandProtocol::printHelp() {
   stream_->println("OK HELP");
   stream_->println("INFO HELP STATUS START STOP GET CONFIG SET RATE <hz> SET RANGE <2|4|8>");
-  stream_->println("INFO SET FILTER <odr_code> [hpf_code] SET FILENAME <name> SET RTC <iso> GET RTC");
+  stream_->println("INFO SET FILTER <odr_code> [hpf_code] SET RTC <iso> GET RTC");
   stream_->println("INFO LIST FILES FILE INFO <name> READ FILE <name> [offset] [length] DOWNLOAD FILE <name>");
   stream_->println("INFO DELETE FILE <name> GET ERRORS CLEAR ERRORS GET SENSOR INFO SAVE CONFIG LOAD DEFAULTS REBOOT");
 }
@@ -197,7 +222,9 @@ void CommandProtocol::printStatus() {
   stream_->print(" dropped=");
   stream_->print(ctx_.droppedSamples ? *ctx_.droppedSamples : 0);
   stream_->print(" overruns=");
-  stream_->println(ctx_.bufferOverruns ? *ctx_.bufferOverruns : 0);
+  stream_->print(ctx_.bufferOverruns ? *ctx_.bufferOverruns : 0);
+  stream_->print(" file=");
+  stream_->println(ctx_.logger && ctx_.logger->activeFilename()[0] ? ctx_.logger->activeFilename() : "none");
 }
 
 void CommandProtocol::printConfig() {
@@ -209,8 +236,7 @@ void CommandProtocol::printConfig() {
   stream_->print(ctx_.config->odrCode);
   stream_->print(" hpf_code=");
   stream_->print(ctx_.config->hpfCode);
-  stream_->print(" filename=");
-  stream_->print(ctx_.config->filename);
+  stream_->print(" filename_mode=automatic_data_sequence");
   stream_->print(" flush_ms=");
   stream_->println(static_cast<unsigned long>(ctx_.config->flushIntervalMs));
 }

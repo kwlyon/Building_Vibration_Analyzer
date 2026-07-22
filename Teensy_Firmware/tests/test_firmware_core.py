@@ -1,4 +1,5 @@
 import binascii
+import re
 import unittest
 
 
@@ -42,6 +43,12 @@ def odr_code_for_rate(rate_hz):
     return 0x0A
 
 
+def next_data_filename(existing_names):
+    pattern = re.compile(r"^data_(\d+)\.csv$", re.IGNORECASE)
+    indices = [int(match.group(1)) for name in existing_names if (match := pattern.fullmatch(name))]
+    return f"Data_{max(indices) + 1 if indices else 0}.csv"
+
+
 class FirmwareMathTests(unittest.TestCase):
     def test_signed_20_positive_and_negative(self):
         self.assertEqual(decode_signed_20(0x00, 0x00, 0x00), 0)
@@ -75,6 +82,11 @@ class CsvSchemaTests(unittest.TestCase):
         for required in ("timestamp_iso8601", "x_mps2", "y_mps2", "z_mps2"):
             self.assertIn(required, fields)
         self.assertEqual(fields[0], "record_type")
+
+    def test_new_acquisition_uses_highest_existing_index_plus_one(self):
+        self.assertEqual(next_data_filename([]), "Data_0.csv")
+        self.assertEqual(next_data_filename(["Data_0.csv", "Data_1.csv", "Data_3.csv"]), "Data_4.csv")
+        self.assertEqual(next_data_filename(["notes.txt", "DATA_9.CSV"]), "Data_10.csv")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "building-vibration-analyzer"
-version = "0.1.0"
+version = "0.2.0"
 description = "Windows control and analysis application for the Teensy ADXL355 building vibration logger"
 requires-python = ">=3.11"
 dependencies = [

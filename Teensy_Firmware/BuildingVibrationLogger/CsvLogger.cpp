@@ -1,6 +1,37 @@
 #include "CsvLogger.h"
 #include <TimeLib.h>
 
+namespace {
+bool equalsIgnoreCaseAscii(const char *a, const char *b) {
+  while (*a && *b) {
+    if (toupper(static_cast<unsigned char>(*a++)) != toupper(static_cast<unsigned char>(*b++))) {
+      return false;
+    }
+  }
+  return *a == '\0' && *b == '\0';
+}
+
+bool parseDataFileIndex(const char *name, uint32_t &index) {
+  const char prefix[] = "DATA_";
+  for (size_t i = 0; prefix[i] != '\0'; ++i) {
+    if (name[i] == '\0' || toupper(static_cast<unsigned char>(name[i])) != prefix[i]) {
+      return false;
+    }
+  }
+  const char *digits = name + 5;
+  if (!isdigit(static_cast<unsigned char>(*digits))) {
+    return false;
+  }
+  char *end = nullptr;
+  const unsigned long parsed = strtoul(digits, &end, 10);
+  if (end == digits || !equalsIgnoreCaseAscii(end, ".CSV")) {
+    return false;
+  }
+  index = static_cast<uint32_t>(parsed);
+  return true;
+}
+}
+
 bool CsvLogger::begin() {
   sdReady_ = SD.begin(BUILTIN_SDCARD);
   return sdReady_;
@@ -12,15 +43,22 @@ bool CsvLogger::startSession(const LoggerConfig &config, uint32_t sessionId, boo
     return false;
   }
 
-  const bool newFile = !SD.exists(config.filename);
-  logFile_ = SD.open(config.filename, FILE_WRITE);
+  if (fileOpen_) {
+    ++writeErrors_;
+    return false;
+  }
+  if (!chooseNextDataFilename(activeFilename_, sizeof(activeFilename_))) {
+    ++writeErrors_;
+    return false;
+  }
+  logFile_ = SD.open(activeFilename_, FILE_WRITE);
   if (!logFile_) {
     ++writeErrors_;
     fileOpen_ = false;
     return false;
   }
   fileOpen_ = true;
-  writeHeaderIfNeeded(newFile || logFile_.size() == 0);
+  writeHeaderIfNeeded(true);
 
   char line[220];
   snprintf(line, sizeof(line),
@@ -98,10 +136,12 @@ void CsvLogger::listFiles(Print &out) {
   out.println("OK LIST");
   File entry = root.openNextFile();
   while (entry) {
-    out.print("FILE name=");
-    out.print(entry.name());
-    out.print(" size=");
-    out.println(static_cast<unsigned long>(entry.size()));
+    if (!entry.isDirectory() && isValidFilename(entry.name())) {
+      out.print("FILE name=");
+      out.print(entry.name());
+      out.print(" size=");
+      out.println(static_cast<unsigned long>(entry.size()));
+    }
     entry.close();
     entry = root.openNextFile();
   }
@@ -112,6 +152,10 @@ void CsvLogger::listFiles(Print &out) {
 bool CsvLogger::fileInfo(const char *name, Print &out) {
   if (!sdReady_ && !begin()) {
     out.println("ERR SD not_ready");
+    return false;
+  }
+  if (!isValidFilename(name)) {
+    out.println("ERR FILE invalid_name");
     return false;
   }
   File file = SD.open(name, FILE_READ);
@@ -130,6 +174,10 @@ bool CsvLogger::fileInfo(const char *name, Print &out) {
 bool CsvLogger::readFileChunk(const char *name, uint32_t offset, uint32_t length, Print &out) {
   if (!sdReady_ && !begin()) {
     out.println("ERR SD not_ready");
+    return false;
+  }
+  if (!isValidFilename(name)) {
+    out.println("ERR FILE invalid_name");
     return false;
   }
   File file = SD.open(name, FILE_READ);
@@ -166,7 +214,65 @@ bool CsvLogger::deleteFile(const char *name) {
   if (!sdReady_ && !begin()) {
     return false;
   }
+  if (!isValidFilename(name) || (fileOpen_ && equalsIgnoreCaseAscii(name, activeFilename_))) {
+    return false;
+  }
   return SD.remove(name);
+}
+
+bool CsvLogger::isValidFilename(const char *name) {
+  if (!name || name[0] == '\0') {
+    return false;
+  }
+  const size_t length = strlen(name);
+  if (length == 0 || length >= sizeof(activeFilename_) || equalsIgnoreCaseAscii(name, ".") ||
+      equalsIgnoreCaseAscii(name, "..") || strstr(name, "..") != nullptr) {
+    return false;
+  }
+  for (size_t i = 0; i < length; ++i) {
+    const char c = name[i];
+    if (!(isalnum(static_cast<unsigned char>(c)) || c == '_' || c == '-' || c == '.')) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool CsvLogger::chooseNextDataFilename(char *buffer, size_t bufferSize) {
+  File root = SD.open("/");
+  if (!root) {
+    return false;
+  }
+  bool found = false;
+  uint32_t highest = 0;
+  File entry = root.openNextFile();
+  while (entry) {
+    if (!entry.isDirectory()) {
+      uint32_t index = 0;
+      if (parseDataFileIndex(entry.name(), index) && (!found || index > highest)) {
+        highest = index;
+        found = true;
+      }
+    }
+    entry.close();
+    entry = root.openNextFile();
+  }
+  root.close();
+
+  uint32_t candidate = found ? highest + 1 : 0;
+  if (found && candidate == 0) {
+    return false;
+  }
+  while (true) {
+    snprintf(buffer, bufferSize, "Data_%lu.csv", static_cast<unsigned long>(candidate));
+    if (!SD.exists(buffer)) {
+      return true;
+    }
+    ++candidate;
+    if (candidate == 0) {
+      return false;
+    }
+  }
 }
 
 bool CsvLogger::writeLine(const char *line) {

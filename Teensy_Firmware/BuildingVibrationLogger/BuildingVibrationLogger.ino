@@ -122,7 +122,9 @@ bool startLogging() {
   recording = true;
   statusLed.setState(LedState::Recording);
   Serial.print("EVT SESSION_START id=");
-  Serial.println(static_cast<unsigned long>(sessionId));
+  Serial.print(static_cast<unsigned long>(sessionId));
+  Serial.print(" name=");
+  Serial.println(csvLogger.activeFilename());
   return true;
 }
 
@@ -136,7 +138,9 @@ bool stopLogging() {
   recording = false;
   statusLed.setState(LedState::Idle);
   Serial.print("EVT SESSION_END id=");
-  Serial.println(static_cast<unsigned long>(sessionId));
+  Serial.print(static_cast<unsigned long>(sessionId));
+  Serial.print(" name=");
+  Serial.println(csvLogger.activeFilename());
   return true;
 }
 

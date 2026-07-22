@@ -13,7 +13,14 @@ from .analysis import (
     sum_power_spectra,
     welch_psd,
 )
-from .csv_log import export_session_csv, load_sessions, samples_to_arrays, select_samples_by_elapsed
+from .csv_log import (
+    export_session_csv,
+    load_sessions,
+    normalize_elapsed_window,
+    sample_rate_from_samples,
+    samples_to_arrays,
+    select_samples_by_elapsed,
+)
 from .excel_export import export_fft_workbook
 from .protocol import build_set_rtc_command
 from .serial_device import DeviceClient, likely_teensy_ports
@@ -40,6 +47,25 @@ def main() -> int:
         print("Install requirements.txt or run the tested protocol/analysis modules directly.")
         print(f"Missing dependency detail: {exc}")
         return 2
+
+    class WorkerSignals(QtCore.QObject):
+        completed = QtCore.Signal(object)
+        failed = QtCore.Signal(str)
+
+    class DeviceWorker(QtCore.QRunnable):
+        def __init__(self, operation) -> None:
+            super().__init__()
+            self.operation = operation
+            self.signals = WorkerSignals()
+
+        @QtCore.Slot()
+        def run(self) -> None:
+            try:
+                result = self.operation()
+            except Exception as exc:
+                self.signals.failed.emit(str(exc))
+                return
+            self.signals.completed.emit(result)
 
     class SampleTableModel(QtCore.QAbstractTableModel):
         headers = [
@@ -140,6 +166,10 @@ def main() -> int:
             self._window_start_line = None
             self._window_end_line = None
             self._window_span = None
+            self._device_busy = False
+            self._device_workers = set()
+            self._device_thread_pool = QtCore.QThreadPool(self)
+            self._device_thread_pool.setMaxThreadCount(1)
 
             central = QtWidgets.QWidget()
             self.setCentralWidget(central)
@@ -177,11 +207,14 @@ def main() -> int:
             local_buttons.addWidget(self.save_session_button)
             local_buttons.addWidget(self.export_fft_button)
             self.sd_file_list = QtWidgets.QListWidget()
+            self.sd_file_list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
             sd_buttons = QtWidgets.QHBoxLayout()
             self.list_files_button = QtWidgets.QPushButton("List SD")
-            self.download_button = QtWidgets.QPushButton("Download")
+            self.download_button = QtWidgets.QPushButton("Download Selected")
+            self.delete_files_button = QtWidgets.QPushButton("Delete Selected")
             sd_buttons.addWidget(self.list_files_button)
             sd_buttons.addWidget(self.download_button)
+            sd_buttons.addWidget(self.delete_files_button)
             self.log = QtWidgets.QPlainTextEdit()
             self.log.setReadOnly(True)
             left_layout.addWidget(QtWidgets.QLabel("Sessions"))
@@ -259,13 +292,14 @@ def main() -> int:
             self.refresh_button.clicked.connect(self.refresh_ports)
             self.connect_button.clicked.connect(self.toggle_connect)
             self.rtc_button.clicked.connect(self.sync_rtc)
-            self.start_button.clicked.connect(lambda: self.send_command("START"))
-            self.stop_button.clicked.connect(lambda: self.send_command("STOP"))
+            self.start_button.clicked.connect(lambda: self.send_command_async("START"))
+            self.stop_button.clicked.connect(lambda: self.send_command_async("STOP"))
             self.open_button.clicked.connect(self.open_csv)
             self.save_session_button.clicked.connect(self.save_selected_session)
             self.export_fft_button.clicked.connect(self.export_selected_fft)
             self.list_files_button.clicked.connect(self.list_sd_files)
             self.download_button.clicked.connect(self.download_selected_sd_file)
+            self.delete_files_button.clicked.connect(self.delete_selected_sd_files)
             self.session_list.currentRowChanged.connect(self.plot_session)
             self.window_start_spin.valueChanged.connect(self.update_analysis_window_from_controls)
             self.window_end_spin.valueChanged.connect(self.update_analysis_window_from_controls)
@@ -311,44 +345,158 @@ def main() -> int:
                 self.append_log(str(response))
             return responses
 
+        def set_device_busy(self, busy: bool) -> None:
+            self._device_busy = busy
+            for widget in (
+                self.connect_button,
+                self.rtc_button,
+                self.start_button,
+                self.stop_button,
+                self.list_files_button,
+                self.download_button,
+                self.delete_files_button,
+            ):
+                widget.setEnabled(not busy)
+
+        def run_device_task(self, description: str, operation, on_success=None) -> None:
+            if self._device_busy:
+                self.append_log("Another device operation is already in progress")
+                return
+            self.set_device_busy(True)
+            self.append_log(f"{description}...")
+            worker = DeviceWorker(operation)
+            self._device_workers.add(worker)
+
+            def completed(result) -> None:
+                self._device_workers.discard(worker)
+                self.set_device_busy(False)
+                if on_success is not None:
+                    on_success(result)
+
+            def failed(message: str) -> None:
+                self._device_workers.discard(worker)
+                self.set_device_busy(False)
+                self.append_log(f"{description} failed: {message}")
+                QtWidgets.QMessageBox.warning(self, description, message)
+
+            worker.signals.completed.connect(completed)
+            worker.signals.failed.connect(failed)
+            self._device_thread_pool.start(worker)
+
+        def send_command_async(self, command: str) -> None:
+            if not self.client.connected:
+                self.append_log("Not connected")
+                return
+
+            def show_responses(responses) -> None:
+                for response in responses:
+                    self.append_log(str(response))
+
+            self.run_device_task(command, lambda: self.client.command(command), show_responses)
+
         def sync_rtc(self) -> None:
             stamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-            self.send_command(build_set_rtc_command(stamp))
+            self.send_command_async(build_set_rtc_command(stamp))
 
         def list_sd_files(self) -> None:
             if not self.client.connected:
                 self.append_log("Connect to the Teensy before listing SD files")
                 return
-            responses = self.send_command("LIST FILES") or []
+            self.run_device_task("Listing SD-card files", self.client.list_files, self.populate_sd_file_list)
+
+        def populate_sd_file_list(self, files) -> None:
             self.sd_file_list.clear()
-            for response in responses:
-                if response.kind == "FILE" and "name" in response.fields:
-                    size = response.fields.get("size", "?")
-                    item = QtWidgets.QListWidgetItem(f"{response.fields['name']} ({size} bytes)")
-                    item.setData(QtCore.Qt.UserRole, response.fields["name"])
-                    self.sd_file_list.addItem(item)
+            for remote_file in files:
+                item = QtWidgets.QListWidgetItem(f"{remote_file.name} ({remote_file.size} bytes)")
+                item.setData(QtCore.Qt.UserRole, remote_file.name)
+                self.sd_file_list.addItem(item)
+            self.append_log(f"Listed {len(files)} SD-card file(s)")
+
+        def selected_sd_filenames(self) -> list[str]:
+            return [item.data(QtCore.Qt.UserRole) for item in self.sd_file_list.selectedItems()]
 
         def download_selected_sd_file(self) -> None:
             if not self.client.connected:
                 self.append_log("Connect to the Teensy before downloading SD files")
                 return
-            item = self.sd_file_list.currentItem()
-            if item is None:
-                self.append_log("Select an SD file first")
+            remote_names = self.selected_sd_filenames()
+            if not remote_names:
+                self.append_log("Select one or more SD files first")
                 return
-            remote_name = item.data(QtCore.Qt.UserRole)
-            default_name = str(Path.home() / "Downloads" / remote_name)
-            destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save SD file", default_name, "CSV files (*.csv);;All files (*.*)")
-            if not destination:
+            destination_dir = QtWidgets.QFileDialog.getExistingDirectory(
+                self, "Choose download folder", str(Path.home() / "Downloads")
+            )
+            if not destination_dir:
                 return
-            try:
-                self.client.save_read_file_chunks(remote_name, Path(destination))
-            except Exception as exc:
-                self.append_log(f"Download failed: {exc}")
+            destination_root = Path(destination_dir)
+            destinations = [(name, destination_root / Path(name).name) for name in remote_names]
+            existing = [path.name for _name, path in destinations if path.exists()]
+            if existing:
+                answer = QtWidgets.QMessageBox.question(
+                    self,
+                    "Overwrite downloaded files?",
+                    "The following files already exist and will be replaced:\n\n" + "\n".join(existing),
+                )
+                if answer != QtWidgets.QMessageBox.Yes:
+                    return
+
+            def download_all():
+                downloaded = []
+                for remote_name, destination in destinations:
+                    self.client.save_read_file_chunks(remote_name, destination)
+                    downloaded.append(destination)
+                return downloaded
+
+            def download_complete(downloaded) -> None:
+                for path in downloaded:
+                    self.append_log(f"Downloaded {path.name} to {path}")
+                if len(downloaded) == 1 and downloaded[0].suffix.lower() == ".csv":
+                    self.load_csv(str(downloaded[0]))
+
+            self.run_device_task(f"Downloading {len(remote_names)} file(s)", download_all, download_complete)
+
+        def delete_selected_sd_files(self) -> None:
+            if not self.client.connected:
+                self.append_log("Connect to the Teensy before deleting SD files")
                 return
-            self.append_log(f"Downloaded {remote_name} to {destination}")
-            if destination.lower().endswith(".csv"):
-                self.load_csv(destination)
+            remote_names = self.selected_sd_filenames()
+            if not remote_names:
+                self.append_log("Select one or more SD files first")
+                return
+            answer = QtWidgets.QMessageBox.question(
+                self,
+                "Delete selected SD-card files?",
+                "Permanently delete these files from the SD card?\n\n" + "\n".join(remote_names),
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No,
+            )
+            if answer != QtWidgets.QMessageBox.Yes:
+                return
+
+            def delete_all():
+                deleted = []
+                errors = []
+                for remote_name in remote_names:
+                    try:
+                        self.client.delete_file(remote_name)
+                        deleted.append(remote_name)
+                    except Exception as exc:
+                        errors.append(f"{remote_name}: {exc}")
+                return deleted, errors
+
+            def delete_complete(result) -> None:
+                deleted, errors = result
+                if deleted:
+                    self.append_log("Deleted: " + ", ".join(deleted))
+                if errors:
+                    message = "\n".join(errors)
+                    self.append_log("Delete errors:\n" + message)
+                    QtWidgets.QMessageBox.warning(self, "Some files were not deleted", message)
+                elif deleted:
+                    QtWidgets.QMessageBox.information(self, "Delete complete", f"Deleted {len(deleted)} file(s).")
+                self.list_sd_files()
+
+            self.run_device_task(f"Deleting {len(remote_names)} file(s)", delete_all, delete_complete)
 
         def open_csv(self) -> None:
             filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open vibration CSV", str(Path.home()), "CSV files (*.csv)")
@@ -373,11 +521,18 @@ def main() -> int:
         def selected_axes(self):
             return tuple(axis for axis, checkbox in self.axis_checkboxes.items() if checkbox.isChecked())
 
-        def selected_window(self, session):
+        def analysis_endpoints(self, session):
             if self.analysis_window is None:
                 return (0.0, session.duration_s)
             start, end = self.analysis_window
-            return (max(0.0, start), min(session.duration_s, end))
+            duration = session.duration_s
+            return (
+                max(0.0, min(duration, float(start))),
+                max(0.0, min(duration, float(end))),
+            )
+
+        def selected_window(self, session):
+            return normalize_elapsed_window(session, *self.analysis_endpoints(session))
 
         def selected_window_samples(self, session):
             start, end = self.selected_window(session)
@@ -400,11 +555,6 @@ def main() -> int:
             duration = session.duration_s
             start = max(0.0, min(float(start), duration))
             end = max(0.0, min(float(end), duration))
-            if end <= start:
-                sample_step = 1.0 / (session.sample_rate_hz or 1000.0)
-                end = min(duration, start + sample_step)
-                if end <= start:
-                    start = max(0.0, end - sample_step)
             self.analysis_window = (start, end)
             self.set_window_controls(session, start, end)
             self.update_window_artists(start, end)
@@ -429,7 +579,7 @@ def main() -> int:
             session = self.selected_session()
             if session is None or event.inaxes != self._time_axis or event.xdata is None:
                 return
-            start, end = self.selected_window(session)
+            start, end = self.analysis_endpoints(session)
             tolerance = max(session.duration_s * 0.015, 0.02)
             if abs(event.xdata - start) <= abs(event.xdata - end) and abs(event.xdata - start) <= tolerance:
                 self._dragging_cursor = "start"
@@ -440,7 +590,7 @@ def main() -> int:
             session = self.selected_session()
             if self._dragging_cursor is None or session is None or event.inaxes != self._time_axis or event.xdata is None:
                 return
-            start, end = self.selected_window(session)
+            start, end = self.analysis_endpoints(session)
             if self._dragging_cursor == "start":
                 start = event.xdata
             else:
@@ -458,21 +608,37 @@ def main() -> int:
             if session is None:
                 self.append_log("Select a session before saving")
                 return
+            start, end = self.selected_window(session)
+            selected_samples = select_samples_by_elapsed(session, start, end)
+            if end <= start or not selected_samples:
+                self.append_log("Save failed: selected time window contains no usable samples")
+                QtWidgets.QMessageBox.warning(self, "Save CSV", "Select a non-zero time window containing data.")
+                return
             default_name = str(Path.home() / "Downloads" / f"session_{session.session_id}.csv")
             destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save selected session CSV", default_name, "CSV files (*.csv)")
             if not destination:
                 return
             try:
-                export_session_csv(session, destination)
+                export_session_csv(session, destination, time_window=(start, end))
             except Exception as exc:
                 self.append_log(f"Save failed: {exc}")
                 return
-            self.append_log(f"Saved session {session.session_id} to {destination}")
+            self.append_log(
+                f"Saved {len(selected_samples)} selected samples from session {session.session_id} to {destination}"
+            )
 
         def export_selected_fft(self) -> None:
             session = self.selected_session()
             if session is None:
                 self.append_log("Select a session before exporting FFT data")
+                return
+            start, end = self.selected_window(session)
+            selected_samples = select_samples_by_elapsed(session, start, end)
+            if end <= start or len(selected_samples) < 5:
+                self.append_log("FFT export failed: select a non-zero window containing at least five samples")
+                QtWidgets.QMessageBox.warning(
+                    self, "Export FFT", "Select a non-zero time window containing at least five samples."
+                )
                 return
             default_name = str(Path.home() / "Downloads" / f"session_{session.session_id}_fft_export.xlsx")
             destination, _ = QtWidgets.QFileDialog.getSaveFileName(
@@ -483,7 +649,7 @@ def main() -> int:
             if not destination.lower().endswith(".xlsx"):
                 destination += ".xlsx"
             try:
-                export_fft_workbook(session, destination, time_window=self.selected_window(session), axes=self.selected_axes())
+                export_fft_workbook(session, destination, time_window=(start, end), axes=self.selected_axes())
             except Exception as exc:
                 self.append_log(f"FFT export failed: {exc}")
                 return
@@ -510,9 +676,10 @@ def main() -> int:
             ax = self.time_figure.add_subplot(111)
             for axis in ("x", "y", "z"):
                 ax.plot(t, data[axis], label=axis.upper(), linewidth=0.8)
-            start, end = self.selected_window(session)
+            start, end = self.analysis_endpoints(session)
+            left, right = sorted((start, end))
             self._time_axis = ax
-            self._window_span = ax.axvspan(start, end, color="tab:orange", alpha=0.12)
+            self._window_span = ax.axvspan(left, right, color="tab:orange", alpha=0.12)
             self._window_start_line = ax.axvline(start, color="tab:orange", linewidth=1.4, linestyle="--", picker=5)
             self._window_end_line = ax.axvline(end, color="tab:orange", linewidth=1.4, linestyle="--", picker=5)
             ax.set_xlabel("Time (s)")
@@ -531,7 +698,8 @@ def main() -> int:
                 self._window_end_line.set_xdata([end, end])
             if self._window_span is not None:
                 self._window_span.remove()
-            self._window_span = self._time_axis.axvspan(start, end, color="tab:orange", alpha=0.12)
+            left, right = sorted((start, end))
+            self._window_span = self._time_axis.axvspan(left, right, color="tab:orange", alpha=0.12)
             self.time_canvas.draw_idle()
 
         def refresh_frequency_plot(self) -> None:
@@ -540,7 +708,7 @@ def main() -> int:
                 return
             self.freq_figure.clear()
             selected_samples = self.selected_window_samples(session)
-            fs = session.sample_rate_hz or 0.0
+            fs = sample_rate_from_samples(selected_samples) or 0.0
             axes = self.selected_axes()
             if fs > 0 and len(selected_samples) > 4 and axes:
                 t, data = samples_to_arrays(selected_samples)

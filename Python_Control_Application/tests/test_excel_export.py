@@ -59,6 +59,25 @@ class ExcelExportTests(unittest.TestCase):
                 self.assertIn("r_spectral_asd_mps2_per_sqrt_hz", psd_xml)
                 self.assertNotIn("z_fft_mps2", fft_xml)
 
+    def test_reversed_window_is_normalized_before_fft(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = pathlib.Path(tmp)
+            csv_path = tmp_path / "synthetic.csv"
+            xlsx_path = tmp_path / "reversed_window.xlsx"
+            self._write_synthetic_csv(csv_path)
+            session = load_sessions(csv_path)[0]
+            export_fft_workbook(session, xlsx_path, window="boxcar", time_window=(3.0, 1.0), axes=("x",))
+            self.assertTrue(xlsx_path.exists())
+
+    def test_fft_export_rejects_zero_width_or_tiny_window(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = pathlib.Path(tmp)
+            csv_path = tmp_path / "synthetic.csv"
+            self._write_synthetic_csv(csv_path)
+            session = load_sessions(csv_path)[0]
+            with self.assertRaisesRegex(ValueError, "at least five samples"):
+                export_fft_workbook(session, tmp_path / "too_small.xlsx", time_window=(1.0, 1.0))
+
     @staticmethod
     def _write_synthetic_csv(path):
         fs = 128.0

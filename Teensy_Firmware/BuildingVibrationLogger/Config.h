@@ -17,7 +17,7 @@ struct LoggerConfig {
   uint32_t flushIntervalMs = 1000;
   float offsetCounts[3] = {0.0f, 0.0f, 0.0f};
   float scaleFactors[3] = {1.0f, 1.0f, 1.0f};
-  char filename[32] = "VIBRATION_DATA.CSV";
+  char filename[32] = "Data_0.csv";
 };
 
 class ConfigManager {

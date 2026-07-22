@@ -6,7 +6,7 @@ Wire the Teensy 4.1 and EVAL-ADXL355-PMDZ according to `Documents/Hardware/PIN_A
 
 ## SD Card Preparation
 
-Use a reliable microSD card formatted as FAT32 or exFAT. Insert it in the Teensy 4.1 built-in socket. The firmware writes to `VIBRATION_DATA.CSV` by default and appends every run to that file.
+Use a reliable microSD card formatted as FAT32 or exFAT. Insert it in the Teensy 4.1 built-in socket. Every Start creates a new file named `Data_0.csv`, `Data_1.csv`, and so on. The firmware scans existing numbered files and uses one greater than the highest present number, so gaps are not filled and existing files are never overwritten. Stop writes the session summary, flushes, and closes the active file. During recording, the file is flushed at the configured interval (one second by default).
 
 ## RTC Battery and Time Sync
 
@@ -42,7 +42,7 @@ SET RTC 2026-07-14T12:34:56Z
 START
 STOP
 LIST FILES
-DOWNLOAD FILE VIBRATION_DATA.CSV
+READ FILE Data_0.csv 0 4096
 ```
 
 ## Desktop Application
@@ -53,21 +53,21 @@ Run:
 python -m building_vibration_analyzer
 ```
 
-Use the connection panel to discover ports, connect, synchronize RTC, start/stop logging, list SD files, download logs, and open local CSV files for analysis.
+Use the connection panel to discover ports, connect, synchronize RTC, start/stop logging, list SD files, download one or several selected logs, delete selected logs after confirmation, and open local CSV files for analysis. SD-card listing, downloading, and deletion run in a worker thread so the interface remains responsive.
 
-For unattended measurements, the logger can record to the Teensy microSD card without the Windows app connected, as long as the Teensy is powered. Use the physical Run/Stop button to begin and end logging. Later, connect USB, click `List SD`, select `VIBRATION_DATA.CSV`, and click `Download`. You can also remove the SD card and open the CSV directly from the local machine.
+For unattended measurements, the logger can record to the Teensy microSD card without the Windows app connected, as long as the Teensy is powered. Use the physical Run/Stop button to begin and end logging. Later, connect USB, click `List SD`, select one or more `Data_N.csv` files, and click `Download Selected`. You can also remove the SD card and open a CSV directly from the local machine.
 
 Local file workflow:
 
-- `Open CSV`: load a local append-only log file or exported session CSV.
-- `Save CSV`: save the selected session to a separate local CSV.
-- `Export FFT`: export the selected session's time data, FFT amplitudes, Welch PSD, ASD, dominant peaks, and frequency-band RMS values to one Excel `.xlsx` workbook.
+- `Open CSV`: load a downloaded acquisition file or exported window CSV.
+- `Save CSV`: save only samples between the two orange selection bars to a local CSV.
+- `Export FFT`: calculate and export FFT amplitudes, Welch PSD, ASD, dominant peaks, and frequency-band RMS values using only samples between the selection bars.
 - `Data Table`: inspect raw selected-session samples in a read-only grid. Select cells and press `Ctrl+C` to copy tab-separated data.
 
 ## Analysis Workflow
 
-1. Open `VIBRATION_DATA.CSV`.
-2. Select one session from the append-only file.
+1. Open a downloaded `Data_N.csv` file.
+2. Select the acquisition session in the file.
 3. Inspect time-domain X/Y/Z acceleration.
 4. Set the analysis window using the Start/End controls or by dragging the two vertical orange cursors on the time plot.
 5. Select frequency-domain traces for X, Y, Z, and either resultant option. `R dynamic` is the FFT/ASD of `sqrt((X-mean(X))^2 + (Y-mean(Y))^2 + (Z-mean(Z))^2)`. `R spectral RSS` combines spectra directly, using `sqrt(X_fft^2 + Y_fft^2 + Z_fft^2)` for FFT amplitude and `sqrt(PSD_X + PSD_Y + PSD_Z)` for ASD.
@@ -75,7 +75,7 @@ Local file workflow:
 7. Use velocity or displacement spectra only with an explicit low-frequency cutoff.
 8. Export selected data, export FFT data to Excel, or generate a report.
 
-The selected time window controls the frequency-domain plot and FFT Excel export. Shorter windows have coarser frequency resolution, approximately `sample_rate / selected_sample_count`.
+The selected time window controls the frequency-domain plot, Save CSV, and FFT Excel export. Reversed cursor limits are sorted and limits outside the data are clipped. A zero-width selection is rejected; FFT display/export requires at least five selected samples. Shorter windows have coarser frequency resolution, approximately `sample_rate / selected_sample_count`.
 
 ## Synthetic Test Data
 

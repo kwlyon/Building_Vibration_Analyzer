@@ -60,7 +60,7 @@ void ConfigManager::sanitizeFilename(const char *input, char *output, size_t out
   }
   output[out] = '\0';
   if (out == 0) {
-    strncpy(output, "VIBRATION_DATA.CSV", outputSize);
+    strncpy(output, "Data_0.csv", outputSize);
     output[outputSize - 1] = '\0';
   }
 }
