@@ -142,13 +142,18 @@ bool CsvLogger::readFileChunk(const char *name, uint32_t offset, uint32_t length
     file.close();
     return false;
   }
+  const uint32_t fileSize = file.size();
+  const uint32_t available = offset < fileSize ? fileSize - offset : 0;
+  const uint32_t payloadLength = length < available ? length : available;
   out.print("OK READ name=");
   out.print(name);
   out.print(" offset=");
   out.print(static_cast<unsigned long>(offset));
   out.print(" length=");
-  out.println(static_cast<unsigned long>(length));
-  for (uint32_t i = 0; i < length && file.available(); ++i) {
+  out.print(static_cast<unsigned long>(length));
+  out.print(" bytes=");
+  out.println(static_cast<unsigned long>(payloadLength));
+  for (uint32_t i = 0; i < payloadLength; ++i) {
     out.write(static_cast<uint8_t>(file.read()));
   }
   out.println();

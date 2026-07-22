@@ -71,20 +71,34 @@ class DeviceClient:
         self._serial.flush()
 
         first = self._serial.readline().decode("utf-8", errors="replace").strip()
-        if first.startswith("ERR"):
+        response = parse_response_line(first)
+        if not response.ok:
             raise RuntimeError(first)
-        if not first.startswith("OK READ"):
+        if response.command != "READ":
             raise RuntimeError(f"unexpected file-read response: {first}")
+        if "bytes" not in response.fields:
+            raise RuntimeError("firmware does not support exact-byte downloads; upload the current firmware")
+        try:
+            payload_length = int(response.fields["bytes"])
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError(f"invalid file-read byte count: {first}") from exc
+        if payload_length < 0 or payload_length > length:
+            raise RuntimeError(f"invalid file-read byte count: {payload_length}")
 
-        lines: list[bytes] = []
-        while True:
-            raw = self._serial.readline()
-            if not raw:
-                break
-            if raw.strip() == b"END READ":
-                break
-            lines.append(raw)
-        return b"".join(lines)
+        payload = bytearray()
+        deadline = time.monotonic() + self.timeout
+        while len(payload) < payload_length and time.monotonic() < deadline:
+            block = self._serial.read(payload_length - len(payload))
+            if block:
+                payload.extend(block)
+        if len(payload) != payload_length:
+            raise RuntimeError(f"incomplete file chunk: expected {payload_length} bytes, received {len(payload)}")
+
+        separator = self._serial.readline()
+        end_marker = self._serial.readline()
+        if separator not in {b"\n", b"\r\n"} or end_marker.strip() != b"END READ":
+            raise RuntimeError("invalid file-read framing")
+        return bytes(payload)
 
     def start_reader(self, callback: Callable[[str], None]) -> None:
         if not self._serial or not self._serial.is_open:

@@ -55,7 +55,7 @@ The Python application parses the leading token first and then parses `key=value
 | `GET RTC` | Return current RTC value and validity. |
 | `LIST FILES` | List root SD files. |
 | `FILE INFO <name>` | Return size and basic metadata. |
-| `READ FILE <name> [offset] [length]` | Return a text chunk for terminal use. |
+| `READ FILE <name> [offset] [length]` | Return an exact-length file chunk for download or terminal use. |
 | `DOWNLOAD FILE <name>` | Start framed file transfer. |
 | `DELETE FILE <name>` | Delete a file only when not recording. Python GUI must confirm first. |
 | `GET ERRORS` | Return sticky firmware error counters. |
@@ -92,6 +92,19 @@ Record types:
 When RTC is invalid, `timestamp_iso8601` is `RTC_INVALID`. Accurate timing still uses `elapsed_us` and `sample_number`.
 
 ## File transfer framing
+
+`READ FILE <name> [offset] [length]` returns:
+
+```text
+OK READ name=<name> offset=<offset> length=<requested-bytes> bytes=<actual-bytes>
+<exactly actual-bytes of raw file data>
+END READ
+```
+
+The raw payload is followed by a line break and the `END READ` marker. Clients must
+read the announced `bytes` count exactly before consuming the framing line break and
+end marker. This preserves CSV rows when a chunk boundary falls in the middle of a
+line and also prevents payload text from being mistaken for a framing marker.
 
 `DOWNLOAD FILE <name>` returns:
 
