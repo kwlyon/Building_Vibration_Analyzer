@@ -1,3 +1,3 @@
 """Control and analysis tools for the Building Vibration Analyzer."""
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"

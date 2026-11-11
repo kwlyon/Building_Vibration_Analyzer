@@ -74,8 +74,14 @@ void loop() {
       stopLogging();
       Serial.println("EVT BUTTON action=stop");
     } else {
-      startLogging();
-      Serial.println("EVT BUTTON action=start");
+      if (startLogging()) {
+        Serial.println("EVT BUTTON action=start");
+      } else {
+        // Keep a failed local start visibly faulted, just like a failed USB
+        // START command.
+        statusLed.setState(LedState::Fault);
+        Serial.println("EVT BUTTON action=start_failed");
+      }
     }
   }
 

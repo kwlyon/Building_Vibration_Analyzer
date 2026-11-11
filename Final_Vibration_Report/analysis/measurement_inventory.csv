@@ -1,0 +1,16 @@
+worksheet,room,location,location_class,diagnostic_reference,questionable,bins,frequency_min_hz,frequency_max_hz,frequency_resolution_hz,excel_prominent_peaks
+Titan Lab,Titan Lab,Entry,floor,False,True,513,0.0,250.25025025025,0.4887700200199987,5
+Titan Lab,Titan Lab,Lab Floor (carpet hole),floor,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 111,PHYS 111,Floor,floor,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 111,PHYS 111,Counter Herzog Wall,counter,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 111,PHYS 111,Optical Table Wall,optical table (float status not recorded),False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 111,PHYS 111,Optical Table Door,optical table (float status not recorded),False,False,513,0.0,250.25025025025,0.4887700200199987,5
+Herzog Lab,Herzog Lab,Freezer Top,diagnostic equipment reference,True,False,513,0.0,250.25025025025,0.4887700200199987,5
+Herzog Lab,Herzog Lab,Floor,floor,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+Herzog Lab,Herzog Lab,Optical Table,optical table (float status not recorded),False,False,513,0.0,250.25025025025,0.4887700200199987,5
+Herzog Lab,Herzog Lab,Back Counter,counter,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 244,PHYS 244,Floor,floor,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 244,PHYS 244,Wooden Table,wooden table,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 245,PHYS 245,Floor,floor,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 245,PHYS 245,Floated Table (AFM),floated optical table,False,False,513,0.0,250.25025025025,0.4887700200199987,5
+PHYS 245,PHYS 245,Unfloated Table (Oliver Laser),unfloated optical table,False,False,513,0.0,250.25025025025,0.4887700200199987,5

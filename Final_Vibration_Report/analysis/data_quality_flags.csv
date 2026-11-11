@@ -1,0 +1,5 @@
+room,location,flag,basis,recommended_action
+Titan Lab,Entry,Known potentially contaminated run,User notes possible door opening and foot traffic; retain for context but exclude from representative ranking.,Repeat under controlled occupancy.
+PHYS 111,Optical Table Door,Strong anomalous 29.8 Hz line,Integrated 0.5-250 Hz RMS is far above the PHYS 111 floor and table-wall runs; spectrum alone cannot identify a transient.,Repeat and capture time series/spectrogram.
+PHYS 245,Floated Table (AFM),Unexpected table amplification,"The 10-20 Hz and total RMS metrics exceed the floor measurement, with a strong 17.6 Hz feature.","Check air pressure, leveling, payload, and isolator resonance; repeat simultaneously with the floor."
+Herzog Lab,Freezer Top,"Diagnostic reference, not a candidate site",Deliberately measured on equipment; excluded from room rankings.,Repeat with compressor on/off to isolate the freezer signature.

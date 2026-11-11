@@ -1,0 +1,28 @@
+{
+  "source_workbook": "C:\\Users\\kwlyon\\Box\\Codex\\Building_Vibration_Analyzer\\Measurment_Files_Physics\\FinalReportData.xlsx",
+  "source_workbook_modified": false,
+  "measurement_runs": 15,
+  "peak_source": "Peaks detected only from numerical frequency_hz and r_spectral_asd_mps2_per_sqrt_hz columns; worksheet peak tables ignored.",
+  "low_frequency_cutoff_hz": 2.0,
+  "mains_exclusion_hz": [
+    58.0,
+    62.0
+  ],
+  "freezer_method": "Match unsmoothed numerical ASD peaks within 1.6 Hz; retain lines seen on at least two distant floors; replace only source-specific matched lines over +/-1.5 Hz by log-linear local interpolation.",
+  "herzog_replaced_bands_hz": [
+    [
+      118.771114864865,
+      121.703734984985
+    ],
+    [
+      88.4673736236236,
+      91.3999937437437
+    ]
+  ],
+  "phys111_replaced_bands_hz": [
+    [
+      118.771114864865,
+      121.703734984985
+    ]
+  ]
+}

@@ -204,8 +204,10 @@ def main() -> int:
             local_buttons = QtWidgets.QHBoxLayout()
             self.save_session_button = QtWidgets.QPushButton("Save CSV")
             self.export_fft_button = QtWidgets.QPushButton("Export FFT")
+            self.clear_sessions_button = QtWidgets.QPushButton("Clear Sessions")
             local_buttons.addWidget(self.save_session_button)
             local_buttons.addWidget(self.export_fft_button)
+            local_buttons.addWidget(self.clear_sessions_button)
             self.sd_file_list = QtWidgets.QListWidget()
             self.sd_file_list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
             sd_buttons = QtWidgets.QHBoxLayout()
@@ -297,6 +299,7 @@ def main() -> int:
             self.open_button.clicked.connect(self.open_csv)
             self.save_session_button.clicked.connect(self.save_selected_session)
             self.export_fft_button.clicked.connect(self.export_selected_fft)
+            self.clear_sessions_button.clicked.connect(self.clear_sessions)
             self.list_files_button.clicked.connect(self.list_sd_files)
             self.download_button.clicked.connect(self.download_selected_sd_file)
             self.delete_files_button.clicked.connect(self.delete_selected_sd_files)
@@ -450,8 +453,9 @@ def main() -> int:
             def download_complete(downloaded) -> None:
                 for path in downloaded:
                     self.append_log(f"Downloaded {path.name} to {path}")
-                if len(downloaded) == 1 and downloaded[0].suffix.lower() == ".csv":
-                    self.load_csv(str(downloaded[0]))
+                for path in downloaded:
+                    if path.suffix.lower() == ".csv":
+                        self.load_csv(str(path))
 
             self.run_device_task(f"Downloading {len(remote_names)} file(s)", download_all, download_complete)
 
@@ -499,24 +503,70 @@ def main() -> int:
             self.run_device_task(f"Deleting {len(remote_names)} file(s)", delete_all, delete_complete)
 
         def open_csv(self) -> None:
-            filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open vibration CSV", str(Path.home()), "CSV files (*.csv)")
-            if not filename:
+            filenames, _ = QtWidgets.QFileDialog.getOpenFileNames(
+                self, "Open vibration CSV", str(Path.home()), "CSV files (*.csv)"
+            )
+            if not filenames:
                 return
-            self.load_csv(filename)
+            for filename in filenames:
+                self.load_csv(filename)
 
         def load_csv(self, filename: str) -> None:
-            self.sessions = load_sessions(filename)
+            loaded_sessions = load_sessions(filename)
+            first_new_row = len(self.sessions)
+            source_name = Path(filename).name
+            for session in loaded_sessions:
+                display_number = len(self.sessions)
+                self.sessions.append(session)
+                item = QtWidgets.QListWidgetItem(
+                    f"Session {display_number} - {source_name} - {len(session.samples)} samples"
+                )
+                item.setToolTip(
+                    f"Source: {filename}\nCSV session ID: {session.session_id}"
+                )
+                self.session_list.addItem(item)
+            if loaded_sessions:
+                self.session_list.setCurrentRow(first_new_row)
+                self.append_log(
+                    f"Loaded {len(loaded_sessions)} session(s) from {source_name}"
+                )
+
+        def clear_sessions(self) -> None:
+            cleared_count = len(self.sessions)
+            self.sessions.clear()
             self.session_list.clear()
-            for session in self.sessions:
-                self.session_list.addItem(f"Session {session.session_id} - {len(session.samples)} samples")
-            if self.sessions:
-                self.session_list.setCurrentRow(0)
+            self.analysis_window = None
+            self._dragging_cursor = None
+            self._time_axis = None
+            self._window_start_line = None
+            self._window_end_line = None
+            self._window_span = None
+            self.table_model.set_samples([])
+            self.summary.clear()
+            self.time_figure.clear()
+            self.freq_figure.clear()
+            self.time_canvas.draw()
+            self.freq_canvas.draw()
+            self._updating_window_controls = True
+            try:
+                for spin in (self.window_start_spin, self.window_end_spin):
+                    spin.setMaximum(0.001)
+                    spin.setValue(0.0)
+            finally:
+                self._updating_window_controls = False
+            self.append_log(
+                f"Cleared {cleared_count} session(s); the next loaded session will be Session 0"
+            )
 
         def selected_session(self):
             row = self.session_list.currentRow()
             if row < 0 or row >= len(self.sessions):
                 return None
             return self.sessions[row]
+
+        def selected_session_number(self) -> int | None:
+            row = self.session_list.currentRow()
+            return row if 0 <= row < len(self.sessions) else None
 
         def selected_axes(self):
             return tuple(axis for axis, checkbox in self.axis_checkboxes.items() if checkbox.isChecked())
@@ -605,6 +655,7 @@ def main() -> int:
 
         def save_selected_session(self) -> None:
             session = self.selected_session()
+            session_number = self.selected_session_number()
             if session is None:
                 self.append_log("Select a session before saving")
                 return
@@ -614,7 +665,7 @@ def main() -> int:
                 self.append_log("Save failed: selected time window contains no usable samples")
                 QtWidgets.QMessageBox.warning(self, "Save CSV", "Select a non-zero time window containing data.")
                 return
-            default_name = str(Path.home() / "Downloads" / f"session_{session.session_id}.csv")
+            default_name = str(Path.home() / "Downloads" / f"session_{session_number}.csv")
             destination, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save selected session CSV", default_name, "CSV files (*.csv)")
             if not destination:
                 return
@@ -624,11 +675,12 @@ def main() -> int:
                 self.append_log(f"Save failed: {exc}")
                 return
             self.append_log(
-                f"Saved {len(selected_samples)} selected samples from session {session.session_id} to {destination}"
+                f"Saved {len(selected_samples)} selected samples from Session {session_number} to {destination}"
             )
 
         def export_selected_fft(self) -> None:
             session = self.selected_session()
+            session_number = self.selected_session_number()
             if session is None:
                 self.append_log("Select a session before exporting FFT data")
                 return
@@ -640,7 +692,7 @@ def main() -> int:
                     self, "Export FFT", "Select a non-zero time window containing at least five samples."
                 )
                 return
-            default_name = str(Path.home() / "Downloads" / f"session_{session.session_id}_fft_export.xlsx")
+            default_name = str(Path.home() / "Downloads" / f"session_{session_number}_fft_export.xlsx")
             destination, _ = QtWidgets.QFileDialog.getSaveFileName(
                 self, "Export frequency analysis workbook", default_name, "Excel workbooks (*.xlsx)"
             )
@@ -653,14 +705,14 @@ def main() -> int:
             except Exception as exc:
                 self.append_log(f"FFT export failed: {exc}")
                 return
-            self.append_log(f"Exported FFT workbook for session {session.session_id} to {destination}")
+            self.append_log(f"Exported FFT workbook for Session {session_number} to {destination}")
 
         def plot_session(self, row: int) -> None:
             if row < 0 or row >= len(self.sessions):
                 return
             session = self.sessions[row]
             if not session.samples:
-                self.summary.setPlainText(f"Session {session.session_id} has no valid DATA samples.")
+                self.summary.setPlainText(f"Session {row} has no valid DATA samples.")
                 self.table_model.set_samples([])
                 return
             self.analysis_window = (0.0, session.duration_s)
@@ -684,7 +736,7 @@ def main() -> int:
             self._window_end_line = ax.axvline(end, color="tab:orange", linewidth=1.4, linestyle="--", picker=5)
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Acceleration (m/s^2)")
-            ax.set_title(f"Session {session.session_id}")
+            ax.set_title(f"Session {self.selected_session_number()}")
             ax.grid(True, alpha=0.3)
             ax.legend()
             self.time_canvas.draw()
@@ -753,7 +805,7 @@ def main() -> int:
                     if peaks:
                         dominant_lines.append(f"{label}: {peaks[0][0]:.3g} Hz ({peaks[0][1]:.3g} m/s^2)")
                 top.set_ylabel("FFT amplitude (m/s^2)")
-                top.set_title(f"Frequency Domain - Session {session.session_id}")
+                top.set_title(f"Frequency Domain - Session {self.selected_session_number()}")
                 top.grid(True, alpha=0.3)
                 top.legend()
 

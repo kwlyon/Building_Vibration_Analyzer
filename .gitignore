@@ -26,3 +26,13 @@ Releases/*
 *.bak
 .DS_Store
 Thumbs.db
+
+# Versioned application build output
+Python_Control_Application/dist-*/
+
+# Report build and visual review intermediates
+*.aux
+*.out
+*.toc
+*.synctex.gz
+tmp/

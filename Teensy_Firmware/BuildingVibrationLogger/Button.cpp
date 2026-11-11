@@ -22,7 +22,7 @@ bool Button::pressedEvent() {
   }
   if ((nowMs - lastChangeMs_) >= DEBOUNCE_MS && reading != stableState_) {
     stableState_ = reading;
-    if (stableState_ == LOW && (nowMs - lastEventMs_) >= MIN_EVENT_SPACING_MS) {
+    if (stableState_ == HIGH && (nowMs - lastEventMs_) >= MIN_EVENT_SPACING_MS) {
       lastEventMs_ = nowMs;
       return true;
     }

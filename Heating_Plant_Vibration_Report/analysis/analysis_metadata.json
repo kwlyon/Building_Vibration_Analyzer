@@ -1,0 +1,10 @@
+{
+  "method": "Welch acceleration ASD values were read from each workbook's PSD_ASD worksheet. Peaks were detected from the numerical ASD, and frequencies below 2 Hz were excluded.",
+  "principal_heating_plant_lines_hz": [
+    29.8149712212212,
+    98.731544044044,
+    101.664164164164,
+    119.993039914915
+  ],
+  "source_limitations": "The plant building could not be measured directly because temporary generators were operating outside. Pipe and sidewalk measurements are near-source proxies; turbine attribution also uses the reported timing."
+}

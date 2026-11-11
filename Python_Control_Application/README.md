@@ -21,7 +21,7 @@ PySide6 is required for the GUI. The core protocol, CSV parsing, and vibration-a
 - Synchronize the Teensy RTC.
 - Start a newly numbered `Data_N.csv` acquisition and stop/close it safely.
 - List SD files with multi-selection, download selected files, and delete selected files after confirmation without blocking the GUI.
-- Parse acquisition CSV logs and select sessions.
+- Retain multiple opened or downloaded CSV sessions, switch among them, and clear the list to restart at Session 0.
 - Compute time-domain statistics, FFT, PSD, ASD, spectrograms, dominant frequencies, harmonics, coherence, and band RMS.
 - Generate HTML and PDF-style reports when Matplotlib is available.
 - Save only the current cursor-selected time window back to a local CSV file.

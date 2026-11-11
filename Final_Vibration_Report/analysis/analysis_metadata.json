@@ -1,0 +1,32 @@
+{
+  "source_workbook": "C:\\Users\\kwlyon\\Box\\Codex\\Building_Vibration_Analyzer\\Measurment_Files_Physics\\FinalReportData.xlsx",
+  "source_workbook_modified": false,
+  "worksheets_examined": [
+    "Plot",
+    "Titan Lab",
+    "PHYS 111",
+    "Herzog Lab",
+    "PHYS 244",
+    "PHYS 245"
+  ],
+  "measurement_runs": 15,
+  "frequency_grid": {
+    "bins": [
+      513
+    ],
+    "resolution_hz": [
+      0.48877002002
+    ],
+    "maximum_hz": [
+      250.25025025
+    ]
+  },
+  "primary_metric": "sqrt(sum(ASD^2 * df)) from 0.5 to 250 Hz",
+  "peak_detection": "Local maxima in unsmoothed log10 ASD with prominence >= 0.08 decade and minimum separation of two bins; ranked by ASD.",
+  "peak_match_tolerance_hz": 1.0,
+  "limitations": [
+    "Only one spectrum is available for most locations; no time-domain records or repeated trials were supplied.",
+    "Acquisition duration, window, overlap, sensor calibration uncertainty, and contemporaneous equipment states are not recorded in the workbook.",
+    "Optical-table float status is explicit only for PHYS 245."
+  ]
+}

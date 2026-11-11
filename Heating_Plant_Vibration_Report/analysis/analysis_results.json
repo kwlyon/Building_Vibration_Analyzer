@@ -1,0 +1,778 @@
+{
+  "common_frequency_bins": 513,
+  "frequency_step_hz_range": [
+    0.4887700200199987,
+    0.48901477215819966
+  ],
+  "pipe_top_peaks": [
+    {
+      "frequency_hz": 98.731544044044,
+      "asd": 0.148133013728443,
+      "ratio_to_local_baseline": 17.116679280916806,
+      "log10_prominence": 1.9972571755077742
+    },
+    {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.107676918598816,
+      "ratio_to_local_baseline": 15.767346645552134,
+      "log10_prominence": 1.5248963132997124
+    },
+    {
+      "frequency_hz": 101.664164164164,
+      "asd": 0.0304275677200825,
+      "ratio_to_local_baseline": 3.6709570705925954,
+      "log10_prominence": 0.6785379951554393
+    },
+    {
+      "frequency_hz": 120.237424924925,
+      "asd": 0.0195899433030692,
+      "ratio_to_local_baseline": 7.913976478301348,
+      "log10_prominence": 0.9560264016429634
+    },
+    {
+      "frequency_hz": 21.5058808808809,
+      "asd": 0.00868238859405319,
+      "ratio_to_local_baseline": 1.2558184749841566,
+      "log10_prominence": 0.17670679152909496
+    },
+    {
+      "frequency_hz": 118.771114864865,
+      "asd": 0.00526188564269906,
+      "ratio_to_local_baseline": 1.7867513233484007,
+      "log10_prominence": 0.18640290414620875
+    },
+    {
+      "frequency_hz": 59.6299424424424,
+      "asd": 0.00483897747850217,
+      "ratio_to_local_baseline": 2.429573645987551,
+      "log10_prominence": 0.47485053873071914
+    },
+    {
+      "frequency_hz": 44.9668418418418,
+      "asd": 0.00439861578442669,
+      "ratio_to_local_baseline": 1.413492392650191,
+      "log10_prominence": 0.16048048528985337
+    },
+    {
+      "frequency_hz": 128.546515265265,
+      "asd": 0.00345384503913856,
+      "ratio_to_local_baseline": 1.5600937067669194,
+      "log10_prominence": 0.3021024421609524
+    },
+    {
+      "frequency_hz": 125.613895145145,
+      "asd": 0.00331569279528171,
+      "ratio_to_local_baseline": 1.3546079266693638,
+      "log10_prominence": 0.13181361260999447
+    },
+    {
+      "frequency_hz": 65.9839527027027,
+      "asd": 0.0032294184014145,
+      "ratio_to_local_baseline": 1.3037025211563043,
+      "log10_prominence": 0.22914790810403396
+    },
+    {
+      "frequency_hz": 145.653465965966,
+      "asd": 0.00313591042855836,
+      "ratio_to_local_baseline": 1.4407382877367974,
+      "log10_prominence": 0.4471162128152404
+    },
+    {
+      "frequency_hz": 150.541166166166,
+      "asd": 0.00290934173868494,
+      "ratio_to_local_baseline": 1.3915576480506417,
+      "log10_prominence": 0.14350120255773025
+    },
+    {
+      "frequency_hz": 135.389295545546,
+      "asd": 0.00269457737734361,
+      "ratio_to_local_baseline": 1.6660462292145266,
+      "log10_prominence": 0.25514216083076624
+    },
+    {
+      "frequency_hz": 74.293043043043,
+      "asd": 0.00237597106650664,
+      "ratio_to_local_baseline": 1.3094952887687685,
+      "log10_prominence": 0.19028387614035136
+    },
+    {
+      "frequency_hz": 158.850256506506,
+      "asd": 0.00190445459581886,
+      "ratio_to_local_baseline": 1.6362970022667866,
+      "log10_prominence": 0.2523957379317485
+    },
+    {
+      "frequency_hz": 197.463088088088,
+      "asd": 0.00162045742124361,
+      "ratio_to_local_baseline": 2.2380079045268446,
+      "log10_prominence": 0.40079946337223404
+    },
+    {
+      "frequency_hz": 163.737956706707,
+      "asd": 0.00138992178851421,
+      "ratio_to_local_baseline": 1.307593199902157,
+      "log10_prominence": 0.1699295642807579
+    },
+    {
+      "frequency_hz": 168.625656906907,
+      "asd": 0.00125616429744529,
+      "ratio_to_local_baseline": 1.2569151846178894,
+      "log10_prominence": 0.20420178811708123
+    },
+    {
+      "frequency_hz": 189.153997747748,
+      "asd": 0.000829564431453977,
+      "ratio_to_local_baseline": 1.2541481804555992,
+      "log10_prominence": 0.10821283447459917
+    }
+  ],
+  "sidewalk_top_peaks": [
+    {
+      "frequency_hz": 119.748654904905,
+      "asd": 0.0385776150601352,
+      "ratio_to_local_baseline": 24.20695212319994,
+      "log10_prominence": 2.0456973616532794
+    },
+    {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.0339023461755117,
+      "ratio_to_local_baseline": 25.615728047404744,
+      "log10_prominence": 1.6314362055360783
+    },
+    {
+      "frequency_hz": 98.731544044044,
+      "asd": 0.0291387603277133,
+      "ratio_to_local_baseline": 21.841765597398076,
+      "log10_prominence": 1.5127935261462635
+    },
+    {
+      "frequency_hz": 9.28663038038038,
+      "asd": 0.00624666521878022,
+      "ratio_to_local_baseline": 2.5146945554302924,
+      "log10_prominence": 0.795214320895536
+    },
+    {
+      "frequency_hz": 101.664164164164,
+      "asd": 0.00620585638765763,
+      "ratio_to_local_baseline": 3.915034313176175,
+      "log10_prominence": 0.6676183918731851
+    },
+    {
+      "frequency_hz": 2.4438501001001,
+      "asd": 0.00570141731377289,
+      "ratio_to_local_baseline": 2.2951963287669708,
+      "log10_prominence": 0.4179291885779901
+    },
+    {
+      "frequency_hz": 128.546515265265,
+      "asd": 0.00254493365730836,
+      "ratio_to_local_baseline": 2.4903729324883095,
+      "log10_prominence": 0.3967597456484886
+    },
+    {
+      "frequency_hz": 179.867367367367,
+      "asd": 0.00240539866056938,
+      "ratio_to_local_baseline": 3.8000742368904468,
+      "log10_prominence": 0.9196856040955015
+    },
+    {
+      "frequency_hz": 189.153997747748,
+      "asd": 0.00179743475550376,
+      "ratio_to_local_baseline": 2.784129128190035,
+      "log10_prominence": 0.48765550350596554
+    },
+    {
+      "frequency_hz": 60.1187124624625,
+      "asd": 0.00179152680176664,
+      "ratio_to_local_baseline": 3.4668639886715065,
+      "log10_prominence": 0.587787216230804
+    },
+    {
+      "frequency_hz": 197.463088088088,
+      "asd": 0.00152219037858558,
+      "ratio_to_local_baseline": 4.009452578759515,
+      "log10_prominence": 0.6404066214482662
+    },
+    {
+      "frequency_hz": 48.877002002002,
+      "asd": 0.00126120398638378,
+      "ratio_to_local_baseline": 1.9987360618307284,
+      "log10_prominence": 0.40381519025449375
+    },
+    {
+      "frequency_hz": 69.8941128628629,
+      "asd": 0.000848806825687583,
+      "ratio_to_local_baseline": 1.5275967438456242,
+      "log10_prominence": 0.2854212111915744
+    },
+    {
+      "frequency_hz": 169.603196946947,
+      "asd": 0.000786472749445411,
+      "ratio_to_local_baseline": 1.7530179313341272,
+      "log10_prominence": 0.4340369491501934
+    },
+    {
+      "frequency_hz": 136.855605605606,
+      "asd": 0.000740019129627401,
+      "ratio_to_local_baseline": 1.462491489161325,
+      "log10_prominence": 0.20368216957334528
+    },
+    {
+      "frequency_hz": 72.3379629629629,
+      "asd": 0.000701954881197948,
+      "ratio_to_local_baseline": 1.3987355370624703,
+      "log10_prominence": 0.15360405837201485
+    },
+    {
+      "frequency_hz": 158.850256506506,
+      "asd": 0.000609149532772234,
+      "ratio_to_local_baseline": 1.6508717946552462,
+      "log10_prominence": 0.2683562639730921
+    },
+    {
+      "frequency_hz": 147.608546046046,
+      "asd": 0.000550752886085458,
+      "ratio_to_local_baseline": 1.3861294669487638,
+      "log10_prominence": 0.22067441785495268
+    }
+  ],
+  "plant_peak_candidates": [
+    {
+      "frequency_hz": 29.8149712212212,
+      "score": 20.097066047103066,
+      "pipe_ratio": 15.767346645552134,
+      "sidewalk_ratio": 25.615728047404744,
+      "Pipe": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.107676918598816
+      },
+      "Sidewalk": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.0339023461755117
+      },
+      "Greek theater": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.000434452556440432
+      },
+      "Courtyard": {
+        "frequency_hz": 29.8299011016525,
+        "asd": 0.000277282209563981
+      },
+      "Herzog floor": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.0228672712720627
+      },
+      "Titan floor": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.00515408804860597
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.00218991293062261
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.00141393296284787
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 29.8149712212212,
+        "asd": 0.0179710203824442
+      }
+    },
+    {
+      "frequency_hz": 98.731544044044,
+      "score": 19.335420777930466,
+      "pipe_ratio": 17.116679280916806,
+      "sidewalk_ratio": 21.841765597398076,
+      "Pipe": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.148133013728443
+      },
+      "Sidewalk": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.0291387603277133
+      },
+      "Greek theater": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.000234744900135506
+      },
+      "Courtyard": {
+        "frequency_hz": 98.7809839759639,
+        "asd": 0.000251803043072646
+      },
+      "Herzog floor": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.00309375410900368
+      },
+      "Titan floor": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.000264154715337964
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.000282775715631085
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.00023339619528537
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 98.731544044044,
+        "asd": 0.00165368415646176
+      }
+    },
+    {
+      "frequency_hz": 119.99303991491499,
+      "score": 13.840998869820458,
+      "pipe_ratio": 7.913976478301348,
+      "sidewalk_ratio": 24.20695212319994,
+      "Pipe": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.0188569593520999
+      },
+      "Sidewalk": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.0385776150601352
+      },
+      "Greek theater": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.000241687374380229
+      },
+      "Courtyard": {
+        "frequency_hz": 119.808619178768,
+        "asd": 0.000233208499603927
+      },
+      "Herzog floor": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.0024108780668945
+      },
+      "Titan floor": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.00023209954601766
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.000260514127208184
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.000576951056156362
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 119.748654904905,
+        "asd": 0.000594903326669933
+      }
+    },
+    {
+      "frequency_hz": 101.664164164164,
+      "score": 3.791031903527944,
+      "pipe_ratio": 3.6709570705925954,
+      "sidewalk_ratio": 3.915034313176175,
+      "Pipe": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.0304275677200825
+      },
+      "Sidewalk": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.00620585638765763
+      },
+      "Greek theater": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.000243194544610497
+      },
+      "Courtyard": {
+        "frequency_hz": 101.715072608913,
+        "asd": 0.000238472498116459
+      },
+      "Herzog floor": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.000744962527601656
+      },
+      "Titan floor": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.000207617550990904
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.000288306421698662
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.000316107374196056
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 101.664164164164,
+        "asd": 0.000458715615978609
+      }
+    },
+    {
+      "frequency_hz": 197.463088088088,
+      "score": 2.995527760527239,
+      "pipe_ratio": 2.2380079045268446,
+      "sidewalk_ratio": 4.009452578759515,
+      "Pipe": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.00162045742124361
+      },
+      "Sidewalk": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.00152219037858558
+      },
+      "Greek theater": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.000175325927238665
+      },
+      "Courtyard": {
+        "frequency_hz": 197.561967951928,
+        "asd": 0.000179207491695859
+      },
+      "Herzog floor": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.000182348974942371
+      },
+      "Titan floor": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.000178670362402728
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.000158508228092498
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.000181507870526809
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 197.463088088088,
+        "asd": 0.000204424570160168
+      }
+    },
+    {
+      "frequency_hz": 59.87432745245245,
+      "score": 2.9022407517467563,
+      "pipe_ratio": 2.429573645987551,
+      "sidewalk_ratio": 3.4668639886715065,
+      "Pipe": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.00483897747850217
+      },
+      "Sidewalk": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.00152537454901841
+      },
+      "Greek theater": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.000270950302312422
+      },
+      "Courtyard": {
+        "frequency_hz": 59.659802203305,
+        "asd": 0.000276779851752479
+      },
+      "Herzog floor": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.00148607799141395
+      },
+      "Titan floor": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.000320090791328496
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.000263674644484795
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.000332219052004043
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 59.6299424424424,
+        "asd": 0.000942293876142723
+      }
+    },
+    {
+      "frequency_hz": 128.546515265265,
+      "score": 1.9710949087950307,
+      "pipe_ratio": 1.5600937067669194,
+      "sidewalk_ratio": 2.4903729324883095,
+      "Pipe": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.00345384503913856
+      },
+      "Sidewalk": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.00254493365730836
+      },
+      "Greek theater": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.00021917726507042
+      },
+      "Courtyard": {
+        "frequency_hz": 128.610885077616,
+        "asd": 0.000211657710669586
+      },
+      "Herzog floor": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.000214374563984147
+      },
+      "Titan floor": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.000224320064292625
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.0001890208129755
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.000487183311958104
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 128.546515265265,
+        "asd": 0.000264184611953327
+      }
+    },
+    {
+      "frequency_hz": 189.153997747748,
+      "score": 1.8686119126969534,
+      "pipe_ratio": 1.2541481804555992,
+      "sidewalk_ratio": 2.784129128190035,
+      "Pipe": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000829564431453977
+      },
+      "Sidewalk": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.00179743475550376
+      },
+      "Greek theater": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000172332117812823
+      },
+      "Courtyard": {
+        "frequency_hz": 189.248716825238,
+        "asd": 0.000148231789370993
+      },
+      "Herzog floor": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000196880639027028
+      },
+      "Titan floor": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000170687838312379
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000213751136670564
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000164734815987164
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 189.153997747748,
+        "asd": 0.000182691558565258
+      }
+    },
+    {
+      "frequency_hz": 158.850256506506,
+      "score": 1.6435682427940648,
+      "pipe_ratio": 1.6362970022667866,
+      "sidewalk_ratio": 1.6508717946552462,
+      "Pipe": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.00190445459581886
+      },
+      "Sidewalk": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.000609149532772234
+      },
+      "Greek theater": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.000213119530349185
+      },
+      "Courtyard": {
+        "frequency_hz": 158.929800951427,
+        "asd": 0.00022829338559651
+      },
+      "Herzog floor": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.000209088632532644
+      },
+      "Titan floor": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.000175417338843403
+      },
+      "PHYS 245 floor": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.000175736475942181
+      },
+      "PHYS 244 floor": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.000244776041635806
+      },
+      "PHYS 111 floor": {
+        "frequency_hz": 158.850256506506,
+        "asd": 0.00019019023082904
+      }
+    }
+  ],
+  "selected_plant_centers_hz": [
+    29.8149712212212,
+    98.731544044044,
+    119.99303991491499,
+    101.664164164164,
+    59.87432745245245,
+    128.546515265265,
+    158.850256506506
+  ],
+  "floor_metrics": [
+    {
+      "room": "Titan Lab",
+      "location": "PHYS_TITAN_FLOOR",
+      "frequency_30_hz": 29.8149712212212,
+      "asd_30": 0.00515408804860597,
+      "rms_2_250_all_lines": 0.006013089463307533,
+      "rms_2_250_excluding_principal_plant_lines": 0.0035619378612098324,
+      "rms_2_20": 0.001274010487034815,
+      "rms_20_50": 0.005039211376924182
+    },
+    {
+      "room": "PHYS 245",
+      "location": "PHYS_245_Floor",
+      "frequency_30_hz": 29.8149712212212,
+      "asd_30": 0.00218991293062261,
+      "rms_2_250_all_lines": 0.005341171066249873,
+      "rms_2_250_excluding_principal_plant_lines": 0.004874504932048791,
+      "rms_2_20": 0.00330615343795102,
+      "rms_20_50": 0.0026391952413631578
+    },
+    {
+      "room": "PHYS 244",
+      "location": "PHYS_244_Floor",
+      "frequency_30_hz": 29.8149712212212,
+      "asd_30": 0.00141393296284787,
+      "rms_2_250_all_lines": 0.0045116459702122,
+      "rms_2_250_excluding_principal_plant_lines": 0.0041948285755055,
+      "rms_2_20": 0.0011812211282913596,
+      "rms_20_50": 0.002080098525885462
+    },
+    {
+      "room": "PHYS 111",
+      "location": "PHYS_111_Floor",
+      "frequency_30_hz": 29.8149712212212,
+      "asd_30": 0.0179710203824442,
+      "rms_2_250_all_lines": 0.0174573778885039,
+      "rms_2_250_excluding_principal_plant_lines": 0.004435306193540226,
+      "rms_2_20": 0.0011334306852128987,
+      "rms_20_50": 0.016890845693475945
+    },
+    {
+      "room": "Herzog Lab",
+      "location": "PHYS_Herzog_Floor",
+      "frequency_30_hz": 29.8149712212212,
+      "asd_30": 0.0228672712720627,
+      "rms_2_250_all_lines": 0.022270933016671247,
+      "rms_2_250_excluding_principal_plant_lines": 0.0042548779911560424,
+      "rms_2_20": 0.0011874508945168647,
+      "rms_20_50": 0.02159636349774415
+    }
+  ],
+  "table_metrics": [
+    {
+      "label": "Herzog optical table",
+      "floated": false,
+      "floor_location": "PHYS_Herzog_Floor",
+      "table_location": "PHYS_Herzog_Optical_Table",
+      "frequency_hz": 29.8149712212212,
+      "floor_asd": 0.0228672712720627,
+      "table_asd": 0.00502122166471847,
+      "table_to_floor_ratio": 0.21958114743900267,
+      "attenuation_db": -13.168098996158433
+    },
+    {
+      "label": "PHYS 111 far optical table",
+      "floated": false,
+      "floor_location": "PHYS_111_Floor",
+      "table_location": "PHYS_111_Far_Optical_Table",
+      "frequency_hz": 29.8149712212212,
+      "floor_asd": 0.0179710203824442,
+      "table_asd": 0.010073083154456,
+      "table_to_floor_ratio": 0.5605181531203618,
+      "attenuation_db": -5.0282063528221785
+    },
+    {
+      "label": "PHYS 111 near-door optical table",
+      "floated": false,
+      "floor_location": "PHYS_111_Floor",
+      "table_location": "PHYS_111_Near_Door_Optical_Table",
+      "frequency_hz": 29.8149712212212,
+      "floor_asd": 0.0179710203824442,
+      "table_asd": 0.0995790415036699,
+      "table_to_floor_ratio": 5.541090009610594,
+      "attenuation_db": 14.87190409816181
+    },
+    {
+      "label": "PHYS 244 rolling table",
+      "floated": false,
+      "floor_location": "PHYS_244_Floor",
+      "table_location": "PHYS_244_Rolling_Table",
+      "frequency_hz": 29.8149712212212,
+      "floor_asd": 0.00141393296284787,
+      "table_asd": 0.000740143680490999,
+      "table_to_floor_ratio": 0.5234644781180009,
+      "attenuation_db": -5.622255677248439
+    },
+    {
+      "label": "PHYS 245 unfloated table",
+      "floated": false,
+      "floor_location": "PHYS_245_Floor",
+      "table_location": "PHYS_245_Unfloated_Table",
+      "frequency_hz": 29.8149712212212,
+      "floor_asd": 0.00218991293062261,
+      "table_asd": 0.00251402558045556,
+      "table_to_floor_ratio": 1.148002528000418,
+      "attenuation_db": 1.1988568883370554
+    },
+    {
+      "label": "PHYS 245 floated table",
+      "floated": true,
+      "floor_location": "PHYS_245_Floor",
+      "table_location": "PHYS_245_Floated_Table",
+      "frequency_hz": 29.8149712212212,
+      "floor_asd": 0.00218991293062261,
+      "table_asd": 0.00228795884502652,
+      "table_to_floor_ratio": 1.0447716039450186,
+      "attenuation_db": 0.38042720630804683
+    }
+  ],
+  "thirty_hz_comparison": {
+    "Pipe_From_Heating_Plant": {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.107676918598816
+    },
+    "Sidewalk_between_Heating_and_Physics": {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.0339023461755117
+    },
+    "Greek_Theater_Top_Stair": {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.000434452556440432
+    },
+    "Courtyard_between_Mullens_Union": {
+      "frequency_hz": 29.8299011016525,
+      "asd": 0.000277282209563981
+    },
+    "PHYS_Herzog_Floor": {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.0228672712720627
+    },
+    "PHYS_TITAN_FLOOR": {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.00515408804860597
+    },
+    "PHYS_245_Floor": {
+      "frequency_hz": 29.8149712212212,
+      "asd": 0.00218991293062261
+    }
+  }
+}
